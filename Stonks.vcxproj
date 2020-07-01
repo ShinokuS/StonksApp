@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -90,10 +90,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <QtRcc Include="StonksApp.qrc"/>
-    <QtUic Include="StonksApp.ui"/>
-    <QtMoc Include="StonksApp.h"/>
-    <ClCompile Include="StonksApp.cpp"/>
+    <QtRcc Include="UI\StonksApp.qrc"/>
+    <QtUic Include="UI\StonksApp.ui"/>
+    <QtMoc Include="UI\StonksApp.h"/>
+    <ClCompile Include="UI\StonksApp.cpp"/>
     <ClCompile Include="main.cpp"/>
 
   </ItemGroup>
