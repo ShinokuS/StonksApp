@@ -10,8 +10,8 @@ struct LimitOrder
 		SELL = 1
 	};
 
-	int instrumentId;
-	int priceInCents;
+	long long instrumentId;
+	long long priceInCents;
 	int quantity;
 	DealType dealType;
 };
