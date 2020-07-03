@@ -24,26 +24,32 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="StonksApp.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-    <QtUic Include="StonksApp.ui">
-      <Filter>Resource Files</Filter>
-    </QtUic>
-    <QtMoc Include="StonksApp.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClCompile Include="StonksApp.cpp">
+    <QtRcc Include="UI\StonksApp.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="UI\StonksApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ResourceCompile Include="$pro_name$.rc">
-    </ResourceCompile>
-    <None Include="$pro_name$.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="$pro_name$.def">
-      <Filter>Resource Files</Filter>
-    </None>
-
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Logic\OrderBook.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="UI\StonksApp.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="UI\StonksApp.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Logic\OrderBook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
