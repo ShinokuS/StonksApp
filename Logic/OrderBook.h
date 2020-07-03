@@ -15,7 +15,7 @@ public:
 	std::map<long long, int> bidsAmountForPrice;
 	
 	long long minPrice;
-	long long midPrice;
+	long long minAskPrice;
 	long long maxPrice;
 };
 
