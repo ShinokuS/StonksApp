@@ -1,7 +1,5 @@
 ﻿#include "OrderBook.h"
 
-#include <chrono>
-
 int randomBetween(int begin, int end)
 {
 	return begin + rand() % (end - begin);
@@ -10,10 +8,11 @@ int randomBetween(int begin, int end)
 // Это способ получить небольшой ордербук без помощи парсера
 // и использовать его для тестов UI например.
 
-// Если не пихать seed, то каждый раз будет рандомный ордербук.
-// Если пихать константу, то при каждом запуске теста будет одинаковый ордербук.
+// В хэдере описан seed по умолчанию, он будет time(0).
+// То есть если не пихать seed, то каждый раз будет рандомный ордербук.
+// А если пихать константу, то при каждом запуске теста будет одинаковый ордербук.
 
-OrderBook* OrderBook::getTestOrderBook(unsigned int seed = time(0))
+OrderBook* OrderBook::getTestOrderBook(unsigned int seed)
 {
 	srand(seed);
 	int nAsks = randomBetween(1, 10);
