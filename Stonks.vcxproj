@@ -94,7 +94,6 @@
     <QtUic Include="UI\StonksApp.ui"/>
     <QtMoc Include="UI\StonksApp.h"/>
     <ClCompile Include="UI\StonksApp.cpp"/>
-    <ClCompile Include="Logic\LimitOrdersData.cpp"/>
     <ClCompile Include="main.cpp"/>
 
   </ItemGroup>
