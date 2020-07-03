@@ -5,6 +5,6 @@
 
 struct LimitOrder
 {
-	long long priceInCents;
+	long long price;
 	int quantity;
 };
