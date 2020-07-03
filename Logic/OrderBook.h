@@ -17,5 +17,6 @@ public:
 	long long minPrice;
 	long long minAskPrice;
 	long long maxPrice;
-};
 
+	static OrderBook* getTestOrderBook(unsigned int seed = time(0));
+};
