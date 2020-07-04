@@ -15,8 +15,8 @@ int randomBetween(int begin, int end)
 OrderBook* OrderBook::getTestOrderBook(unsigned int seed)
 {
 	srand(seed);
-	int nAsks = randomBetween(1, 10);
-	int nBids = randomBetween(1, 10);
+	int nAsks = randomBetween(20, 100);
+	int nBids = randomBetween(20, 100);
 	long long minBidPrice = 100;
 	long long minAskPrice = 10000;
 	long long maxAskPrice = 20000;

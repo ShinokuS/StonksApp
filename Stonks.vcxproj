@@ -47,14 +47,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>5.15.0</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
-    <QtBuildConfig>debug</QtBuildConfig>
+    <QtInstall>$(DefaultQtVersion)</QtInstall>
+    <QtModules>core;gui;widgets;charts</QtModules>
+    <QtBuildConfig>
+    </QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>5.15.0</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
-    <QtBuildConfig>release</QtBuildConfig>
+    <QtInstall>$(DefaultQtVersion)</QtInstall>
+    <QtModules>core;gui;widgets;charts</QtModules>
+    <QtBuildConfig>
+    </QtBuildConfig>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />
@@ -89,12 +91,16 @@
     <QtRcc Include="UI\StonksApp.qrc" />
     <QtUic Include="UI\StonksApp.ui" />
     <QtMoc Include="UI\StonksApp.h" />
+    <ClCompile Include="Logic\GraphsBuilder.cpp" />
     <ClCompile Include="Logic\OrderBook.cpp" />
+    <ClCompile Include="MarketDepthGraph.cpp" />
     <ClCompile Include="UI\StonksApp.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Logic\GraphsBuilder.h" />
     <ClInclude Include="Logic\OrderBook.h" />
+    <ClInclude Include="UI\Graphs\MarketDepthGraph.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
