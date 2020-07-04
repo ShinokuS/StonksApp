@@ -4,7 +4,7 @@ class GraphsBuilder
 {
 public:
 
-	void buildMarketDepthGraph(const OrderBook* orderBook)
+	void buildMarketDepthGraph(const OrderBook* orderBook);
 
 private:
 

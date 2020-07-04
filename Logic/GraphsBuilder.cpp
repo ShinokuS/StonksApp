@@ -6,10 +6,12 @@
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QAreaSeries>
 
+using namespace QtCharts;
+
 void GraphsBuilder::buildMarketDepthGraph(const OrderBook* orderBook) {
 
     std::map<long long, int> bids = orderBook->bidsAmountForPrice;
-    std::map<long long, int> asks = orderBook->asksAmountForPrice
+    std::map<long long, int> asks = orderBook->asksAmountForPrice;
 
         auto iter = asks.begin();
     int prevY = iter->second;
