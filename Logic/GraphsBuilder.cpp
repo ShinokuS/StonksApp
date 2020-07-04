@@ -15,6 +15,7 @@ using namespace QtCharts;
 // тут аналогично, но без деления
 #define nOrders qreal(iter->second)
 
+
 MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
 
     // Краткие псевдонимы для мапов.
@@ -29,12 +30,12 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
 
     // Получаем координаты из одного мапа.
     auto iter = asks->begin();
-    int prevY = iter->second;
+    qreal prevY = nOrders;
     asksUpLineSeries->append(price, nOrders);
     iter++;
-    for (; iter != asks->end(); iter++) {
-        asksUpLineSeries->append(price, qreal(prevY));
-        asksUpLineSeries->append(price, qreal((iter->second) + prevY));
+    for (/*    */; iter != asks->end(); iter++) {
+        asksUpLineSeries->append(price, prevY);
+        asksUpLineSeries->append(price, prevY + nOrders);
         prevY += iter->second;
     }
 
@@ -45,20 +46,23 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
     bidsUpLineSeries->append(price, nOrders);
     do {
         iter--;
-        bidsUpLineSeries->append(price, qreal(prevY));
-        bidsUpLineSeries->append(price, qreal((iter->second) + prevY));
+        bidsUpLineSeries->append(price, prevY);
+        bidsUpLineSeries->append(price, prevY + nOrders);
         prevY += iter->second;
     } while (iter != bids->begin());
 
     // Рисуем дно каждой половины графика.
     iter = bids->end();
     iter--;
-    *bidsDownLineSeries << QPointF(price, 0) << QPointF(priceAsQReal(bids->begin()->first), 0);
+    qreal firstBidPrice = priceAsQReal(bids->begin()->first);
+    *bidsDownLineSeries << QPointF(price, 0) << QPointF(firstBidPrice, 0);
+    
     iter = asks->end();
     iter--;
-    *asksDownLineSeries << QPointF(priceAsQReal(asks->begin()->first), 0) << QPointF(price, 0);
+    qreal firstAskPrice = priceAsQReal(asks->begin()->first);
+    *asksDownLineSeries << QPointF(firstAskPrice, 0) << QPointF(price, 0);
 
-    // Получаем полную форму каждой половины графика, по их кривой сверху и дну снизу.
+    // Получаем полную форму каждой половины графика по кривой сверху и дну снизу.
     QAreaSeries* bidsSeries = new QAreaSeries(bidsUpLineSeries, bidsDownLineSeries);
     QAreaSeries* asksSeries = new QAreaSeries(asksUpLineSeries, asksDownLineSeries);
 
