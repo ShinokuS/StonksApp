@@ -36,10 +36,13 @@
     <ClCompile Include="Logic\OrderBook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MarketDepthGraph.cpp">
+    <ClCompile Include="Logic\GraphsBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Logic\GraphsBuilder.cpp">
+    <ClCompile Include="UI\Graphs\MarketDepthGraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PriceAsQReal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -61,6 +64,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logic\GraphsBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PriceAsQReal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
