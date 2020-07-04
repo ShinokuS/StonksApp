@@ -10,13 +10,14 @@ using namespace QtCharts;
 
 int main(int argc, char *argv[])
 {
+    QApplication a(argc, argv);
+
     auto orderBook = OrderBook::getTestOrderBook();
     auto graph = GraphsBuilder::buildMarketDepthGraph(orderBook);
 
     QChartView* MarketDepthView = new QChartView(graph);
     MarketDepthView->setRenderHint(QPainter::Antialiasing);
 
-    QApplication a(argc, argv);
     StonksApp w;
     w.setCentralWidget(MarketDepthView);
     w.resize(400, 300);
