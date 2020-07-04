@@ -93,7 +93,7 @@
     <QtMoc Include="UI\StonksApp.h" />
     <ClCompile Include="Logic\GraphsBuilder.cpp" />
     <ClCompile Include="Logic\OrderBook.cpp" />
-    <ClCompile Include="MarketDepthGraph.cpp" />
+    <ClCompile Include="UI\Graphs\MarketDepthGraph.cpp" />
     <ClCompile Include="UI\StonksApp.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
