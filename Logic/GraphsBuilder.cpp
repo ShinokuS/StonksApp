@@ -1,7 +1,6 @@
 #include "GraphsBuilder.h"
 #include "OrderBook.h"
 
-
 #include <QtGlobal>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QAreaSeries>

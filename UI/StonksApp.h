@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+
 #include "ui_StonksApp.h"
 
 class StonksApp : public QMainWindow

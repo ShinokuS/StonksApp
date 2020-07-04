@@ -1,4 +1,5 @@
 #pragma once
+
 #include "../UI/Graphs/MarketDepthGraph.h"
 #include "OrderBook.h"
 
