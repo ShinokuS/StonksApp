@@ -5,6 +5,11 @@ int randomBetween(int begin, int end)
 	return begin + rand() % (end - begin);
 }
 
+// Прячу сюда громоздкую проверку наличия ключа в std::map
+#define noBidsWithSuch(price) testOrderBook->bidsAmountForPrice.find(price) == testOrderBook->bidsAmountForPrice.end()
+#define noAsksWithSuch(price) testOrderBook->asksAmountForPrice.find(price) == testOrderBook->asksAmountForPrice.end()
+
+
 // Это способ получить небольшой ордербук без помощи парсера
 // и использовать его для тестов UI например.
 
@@ -27,30 +32,21 @@ OrderBook* OrderBook::getTestOrderBook(unsigned int seed)
 
 	for (int i = 0; i < nBids; i++) {
 		long long price = randomBetween(minBidPrice, minAskPrice);
-		
-		// В с++ это значит "если такого ключа в map ещё нет"
-		if (testOrderBook->bidsAmountForPrice.find(price) ==
-								testOrderBook->bidsAmountForPrice.end()) {
+		if (noBidsWithSuch(price)) {
 			testOrderBook->bidsAmountForPrice[price] = 0;
 		}
-
 		testOrderBook->bidsAmountForPrice[price] += randomBetween(1, maxAmountInOrder);
 	}
 
 	for (int i = 0; i < nAsks; i++) {
 		long long price = randomBetween(minAskPrice, maxAskPrice);
-
-		// В с++ это значит "если такого ключа в map ещё нет"
-		if (testOrderBook->asksAmountForPrice.find(price) ==
-								testOrderBook->asksAmountForPrice.end()) {
+		if (noAsksWithSuch(price)) {
 			testOrderBook->asksAmountForPrice[price] = 0;
 		}
-
 		testOrderBook->asksAmountForPrice[price] += randomBetween(1, maxAmountInOrder);
 	}
 
-	// Ёбаный с++ не может красиво доставать первый/последний ключи из map.
-	// Упаковывать в функции лень.
+	// Из std::map очень неудобно доставать первый/последний ключи...
 	testOrderBook->minPrice = (*testOrderBook->bidsAmountForPrice.begin()).first;
 	testOrderBook->minAskPrice = (*testOrderBook->asksAmountForPrice.begin()).first;
 	auto endIter = testOrderBook->bidsAmountForPrice.end();

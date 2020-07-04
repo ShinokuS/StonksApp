@@ -1,11 +1,12 @@
-#include "UI\StonksApp.h"
 #include "Logic/OrderBook.h"
 #include "Logic/GraphsBuilder.h"
 #include "UI/Graphs/MarketDepthGraph.h"
+#include "UI\StonksApp.h"
 
 #include <QtCharts/QChartView>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
+
 using namespace QtCharts;
 
 int main(int argc, char *argv[])

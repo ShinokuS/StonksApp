@@ -1,6 +1,6 @@
-#include "GraphsBuilder.h"
+﻿#include "GraphsBuilder.h"
 #include "OrderBook.h"
-
+#include "..\Utility\PriceAsQReal.h"
 
 #include <QtGlobal>
 #include <QtCharts/QLineSeries>
@@ -8,85 +8,63 @@
 
 using namespace QtCharts;
 
+// iter->first само по себе длинновато и не понятно,
+// а его ещё надо конвертнуть в qreal и разделить на 100
+#define price priceAsQReal(iter->first)
+
+// тут аналогично, но без деления
+#define nOrders qreal(iter->second)
+
+
 MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
 
-    //��������� ����� ��� �������� ��������� ����� �����
+    // Краткие псевдонимы для мапов.
+    std::map<long long, int>* bids = &orderBook->bidsAmountForPrice;
+    std::map<long long, int>* asks = &orderBook->asksAmountForPrice;
+
+    // Объявляем серии для хранения точек для линий графика.
     QLineSeries* bidsUpLineSeries = new QLineSeries();
     QLineSeries* bidsDownLineSeries = new QLineSeries();
     QLineSeries* asksUpLineSeries = new QLineSeries();
     QLineSeries* asksDownLineSeries = new QLineSeries();
 
-
-    std::map<long long, int>* bids = &orderBook->bidsAmountForPrice;
-    std::map<long long, int>* asks = &orderBook->asksAmountForPrice;
-
-    //�������� ���������� �� �����
-    auto iter = asks->begin();
-    int prevY = iter->second;
-    asksUpLineSeries->append(qreal(iter->first), qreal(iter->second));
-    iter++;
-    for (; iter != asks->end(); iter++) {
-        asksUpLineSeries->append(qreal(iter->first), qreal(prevY));
-        asksUpLineSeries->append(qreal(iter->first), qreal((iter->second) + prevY));
+    // Получаем координаты из одного мапа.
+    qreal prevY = 0;
+    for (auto iter = asks->begin(); iter != asks->end(); iter++) {
+        asksUpLineSeries->append(price, prevY);
+        asksUpLineSeries->append(price, prevY + nOrders);
         prevY += iter->second;
     }
 
-    iter = bids->end(); iter--;
+    // И из другого.
+    auto iter = bids->end();
+    iter--;
     prevY = iter->second;
-    bidsUpLineSeries->append(qreal(iter->first), qreal(iter->second));
+    bidsUpLineSeries->append(price, nOrders);
     do {
         iter--;
-        bidsUpLineSeries->append(qreal(iter->first), qreal(prevY));
-        bidsUpLineSeries->append(qreal(iter->first), qreal((iter->second) + prevY));
+        bidsUpLineSeries->append(price, prevY);
+        bidsUpLineSeries->append(price, prevY + nOrders);
         prevY += iter->second;
     } while (iter != bids->begin());
 
-    iter = bids->end(); iter--;
-    *bidsDownLineSeries << QPointF(qreal(iter->first), 0) << QPointF(qreal(bids->begin()->first), 0);
-    iter = asks->end(); iter--;
-    *asksDownLineSeries << QPointF(qreal(asks->begin()->first), 0) << QPointF(qreal(iter->first), 0);
+    // Рисуем дно каждой половины графика.
+    iter = bids->end();
+    iter--;
+    qreal firstBidPrice = priceAsQReal(bids->begin()->first);
+    *bidsDownLineSeries << QPointF(price, 0) << QPointF(firstBidPrice, 0);
+    
+    iter = asks->end();
+    iter--;
+    qreal firstAskPrice = priceAsQReal(asks->begin()->first);
+    *asksDownLineSeries << QPointF(firstAskPrice, 0) << QPointF(price, 0);
 
-
-
+    // Получаем полную форму каждой половины графика по кривой сверху и дну снизу.
     QAreaSeries* bidsSeries = new QAreaSeries(bidsUpLineSeries, bidsDownLineSeries);
-    bidsSeries->setName("Bids");
-    QPen pen(0x059605);
-    pen.setWidth(1);
-    bidsSeries->setPen(pen);
-
     QAreaSeries* asksSeries = new QAreaSeries(asksUpLineSeries, asksDownLineSeries);
-    asksSeries->setName("Asks");
-    pen.setColor(0x940000);
-    pen.setWidth(1);
-    asksSeries->setPen(pen);
 
-
-    QLinearGradient gradient(QPointF(0, 0), QPointF(0, 1));
-    gradient.setColorAt(0.0, 0x26f626);
-    gradient.setColorAt(1.0, 0x1e671e);
-    gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-    bidsSeries->setBrush(gradient);
-    gradient.setColorAt(0.0, 0xe60000);
-    gradient.setColorAt(1.0, 0x5c0006);
-    asksSeries->setBrush(gradient);
-
-    //������� ����� �������
-
-    auto marketDepthChart = new MarketDepthGraph();
-    marketDepthChart->addSeries(bidsSeries);
-    marketDepthChart->addSeries(asksSeries);
-    marketDepthChart->setTitle("Market Depth");
-    marketDepthChart->createDefaultAxes();
-
-    //������� ���� ��� ���������� ����� � ��� Y
-
-    //marketDepthChart->axes(Qt::Horizontal).first()->setRange(0, 20);
-    //marketDepthChart->axes(Qt::Vertical).first()->setRange(0, 10);
-
-    return marketDepthChart;
-/*
-    QChartView* MarketDepthView = new QChartView(marketDepthChart);
-    MarketDepthView->setRenderHint(QPainter::Antialiasing);
-*/
-
+    // В график запихиваем все эти полученные линии,
+    // а он в конструкторе разбирается со стилем их отображения.
+    // На выходе из метода будет полностью готовый график.
+    return new MarketDepthGraph(bidsSeries, asksSeries);
 }
