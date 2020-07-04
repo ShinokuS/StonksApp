@@ -29,18 +29,15 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
     QLineSeries* asksDownLineSeries = new QLineSeries();
 
     // Получаем координаты из одного мапа.
-    auto iter = asks->begin();
-    qreal prevY = nOrders;
-    asksUpLineSeries->append(price, nOrders);
-    iter++;
-    for (/*    */; iter != asks->end(); iter++) {
+    qreal prevY = 0;
+    for (auto iter = asks->begin(); iter != asks->end(); iter++) {
         asksUpLineSeries->append(price, prevY);
         asksUpLineSeries->append(price, prevY + nOrders);
         prevY += iter->second;
     }
 
     // И из другого.
-    iter = bids->end();
+    auto iter = bids->end();
     iter--;
     prevY = iter->second;
     bidsUpLineSeries->append(price, nOrders);
