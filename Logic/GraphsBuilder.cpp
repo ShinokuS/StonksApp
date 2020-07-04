@@ -1,43 +1,50 @@
 #include "GraphsBuilder.h"
 #include "OrderBook.h"
 
+
 #include <QtGlobal>
-#include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QAreaSeries>
 
 using namespace QtCharts;
 
-void GraphsBuilder::buildMarketDepthGraph(const OrderBook* orderBook) {
+MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
 
-    std::map<long long, int> bids = orderBook->bidsAmountForPrice;
-    std::map<long long, int> asks = orderBook->asksAmountForPrice;
+    //объ€вл€ем серии дл€ хранени€ координат точек линий
+    QLineSeries* bidsUpLineSeries = new QLineSeries();
+    QLineSeries* bidsDownLineSeries = new QLineSeries();
+    QLineSeries* asksUpLineSeries = new QLineSeries();
+    QLineSeries* asksDownLineSeries = new QLineSeries();
 
-        auto iter = asks.begin();
+
+    std::map<long long, int>* bids = &orderBook->bidsAmountForPrice;
+    std::map<long long, int>* asks = &orderBook->asksAmountForPrice;
+
+    //получаем координаты из мапов
+    auto iter = asks->begin();
     int prevY = iter->second;
     asksUpLineSeries->append(qreal(iter->first), qreal(iter->second));
     iter++;
-    for (/*    */; iter != asks.end(); iter++) {
+    for (; iter != asks->end(); iter++) {
         asksUpLineSeries->append(qreal(iter->first), qreal(prevY));
         asksUpLineSeries->append(qreal(iter->first), qreal((iter->second) + prevY));
         prevY += iter->second;
     }
 
-    iter = bids.end(); iter--;
-    auto tempBeginIter = bids.begin();
-    tempBeginIter--;
+    iter = bids->end(); iter--;
     prevY = iter->second;
     bidsUpLineSeries->append(qreal(iter->first), qreal(iter->second));
-    iter--;
-    for (/*    */; iter != tempBeginIter; iter--) {
+    do {
+        iter--;
         bidsUpLineSeries->append(qreal(iter->first), qreal(prevY));
         bidsUpLineSeries->append(qreal(iter->first), qreal((iter->second) + prevY));
         prevY += iter->second;
-    }
-    iter = bids.end(); iter--;
-    *bidsDownLineSeries << QPointF(qreal(iter->first), 0) << QPointF(qreal(bids.begin()->first), 0);
-    iter = asks.end(); iter--;
-    *asksDownLineSeries << QPointF(qreal(asks.begin()->first), 0) << QPointF(qreal(iter->first), 0);
+    } while (iter != bids->begin());
+
+    iter = bids->end(); iter--;
+    *bidsDownLineSeries << QPointF(qreal(iter->first), 0) << QPointF(qreal(bids->begin()->first), 0);
+    iter = asks->end(); iter--;
+    *asksDownLineSeries << QPointF(qreal(asks->begin()->first), 0) << QPointF(qreal(iter->first), 0);
 
 
 
@@ -55,24 +62,31 @@ void GraphsBuilder::buildMarketDepthGraph(const OrderBook* orderBook) {
 
 
     QLinearGradient gradient(QPointF(0, 0), QPointF(0, 1));
-    gradient.setColorAt(0.0, 0x3cc63c);
-    gradient.setColorAt(1.0, 0x26f626);
+    gradient.setColorAt(0.0, 0x26f626);
+    gradient.setColorAt(1.0, 0x1e671e);
     gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
     bidsSeries->setBrush(gradient);
-    gradient.setColorAt(0.0, 0xcc0000);
-    gradient.setColorAt(1.0, 0xe60000);
+    gradient.setColorAt(0.0, 0xe60000);
+    gradient.setColorAt(1.0, 0x5c0006);
     asksSeries->setBrush(gradient);
 
-    QChart* chart = new QChart();
-    chart->addSeries(bidsSeries);
-    chart->addSeries(asksSeries);
-    chart->setTitle("Market Depth");
-    chart->createDefaultAxes();
-    //chart->axes(Qt::Horizontal).first()->setRange(0, 20);
-    //chart->axes(Qt::Vertical).first()->setRange(0, 10);
+    //создаем макет графика
 
-    QChartView* MarketDepthView = new QChartView(chart);
+    auto marketDepthChart = new MarketDepthGraph();
+    marketDepthChart->addSeries(bidsSeries);
+    marketDepthChart->addSeries(asksSeries);
+    marketDepthChart->setTitle("Market Depth");
+    marketDepthChart->createDefaultAxes();
+
+    //будуща€ фича дл€ расширени€ полей у оси Y
+
+    //marketDepthChart->axes(Qt::Horizontal).first()->setRange(0, 20);
+    //marketDepthChart->axes(Qt::Vertical).first()->setRange(0, 10);
+
+    return marketDepthChart;
+/*
+    QChartView* MarketDepthView = new QChartView(marketDepthChart);
     MarketDepthView->setRenderHint(QPainter::Antialiasing);
-
+*/
 
 }
