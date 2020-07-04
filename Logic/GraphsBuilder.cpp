@@ -72,7 +72,7 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
 
     //создаем макет графика
 
-    MarketDepthGraph* marketDepthChart;
+    auto marketDepthChart = new MarketDepthGraph();
     marketDepthChart->addSeries(bidsSeries);
     marketDepthChart->addSeries(asksSeries);
     marketDepthChart->setTitle("Market Depth");
