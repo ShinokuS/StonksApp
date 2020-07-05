@@ -2,12 +2,18 @@
 
 #include <QtCharts/QChartView>
 
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QHeaderView>
+
 using namespace QtCharts;
 
 StonksMainWindow::StonksMainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    graphLayout = new QGridLayout(this);
+
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
@@ -17,6 +23,13 @@ void StonksMainWindow::placeMarketDepthGraph()
 
     QChartView* MarketDepthView = new QChartView(graph);
     MarketDepthView->setRenderHint(QPainter::Antialiasing);
+    
+    graphLayout->addWidget(MarketDepthView);
+    ui.graphWidget->setLayout(graphLayout);
 
-    this->setCentralWidget(MarketDepthView);
+}
+
+void StonksMainWindow::placeOrderBookTable()
+{
+
 }
