@@ -93,6 +93,7 @@
     <QtMoc Include="UI\StonksMainWindow.h" />
     <ClCompile Include="Logic\GraphsBuilder.cpp" />
     <ClCompile Include="Logic\OrderBook.cpp" />
+    <ClCompile Include="Logic\OrderBookTableModel.cpp" />
     <ClCompile Include="Utility\PriceAsQReal.cpp" />
     <ClCompile Include="UI\Graphs\MarketDepthGraph.cpp" />
     <ClCompile Include="UI\StonksMainWindow.cpp" />
@@ -101,6 +102,7 @@
   <ItemGroup>
     <ClInclude Include="Logic\GraphsBuilder.h" />
     <ClInclude Include="Logic\OrderBook.h" />
+    <ClInclude Include="Logic\OrderBookTableModel.h" />
     <ClInclude Include="Utility\PriceAsQReal.h" />
     <ClInclude Include="UI\Graphs\MarketDepthGraph.h" />
   </ItemGroup>
