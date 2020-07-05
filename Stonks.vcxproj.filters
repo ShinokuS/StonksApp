@@ -24,7 +24,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="UI\StonksApp.qrc" />
+    <QtRcc Include="UI\StonksMainWindow.qrc" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
