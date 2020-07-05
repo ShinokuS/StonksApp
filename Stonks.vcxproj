@@ -89,13 +89,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="UI\StonksApp.qrc" />
-    <QtUic Include="UI\StonksApp.ui" />
-    <QtMoc Include="UI\StonksApp.h" />
+    <QtUic Include="UI\StonksMainWindow.ui" />
+    <QtMoc Include="UI\StonksMainWindow.h" />
     <ClCompile Include="Logic\GraphsBuilder.cpp" />
     <ClCompile Include="Logic\OrderBook.cpp" />
     <ClCompile Include="Utility\PriceAsQReal.cpp" />
     <ClCompile Include="UI\Graphs\MarketDepthGraph.cpp" />
-    <ClCompile Include="UI\StonksApp.cpp" />
+    <ClCompile Include="UI\StonksMainWindow.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
