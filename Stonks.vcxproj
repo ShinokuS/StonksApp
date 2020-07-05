@@ -102,7 +102,7 @@
   <ItemGroup>
     <ClInclude Include="Logic\GraphsBuilder.h" />
     <ClInclude Include="Logic\OrderBook.h" />
-    <ClInclude Include="Logic\OrderBookTableModel.h" />
+    <QtMoc Include="Logic\OrderBookTableModel.h" />
     <ClInclude Include="Utility\PriceAsQReal.h" />
     <ClInclude Include="UI\Graphs\MarketDepthGraph.h" />
   </ItemGroup>

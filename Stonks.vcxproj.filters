@@ -62,12 +62,12 @@
     <ClInclude Include="Utility\PriceAsQReal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Logic\OrderBookTableModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="UI\StonksMainWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Logic\OrderBookTableModel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

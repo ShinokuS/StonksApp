@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>953</width>
+    <width>1112</width>
     <height>509</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>251</width>
+      <width>361</width>
       <height>491</height>
      </rect>
     </property>
@@ -27,9 +27,9 @@
    <widget class="QWidget" name="graphWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>380</x>
       <y>10</y>
-      <width>671</width>
+      <width>721</width>
       <height>491</height>
      </rect>
     </property>
