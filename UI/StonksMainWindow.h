@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <QtWidgets/QMainWindow>
-#include <QGridLayout>
 
 #include "ui_StonksMainWindow.h"
 #include "../Logic/OrderBook.h"
@@ -14,8 +13,6 @@ class StonksMainWindow : public QMainWindow
 
 public:
     StonksMainWindow(QWidget* parent = Q_NULLPTR);
-
-    QGridLayout* graphLayout;
 
     void placeMarketDepthGraph();
     void placeOrderBookTable();
