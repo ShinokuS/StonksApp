@@ -24,12 +24,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="UI\StonksApp.qrc" />
+    <QtRcc Include="UI\StonksMainWindow.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="UI\StonksApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,19 +39,12 @@
     <ClCompile Include="UI\Graphs\MarketDepthGraph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PriceAsQReal.cpp">
+    <ClCompile Include="Utility\PriceAsQReal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="UI\StonksApp.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="UI\StonksApp.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
+    <ClCompile Include="UI\StonksMainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logic\OrderBook.h">
@@ -66,8 +56,18 @@
     <ClInclude Include="Logic\GraphsBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PriceAsQReal.h">
+    <ClInclude Include="Utility\PriceAsQReal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="UI\StonksMainWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="UI\StonksMainWindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>
