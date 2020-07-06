@@ -35,5 +35,9 @@ void StonksMainWindow::placeOrderBookTable()
 
     ui.tableView->setModel(model);
     int centerIndex = model->rowCount() / 2 - 1;
+
+    ui.tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui.tableView->verticalHeader()->hide();
     ui.tableView->scrollTo(model->index(centerIndex,0), QAbstractItemView::PositionAtCenter);
 }
