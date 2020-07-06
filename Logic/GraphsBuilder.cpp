@@ -31,8 +31,8 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
     // Получаем координаты из одного мапа.
     qreal prevY = 0;
     for (auto iter = asks->begin(); iter != asks->end(); iter++) {
-        asksUpLineSeries->append(price, prevY);
-        asksUpLineSeries->append(price, prevY + nOrders);
+        asksUpLineSeries->append(prevY, price);
+        asksUpLineSeries->append(prevY + nOrders, price);
         prevY += iter->second;
     }
 
@@ -40,11 +40,11 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
     auto iter = bids->end();
     iter--;
     prevY = iter->second;
-    bidsUpLineSeries->append(price, nOrders);
+    bidsUpLineSeries->append(nOrders, price);
     do {
         iter--;
-        bidsUpLineSeries->append(price, prevY);
-        bidsUpLineSeries->append(price, prevY + nOrders);
+        bidsUpLineSeries->append(prevY, price);
+        bidsUpLineSeries->append(prevY + nOrders, price);
         prevY += iter->second;
     } while (iter != bids->begin());
 
@@ -52,12 +52,12 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
     iter = bids->end();
     iter--;
     qreal firstBidPrice = priceAsQReal(bids->begin()->first);
-    *bidsDownLineSeries << QPointF(price, 0) << QPointF(firstBidPrice, 0);
+    *bidsDownLineSeries << QPointF(0,price) << QPointF(0, firstBidPrice);
     
     iter = asks->end();
     iter--;
     qreal firstAskPrice = priceAsQReal(asks->begin()->first);
-    *asksDownLineSeries << QPointF(firstAskPrice, 0) << QPointF(price, 0);
+    *asksDownLineSeries << QPointF(0, firstBidPrice) << QPointF(0, price);
 
     // Получаем полную форму каждой половины графика по кривой сверху и дну снизу.
     QAreaSeries* bidsSeries = new QAreaSeries(bidsUpLineSeries, bidsDownLineSeries);
