@@ -40,5 +40,5 @@ void StonksMainWindow::placeOrderBookTable()
     ui.tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui.tableView->verticalHeader()->hide();
-    ui.tableView->scrollTo(model->index(model->returnCenterIndex()-1,0), QAbstractItemView::PositionAtCenter);
+    ui.tableView->scrollTo(model->index(model->returnCenterIndex()-2,0), QAbstractItemView::PositionAtCenter);
 }
