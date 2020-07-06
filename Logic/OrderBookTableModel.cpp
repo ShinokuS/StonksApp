@@ -71,17 +71,15 @@ void OrderBookTableModel::initOrderBookTableStruct(OrderBook* orderBook)
         iter--;
         rowOrderBook.prices = price;
         rowOrderBook.quantity = nOrders;
-        rowOrderBook.askMarker = true;
         rows.append(std::move(rowOrderBook));
         OrderBookTableModel::centerIndex++;
     } while (iter != asks->begin());
-
+    rowOrderBook.askMarker = false;
     iter = bids->end();
     do {
         iter--;
         rowOrderBook.prices = price;
         rowOrderBook.quantity = nOrders;
-        rowOrderBook.askMarker = false;
         rows.append(std::move(rowOrderBook));
     } while (iter != bids->begin());
 }
