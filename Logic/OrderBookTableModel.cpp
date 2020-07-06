@@ -1,14 +1,17 @@
 ﻿#include "OrderBookTableModel.h"
+#include "..\Utility\PriceAsQReal.h"
 
 #include <QSize>
 #include <QBrush>
 #include <QScrollBar>
 
+#define price priceAsQReal(iter->first)
+#define nOrders qreal(iter->second)
+
 OrderBookTableModel::OrderBookTableModel(QObject* parent)
     : QAbstractTableModel(parent)
 {
-    headers << "Bids" << "Price" << "Asks";
-    initOrderBookTableStruct();
+    headers << "Price" << "Quantity";
 }
 
 QVariant OrderBookTableModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -37,41 +40,56 @@ QVariant OrderBookTableModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto row = rows.at(index.row());
-    switch(role) {
+    switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
         switch (index.column()) {
-        case 0: return row.bids;
-        case 1: return row.price;
-        case 2: return row.asks;
+        case 0: return row.prices;
+        case 1: return row.quantity;
         }
     case Qt::TextAlignmentRole:
         return Qt::AlignCenter;
     case Qt::BackgroundRole:
-        if (row.bids == "") {
-            return QBrush(Qt::red);
+        if (row.askMarker) {
+            return QBrush(0xff6161);
         }
-        else return QBrush(Qt::green);
+        else return QBrush(0x7ce670);
     }
-    
     return QVariant();
 }
 
-void OrderBookTableModel::initOrderBookTableStruct()
+void OrderBookTableModel::initOrderBookTableStruct(OrderBook* orderBook)
 {
-    for (int i = 1; i < 31; ++i) {
-        OrderBookTableStruct rowOrderBook;
-        if (i > 15) {
-            rowOrderBook.bids = QString("bid");
-            rowOrderBook.asks = QString("");
-        }
-        else {
-            rowOrderBook.bids = QString("");
-            rowOrderBook.asks = QString("ask");
-        }
-        rowOrderBook.price = QString("price");
+    OrderBookTableStruct rowOrderBook;
+    std::map<long long, int>* bids = &orderBook->bidsAmountForPrice;
+    std::map<long long, int>* asks = &orderBook->asksAmountForPrice;
+    
+    OrderBookTableModel::centerIndex = 0;
+    rowOrderBook.askMarker = true;
+    auto iter = asks->end();
+    do {
+        iter--;
+        rowOrderBook.prices = price;
+        rowOrderBook.quantity = nOrders;
         rows.append(std::move(rowOrderBook));
-    }
+        rowOrderBook.askMarker = true;
+        OrderBookTableModel::centerIndex++;
+    } while (iter != asks->begin());
+
+    rowOrderBook.askMarker = false;
+    iter = bids->end();
+    do {
+        iter--;
+        rowOrderBook.prices = price;
+        rowOrderBook.quantity = nOrders;
+        rows.append(std::move(rowOrderBook));
+        rowOrderBook.askMarker = false;
+    } while (iter != bids->begin());
+}
+
+int OrderBookTableModel::returnCenterIndex()
+{
+    return OrderBookTableModel::centerIndex;
 }
 
 bool OrderBookTableModel::setData(const QModelIndex& index, const QVariant&, int role)

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <QAbstractTableModel>
+#include "OrderBook.h"
 
 class OrderBookTableModel : public QAbstractTableModel
 {
@@ -7,11 +8,13 @@ class OrderBookTableModel : public QAbstractTableModel
 public:
 
     struct OrderBookTableStruct {
-        QString asks;
-        QString price;
-        QString bids;
+        qreal prices;
+        qreal quantity;
+        bool askMarker;
     };
-    explicit OrderBookTableModel(QObject* parent = nullptr);
+    int centerIndex;
+
+    OrderBookTableModel(QObject* parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
@@ -22,7 +25,8 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
-    void initOrderBookTableStruct();
+    void initOrderBookTableStruct(OrderBook *orderBook);
+    int returnCenterIndex();
 
 private:
     QStringList headers;

@@ -32,12 +32,13 @@ void StonksMainWindow::placeMarketDepthGraph()
 void StonksMainWindow::placeOrderBookTable()
 {
     auto model = new OrderBookTableModel(this);
-
+    auto orderBook = OrderBook::getTestOrderBook();
+    model->initOrderBookTableStruct(orderBook);
     ui.tableView->setModel(model);
-    int centerIndex = model->rowCount() / 2 - 1;
+    
 
     ui.tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui.tableView->verticalHeader()->hide();
-    ui.tableView->scrollTo(model->index(centerIndex,0), QAbstractItemView::PositionAtCenter);
+    ui.tableView->scrollTo(model->index(model->returnCenterIndex()-1,0), QAbstractItemView::PositionAtCenter);
 }
