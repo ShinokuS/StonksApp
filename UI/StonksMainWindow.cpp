@@ -10,10 +10,11 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(QWidget *parent)
+StonksMainWindow::StonksMainWindow(OrderBook* relatedOrderBook, QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    this->relatedOrderBook = relatedOrderBook;
 
     this->placeMarketDepthGraph();
     this->placeOrderBookTable();
@@ -21,8 +22,7 @@ StonksMainWindow::StonksMainWindow(QWidget *parent)
 
 void StonksMainWindow::placeMarketDepthGraph()
 {
-    auto orderBook = OrderBook::getTestOrderBook();
-    auto graph = GraphsBuilder::buildMarketDepthGraph(orderBook);
+    auto graph = GraphsBuilder::buildMarketDepthGraph(relatedOrderBook);
 
     QChartView* MarketDepthView = new QChartView(graph);
     MarketDepthView->setRenderHint(QPainter::Antialiasing);
@@ -36,8 +36,7 @@ void StonksMainWindow::placeMarketDepthGraph()
 void StonksMainWindow::placeOrderBookTable()
 {
     auto model = new OrderBookTableModel(this);
-    auto orderBook = OrderBook::getTestOrderBook();
-    model->initOrderBookTableStruct(orderBook);
+    model->initOrderBookTableStruct(relatedOrderBook);
     ui.tableView->setModel(model);
     
 
