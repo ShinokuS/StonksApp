@@ -45,6 +45,9 @@
     <ClCompile Include="UI\StonksMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Logic\OrderBookTableModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logic\OrderBook.h">
@@ -62,6 +65,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="UI\StonksMainWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Logic\OrderBookTableModel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
