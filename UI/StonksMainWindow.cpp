@@ -33,6 +33,7 @@ void StonksMainWindow::placeMarketDepthGraph()
 
     QChartView* MarketDepthView = new QChartView(graph);
     MarketDepthView->setRenderHint(QPainter::Antialiasing);
+    MarketDepthView->setRubberBand(QChartView::HorizontalRubberBand);
     
     QGridLayout* graphLayout = new QGridLayout(this);
     graphLayout->addWidget(MarketDepthView);
