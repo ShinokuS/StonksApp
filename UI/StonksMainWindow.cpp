@@ -2,8 +2,6 @@
 
 #include <QtCharts/QChartView>
 
-#include <QTableWidget>
-#include <QTableWidgetItem>
 #include <QHeaderView>
 #include <QGridLayout>
 
