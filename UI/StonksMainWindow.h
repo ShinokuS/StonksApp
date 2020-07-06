@@ -16,7 +16,7 @@ class StonksMainWindow : public QMainWindow
 public:
     StonksMainWindow(QWidget* parent = Q_NULLPTR);
 
-    void placeMarketDepthGraph();
+    void placeMarketDepthGraph(OrderBook* orderBook);
     void placeOrderBookTable();
 
 private:
