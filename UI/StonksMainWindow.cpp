@@ -15,8 +15,9 @@ StonksMainWindow::StonksMainWindow(QWidget *parent)
     ui.setupUi(this);
 }
 
-void StonksMainWindow::placeMarketDepthGraph(OrderBook* orderBook)
+void StonksMainWindow::placeMarketDepthGraph()
 {
+    auto orderBook = OrderBook::getTestOrderBook();
     auto graph = GraphsBuilder::buildMarketDepthGraph(orderBook);
 
     QChartView* MarketDepthView = new QChartView(graph);
