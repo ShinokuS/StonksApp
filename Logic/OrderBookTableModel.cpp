@@ -3,7 +3,6 @@
 
 #include <QSize>
 #include <QBrush>
-#include <QScrollBar>
 
 #define price priceAsQReal(iter->first)
 #define nOrders qreal(iter->second)
