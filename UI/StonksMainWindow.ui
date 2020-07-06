@@ -7,29 +7,42 @@
     <x>0</x>
     <y>0</y>
     <width>950</width>
-    <height>500</height>
+    <height>538</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>StonksApp</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTableView" name="tableView">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>251</width>
-      <height>481</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QWidget" name="graphWidget" native="true">
     <property name="geometry">
      <rect>
       <x>270</x>
       <y>10</y>
       <width>671</width>
+      <height>521</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="centerButton">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>500</y>
+      <width>251</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Center</string>
+    </property>
+   </widget>
+   <widget class="QTableView" name="tableView">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>11</y>
+      <width>251</width>
       <height>481</height>
      </rect>
     </property>

@@ -14,10 +14,17 @@ StonksMainWindow::StonksMainWindow(OrderBook* relatedOrderBook, QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    connect(ui.centerButton, SIGNAL(clicked()), this, SLOT(centerOrderBookTable()));
+    model = new OrderBookTableModel(this);
     this->relatedOrderBook = relatedOrderBook;
 
     this->placeMarketDepthGraph();
     this->placeOrderBookTable();
+}
+
+void StonksMainWindow::centerOrderBookTable()
+{
+    ui.tableView->scrollTo(StonksMainWindow::model->index(model->returnCenterIndex() - 2, 0), QAbstractItemView::PositionAtCenter);
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
@@ -35,13 +42,13 @@ void StonksMainWindow::placeMarketDepthGraph()
 
 void StonksMainWindow::placeOrderBookTable()
 {
-    auto model = new OrderBookTableModel(this);
-    model->initOrderBookTableStruct(relatedOrderBook);
+    StonksMainWindow::model->initOrderBookTableStruct(relatedOrderBook);
     ui.tableView->setModel(model);
-    
 
     ui.tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui.tableView->verticalHeader()->hide();
-    ui.tableView->scrollTo(model->index(model->returnCenterIndex()-2,0), QAbstractItemView::PositionAtCenter);
+
+    StonksMainWindow::centerOrderBookTable();
+
 }
