@@ -9,10 +9,14 @@
 
 using namespace QtCharts;
 
+// parent по умолчанию описан в хэдере (Q_NULLPTR короч)
 StonksMainWindow::StonksMainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+
+    this->placeMarketDepthGraph();
+    this->placeOrderBookTable();
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
