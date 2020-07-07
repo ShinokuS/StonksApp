@@ -57,7 +57,7 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
     iter = asks->end();
     iter--;
     qreal firstAskPrice = priceAsQReal(asks->begin()->first);
-    *asksDownLineSeries << QPointF(0, firstBidPrice) << QPointF(0, price);
+    *asksDownLineSeries << QPointF(0, firstAskPrice) << QPointF(0, price);
 
     // Получаем полную форму каждой половины графика по кривой сверху и дну снизу.
     QAreaSeries* bidsSeries = new QAreaSeries(bidsUpLineSeries, bidsDownLineSeries);
