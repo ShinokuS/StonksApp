@@ -4,10 +4,8 @@
 
 int main(int argc, char *argv[])
 {
-    auto orderBook = OrderBook::getTestOrderBook();
-
     QApplication a(argc, argv);
-    StonksMainWindow mainWindow(orderBook);
+    StonksMainWindow mainWindow;
 
     mainWindow.show();
     return a.exec();

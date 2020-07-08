@@ -1,6 +1,4 @@
 ﻿#include "GraphsBuilder.h"
-#include "OrderBook.h"
-#include "..\Utility\PriceAsQReal.h"
 
 #include <QtGlobal>
 #include <QtCharts/QLineSeries>
@@ -8,19 +6,7 @@
 
 using namespace QtCharts;
 
-// iter->first само по себе длинновато и не понятно,
-// а его ещё надо конвертнуть в qreal и разделить на 100
-#define price priceAsQReal(iter->first)
-
-// тут аналогично, но без деления
-#define nOrders qreal(iter->second)
-
-
-MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
-
-    // Краткие псевдонимы для мапов.
-    std::map<long long, int>* bids = &orderBook->bidsAmountForPrice;
-    std::map<long long, int>* asks = &orderBook->asksAmountForPrice;
+MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orderBook) {
 
     // Объявляем серии для хранения точек для линий графика.
     QLineSeries* bidsUpLineSeries = new QLineSeries();
@@ -28,36 +14,30 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
     QLineSeries* asksUpLineSeries = new QLineSeries();
     QLineSeries* asksDownLineSeries = new QLineSeries();
 
-    // Получаем координаты из одного мапа.
-    qreal prevY = 0;
-    for (auto iter = asks->begin(); iter != asks->end(); iter++) {
-        asksUpLineSeries->append(prevY, price);
-        asksUpLineSeries->append(prevY + nOrders, price);
-        prevY += iter->second;
-    }
-
-    // И из другого.
-    auto iter = bids->end();
-    iter--;
-    prevY = iter->second;
-    bidsUpLineSeries->append(nOrders, price);
+    // Обрабатываем данные с модели
+    auto iter = orderBook->rows.end();
+    do iter--; while (!iter->askMarker);
+    auto centralIter = iter;
+    qreal prevY = iter->quantity;
+    asksUpLineSeries->append(prevY, iter->prices);
     do {
         iter--;
-        bidsUpLineSeries->append(prevY, price);
-        bidsUpLineSeries->append(prevY + nOrders, price);
-        prevY += iter->second;
-    } while (iter != bids->begin());
+        asksUpLineSeries->append(prevY, iter->prices);
+        asksUpLineSeries->append(prevY + iter->quantity, iter->prices);
+        prevY += iter->quantity;
+    } while (iter!=orderBook->rows.begin());
+    *asksDownLineSeries << QPointF(0, centralIter->prices) << QPointF(0, iter->prices);
 
-    // Рисуем дно каждой половины графика.
-    iter = bids->end();
+    iter = centralIter++;
+    prevY = iter->quantity;
+    iter++;
+    for (; iter != orderBook->rows.end(); iter++) {
+        bidsUpLineSeries->append(prevY, iter->prices);
+        bidsUpLineSeries->append(prevY + iter->quantity, iter->prices);
+        prevY += iter->quantity;
+    }
     iter--;
-    qreal firstBidPrice = priceAsQReal(bids->begin()->first);
-    *bidsDownLineSeries << QPointF(0,price) << QPointF(0, firstBidPrice);
-    
-    iter = asks->end();
-    iter--;
-    qreal firstAskPrice = priceAsQReal(asks->begin()->first);
-    *asksDownLineSeries << QPointF(0, firstAskPrice) << QPointF(0, price);
+    *bidsDownLineSeries << QPointF(0, centralIter->prices) << QPointF(0, iter->prices);
 
     // Получаем полную форму каждой половины графика по кривой сверху и дну снизу.
     QAreaSeries* bidsSeries = new QAreaSeries(bidsUpLineSeries, bidsDownLineSeries);

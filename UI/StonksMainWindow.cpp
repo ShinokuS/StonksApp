@@ -1,20 +1,19 @@
 ﻿#include "StonksMainWindow.h"
 
 #include <QtCharts/QChartView>
-
 #include <QHeaderView>
 #include <QGridLayout>
 
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBook* relatedOrderBook, QWidget *parent)
+StonksMainWindow::StonksMainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
     connect(ui.centerButton, SIGNAL(clicked()), this, SLOT(centerOrderBookTable()));
     model = new OrderBookTableModel(this);
-    this->relatedOrderBook = relatedOrderBook;
+    StonksMainWindow::model->getTestOrderBookTable();
 
     this->placeMarketDepthGraph();
     this->placeOrderBookTable();
@@ -27,7 +26,7 @@ void StonksMainWindow::centerOrderBookTable()
 
 void StonksMainWindow::placeMarketDepthGraph()
 {
-    auto graph = GraphsBuilder::buildMarketDepthGraph(relatedOrderBook);
+    auto graph = GraphsBuilder::buildMarketDepthGraph(model);
 
     QChartView* MarketDepthView = new QChartView(graph);
     MarketDepthView->setRenderHint(QPainter::Antialiasing);
@@ -38,13 +37,10 @@ void StonksMainWindow::placeMarketDepthGraph()
     QGridLayout* graphLayout = new QGridLayout(this);
     graphLayout->addWidget(MarketDepthView);
     ui.graphWidget->setLayout(graphLayout);
-
 }
 
 void StonksMainWindow::placeOrderBookTable()
 {
-    //StonksMainWindow::model->initOrderBookTableStruct(relatedOrderBook);
-    StonksMainWindow::model->getTestOrderBookTable();
     ui.tableView->setModel(model);
 
     ui.tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -52,5 +48,4 @@ void StonksMainWindow::placeOrderBookTable()
     ui.tableView->verticalHeader()->hide();
 
     StonksMainWindow::centerOrderBookTable();
-
 }

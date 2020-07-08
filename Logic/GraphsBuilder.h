@@ -1,11 +1,10 @@
 ﻿#pragma once
 
 #include "../UI/Graphs/MarketDepthGraph.h"
-#include "OrderBook.h"
+#include "OrderBookTableModel.h"
 
 class GraphsBuilder
 {
 public:
-	static MarketDepthGraph* buildMarketDepthGraph(OrderBook* orderBook);
-
+	static MarketDepthGraph* buildMarketDepthGraph(OrderBookTableModel* orderBook);
 };

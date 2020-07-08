@@ -1,12 +1,7 @@
 ﻿#include "OrderBookTableModel.h"
-#include "..\Utility\PriceAsQReal.h"
 
 #include <QSize>
 #include <QBrush>
-
-
-#define price priceAsQReal(iter->first)
-#define nOrders qreal(iter->second)
 
 OrderBookTableModel::OrderBookTableModel(QObject* parent)
     : QAbstractTableModel(parent)
@@ -57,33 +52,7 @@ QVariant OrderBookTableModel::data(const QModelIndex& index, int role) const
     }
     return QVariant();
 }
-/*
-void OrderBookTableModel::initOrderBookTableStruct(OrderBook* orderBook)
-{
-    OrderBookTableStruct rowOrderBook;
-    std::map<long long, int>* bids = &orderBook->bidsAmountForPrice;
-    std::map<long long, int>* asks = &orderBook->asksAmountForPrice;
-    
-    OrderBookTableModel::centerIndex = 0;
-    rowOrderBook.askMarker = true;
-    auto iter = asks->end();
-    do {
-        iter--;
-        rowOrderBook.prices = price;
-        rowOrderBook.quantity = nOrders;
-        rows.append(std::move(rowOrderBook));
-        OrderBookTableModel::centerIndex++;
-    } while (iter != asks->begin());
-    rowOrderBook.askMarker = false;
-    iter = bids->end();
-    do {
-        iter--;
-        rowOrderBook.prices = price;
-        rowOrderBook.quantity = nOrders;
-        rows.append(std::move(rowOrderBook));
-    } while (iter != bids->begin());
-}
-*/
+
 int randomBetweens(int begin, int end)
 {
     return begin + rand() % (end - begin);
