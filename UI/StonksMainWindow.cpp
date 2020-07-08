@@ -43,7 +43,8 @@ void StonksMainWindow::placeMarketDepthGraph()
 
 void StonksMainWindow::placeOrderBookTable()
 {
-    StonksMainWindow::model->initOrderBookTableStruct(relatedOrderBook);
+    //StonksMainWindow::model->initOrderBookTableStruct(relatedOrderBook);
+    StonksMainWindow::model->getTestOrderBookTable();
     ui.tableView->setModel(model);
 
     ui.tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);

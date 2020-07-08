@@ -4,6 +4,7 @@
 #include <QSize>
 #include <QBrush>
 
+
 #define price priceAsQReal(iter->first)
 #define nOrders qreal(iter->second)
 
@@ -56,7 +57,7 @@ QVariant OrderBookTableModel::data(const QModelIndex& index, int role) const
     }
     return QVariant();
 }
-
+/*
 void OrderBookTableModel::initOrderBookTableStruct(OrderBook* orderBook)
 {
     OrderBookTableStruct rowOrderBook;
@@ -81,6 +82,45 @@ void OrderBookTableModel::initOrderBookTableStruct(OrderBook* orderBook)
         rowOrderBook.quantity = nOrders;
         rows.append(std::move(rowOrderBook));
     } while (iter != bids->begin());
+}
+*/
+int randomBetweens(int begin, int end)
+{
+    return begin + rand() % (end - begin);
+}
+
+void OrderBookTableModel::getTestOrderBookTable(unsigned int seed) 
+{
+    srand(seed);
+    int nAsks = randomBetweens(20, 100);
+    int nBids = randomBetweens(20, 100);
+    long long minBidPrice = 100;
+    long long minAskPrice = 10000;
+    long long maxAskPrice = 20000;
+    int maxAmountInOrder = 10000;
+
+    OrderBookTableStruct rowOrderBook;
+    OrderBookTableModel::centerIndex = 0;
+
+    rowOrderBook.askMarker = true;
+    for (int i = 0; i < nAsks; i++) {
+        rowOrderBook.prices = qreal(randomBetweens(minAskPrice, maxAskPrice))/100;
+        rowOrderBook.quantity = qreal(randomBetweens(1, maxAmountInOrder));
+        if (rows.indexOf(rowOrderBook) == -1) {
+            rows.append(std::move(rowOrderBook));
+            OrderBookTableModel::centerIndex++;
+        }
+    }
+
+    rowOrderBook.askMarker = false;
+    for (int i = 0; i < nBids; i++) {
+        rowOrderBook.prices = qreal(randomBetweens(minBidPrice, minAskPrice))/100;
+        rowOrderBook.quantity = qreal(randomBetweens(1, maxAmountInOrder));
+        if (rows.indexOf(rowOrderBook) == -1) {
+            rows.append(std::move(rowOrderBook));
+        }
+    }
+    std::sort(rows.begin(), rows.end());
 }
 
 int OrderBookTableModel::returnCenterIndex()
