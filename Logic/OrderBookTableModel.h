@@ -38,7 +38,7 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
-    void fillRandomly(unsigned int seed = time(0));
+    static OrderBookTableModel* getRandomInstance(unsigned int seed = time(0));
     int returnCenterIndex();
 
     // интерфейс для добавления элементов

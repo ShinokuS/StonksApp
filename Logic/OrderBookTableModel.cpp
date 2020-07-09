@@ -58,8 +58,9 @@ int randomBetween(int begin, int end)
     return begin + rand() % (end - begin);
 }
 
-void OrderBookTableModel::fillRandomly(unsigned int seed) 
+OrderBookTableModel* OrderBookTableModel::getRandomInstance(unsigned int seed)
 {
+    // настройки рандома
     srand(seed);
     int nBids = randomBetween(20, 100);
     int nAsks = randomBetween(20, 100);
@@ -68,23 +69,26 @@ void OrderBookTableModel::fillRandomly(unsigned int seed)
     long long maxAskPrice = 20000;
     int maxAmountInOrder = 10000;
 
-    OrderBookTableModel::centerIndex = 0;
+    auto randomOrderBook = new OrderBookTableModel;
+    randomOrderBook->centerIndex = 0;
 
     for (int i = 0; i < nBids; i++) {
         qreal price = randomBetween(minBidPrice, minAskPrice);
         price /= 100; // перевод из копеек
         qreal quantity = randomBetween(1, maxAmountInOrder);
-        addBid(price, quantity);
+        randomOrderBook->addBid(price, quantity);
     }
 
     for (int i = 0; i < nAsks; i++) {
         qreal price = randomBetween(minAskPrice, maxAskPrice);
         price /= 100; // перевод из копеек
         qreal quantity = randomBetween(1, maxAmountInOrder);
-        addAsk(price, quantity);
+        randomOrderBook->addAsk(price, quantity);
     }
 
-    std::sort(rows.begin(), rows.end());
+    std::sort(randomOrderBook->rows.begin(), randomOrderBook->rows.end());
+
+    return randomOrderBook;
 }
 
 int OrderBookTableModel::returnCenterIndex()

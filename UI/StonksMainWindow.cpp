@@ -12,8 +12,9 @@ StonksMainWindow::StonksMainWindow(QWidget *parent)
 {
     ui.setupUi(this);
     connect(ui.centerButton, SIGNAL(clicked()), this, SLOT(centerOrderBookTable()));
-    model = new OrderBookTableModel(this);
-    model->fillRandomly();
+    
+    model = OrderBookTableModel::getRandomInstance();
+    model->setParent(this);
 
     this->placeMarketDepthGraph();
     this->placeOrderBookTable();
