@@ -6,28 +6,28 @@ class OrderBookTableModel : public QAbstractTableModel
     Q_OBJECT
 public:
 
-    struct OrderBookTableStruct {
-        qreal prices;
+    struct Order {
+        qreal price;
         qreal quantity;
         bool askMarker;
-        bool operator==(const OrderBookTableStruct& s) {
-            if (this->prices != s.prices) {
+        bool operator==(const Order& other) {
+            if (this->price != other.price) {
                 return false;
             }
-            if (this->quantity != s.quantity) {
+            if (this->quantity != other.quantity) {
                 return false;
             }
-            if (this->askMarker != s.askMarker) {
+            if (this->askMarker != other.askMarker) {
                 return false;
             }
             return true;
         }
-        bool operator<(const OrderBookTableStruct& s) {
-            return this->prices> s.prices;
+        bool operator<(const Order& other) {
+            return this->price > other.price;
         }
     };
     int centerIndex;
-    QList<OrderBookTableStruct> rows;
+    QList<Order> rows;
 
     OrderBookTableModel(QObject* parent = nullptr);
 

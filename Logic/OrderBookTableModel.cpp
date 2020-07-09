@@ -39,7 +39,7 @@ QVariant OrderBookTableModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole:
     case Qt::EditRole:
         switch (index.column()) {
-        case 0: return row.prices;
+        case 0: return row.price;
         case 1: return row.quantity;
         }
     case Qt::TextAlignmentRole:
@@ -53,7 +53,7 @@ QVariant OrderBookTableModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-int randomBetweens(int begin, int end)
+int randomBetween(int begin, int end)
 {
     return begin + rand() % (end - begin);
 }
@@ -61,32 +61,32 @@ int randomBetweens(int begin, int end)
 void OrderBookTableModel::getTestOrderBookTable(unsigned int seed) 
 {
     srand(seed);
-    int nAsks = randomBetweens(20, 100);
-    int nBids = randomBetweens(20, 100);
+    int nAsks = randomBetween(20, 100);
+    int nBids = randomBetween(20, 100);
     long long minBidPrice = 100;
     long long minAskPrice = 10000;
     long long maxAskPrice = 20000;
     int maxAmountInOrder = 10000;
 
-    OrderBookTableStruct rowOrderBook;
+    Order order;
     OrderBookTableModel::centerIndex = 0;
 
-    rowOrderBook.askMarker = true;
+    order.askMarker = true;
     for (int i = 0; i < nAsks; i++) {
-        rowOrderBook.prices = qreal(randomBetweens(minAskPrice, maxAskPrice))/100;
-        rowOrderBook.quantity = qreal(randomBetweens(1, maxAmountInOrder));
-        if (rows.indexOf(rowOrderBook) == -1) {
-            rows.append(std::move(rowOrderBook));
+        order.price = qreal(randomBetween(minAskPrice, maxAskPrice))/100;
+        order.quantity = qreal(randomBetween(1, maxAmountInOrder));
+        if (rows.indexOf(order) == -1) {
+            rows.append(std::move(order));
             OrderBookTableModel::centerIndex++;
         }
     }
 
-    rowOrderBook.askMarker = false;
+    order.askMarker = false;
     for (int i = 0; i < nBids; i++) {
-        rowOrderBook.prices = qreal(randomBetweens(minBidPrice, minAskPrice))/100;
-        rowOrderBook.quantity = qreal(randomBetweens(1, maxAmountInOrder));
-        if (rows.indexOf(rowOrderBook) == -1) {
-            rows.append(std::move(rowOrderBook));
+        order.price = qreal(randomBetween(minBidPrice, minAskPrice))/100;
+        order.quantity = qreal(randomBetween(1, maxAmountInOrder));
+        if (rows.indexOf(order) == -1) {
+            rows.append(std::move(order));
         }
     }
     std::sort(rows.begin(), rows.end());
