@@ -86,7 +86,9 @@ OrderBookTableModel* OrderBookTableModel::getRandomInstance(unsigned int seed)
         randomOrderBook->addAsk(price, quantity);
     }
 
-    std::sort(randomOrderBook->rows.begin(), randomOrderBook->rows.end());
+    // строки таблицы будут идти вниз от дорогих ордеров к дешёвым
+    std::sort(randomOrderBook->rows.begin(), randomOrderBook->rows.end(),
+        [](Order& left, Order& right) { return left.price > right.price; });
 
     return randomOrderBook;
 }
