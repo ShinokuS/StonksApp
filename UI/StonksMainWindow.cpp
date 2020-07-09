@@ -7,13 +7,13 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(QWidget *parent)
+StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
     connect(ui.centerButton, SIGNAL(clicked()), this, SLOT(centerOrderBookTable()));
     
-    model = OrderBookTableModel::getRandomInstance();
+    model = orderBookTableModel;
     model->setParent(this);
 
     this->placeMarketDepthGraph();

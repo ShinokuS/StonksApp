@@ -4,8 +4,10 @@
 
 int main(int argc, char *argv[])
 {
+    auto model = OrderBookTableModel::getRandomInstance();
+
     QApplication a(argc, argv);
-    StonksMainWindow mainWindow;
+    StonksMainWindow mainWindow(model);
 
     mainWindow.show();
     return a.exec();

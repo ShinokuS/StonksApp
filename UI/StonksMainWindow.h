@@ -14,7 +14,7 @@ class StonksMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    StonksMainWindow(QWidget* parent = Q_NULLPTR);
+    StonksMainWindow(OrderBookTableModel* orderBookTableModel, QWidget* parent = Q_NULLPTR);
     
 private slots:
     void centerOrderBookTable();
