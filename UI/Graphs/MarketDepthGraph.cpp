@@ -26,12 +26,12 @@ MarketDepthGraph::MarketDepthGraph(QAreaSeries* bidsSeries, QAreaSeries* asksSer
 
     // Красивое заполнение прощади под линиями:
     QLinearGradient gradient(QPointF(0, 0), QPointF(0, 1));
-    gradient.setColorAt(0.0, 0x26f626);
-    gradient.setColorAt(1.0, 0x1e671e);
+    gradient.setColorAt(0.0, 0x7ce670);
+    gradient.setColorAt(1.0, 0x7ce670);
     gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
     bidsSeries->setBrush(gradient);
-    gradient.setColorAt(0.0, 0xe60000);
-    gradient.setColorAt(1.0, 0x5c0006);
+    gradient.setColorAt(0.0, 0xff6161);
+    gradient.setColorAt(1.0, 0xff6161);
     asksSeries->setBrush(gradient);
 
     // Оси:

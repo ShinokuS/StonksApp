@@ -92,18 +92,16 @@
     <QtUic Include="UI\StonksMainWindow.ui" />
     <QtMoc Include="UI\StonksMainWindow.h" />
     <ClCompile Include="Logic\GraphsBuilder.cpp" />
-    <ClCompile Include="Logic\OrderBook.cpp" />
+    <ClCompile Include="Logic\Order.cpp" />
     <ClCompile Include="Logic\OrderBookTableModel.cpp" />
-    <ClCompile Include="Utility\PriceAsQReal.cpp" />
     <ClCompile Include="UI\Graphs\MarketDepthGraph.cpp" />
     <ClCompile Include="UI\StonksMainWindow.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logic\GraphsBuilder.h" />
-    <ClInclude Include="Logic\OrderBook.h" />
     <QtMoc Include="Logic\OrderBookTableModel.h" />
-    <ClInclude Include="Utility\PriceAsQReal.h" />
+    <ClInclude Include="Logic\Order.h" />
     <ClInclude Include="UI\Graphs\MarketDepthGraph.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

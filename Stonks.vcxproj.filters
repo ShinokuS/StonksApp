@@ -30,16 +30,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Logic\OrderBook.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Logic\GraphsBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UI\Graphs\MarketDepthGraph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\PriceAsQReal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UI\StonksMainWindow.cpp">
@@ -48,18 +42,18 @@
     <ClCompile Include="Logic\OrderBookTableModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Logic\Order.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Logic\OrderBook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UI\Graphs\MarketDepthGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logic\GraphsBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\PriceAsQReal.h">
+    <ClInclude Include="Logic\Order.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

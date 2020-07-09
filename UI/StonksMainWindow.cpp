@@ -1,22 +1,20 @@
 ﻿#include "StonksMainWindow.h"
 
 #include <QtCharts/QChartView>
-
-#include <QTableWidget>
-#include <QTableWidgetItem>
 #include <QHeaderView>
 #include <QGridLayout>
 
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBook* relatedOrderBook, QWidget *parent)
+StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
     connect(ui.centerButton, SIGNAL(clicked()), this, SLOT(centerOrderBookTable()));
-    model = new OrderBookTableModel(this);
-    this->relatedOrderBook = relatedOrderBook;
+    
+    model = orderBookTableModel;
+    model->setParent(this);
 
     this->placeMarketDepthGraph();
     this->placeOrderBookTable();
@@ -29,20 +27,21 @@ void StonksMainWindow::centerOrderBookTable()
 
 void StonksMainWindow::placeMarketDepthGraph()
 {
-    auto graph = GraphsBuilder::buildMarketDepthGraph(relatedOrderBook);
+    auto graph = GraphsBuilder::buildMarketDepthGraph(model);
 
     QChartView* MarketDepthView = new QChartView(graph);
     MarketDepthView->setRenderHint(QPainter::Antialiasing);
+
+    // Пока кривой зум, в будущем возможно добавлю нормальный
+    //MarketDepthView->setRubberBand(QChartView::VerticalRubberBand);
     
     QGridLayout* graphLayout = new QGridLayout(this);
     graphLayout->addWidget(MarketDepthView);
     ui.graphWidget->setLayout(graphLayout);
-
 }
 
 void StonksMainWindow::placeOrderBookTable()
 {
-    StonksMainWindow::model->initOrderBookTableStruct(relatedOrderBook);
     ui.tableView->setModel(model);
 
     ui.tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -50,5 +49,4 @@ void StonksMainWindow::placeOrderBookTable()
     ui.tableView->verticalHeader()->hide();
 
     StonksMainWindow::centerOrderBookTable();
-
 }

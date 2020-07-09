@@ -1,11 +1,7 @@
 ﻿#include "OrderBookTableModel.h"
-#include "..\Utility\PriceAsQReal.h"
 
 #include <QSize>
 #include <QBrush>
-
-#define price priceAsQReal(iter->first)
-#define nOrders qreal(iter->second)
 
 OrderBookTableModel::OrderBookTableModel(QObject* parent)
     : QAbstractTableModel(parent)
@@ -43,7 +39,7 @@ QVariant OrderBookTableModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole:
     case Qt::EditRole:
         switch (index.column()) {
-        case 0: return row.prices;
+        case 0: return row.price;
         case 1: return row.quantity;
         }
     case Qt::TextAlignmentRole:
@@ -57,30 +53,40 @@ QVariant OrderBookTableModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-void OrderBookTableModel::initOrderBookTableStruct(OrderBook* orderBook)
+int randomBetween(int begin, int end)
 {
-    OrderBookTableStruct rowOrderBook;
-    std::map<long long, int>* bids = &orderBook->bidsAmountForPrice;
-    std::map<long long, int>* asks = &orderBook->asksAmountForPrice;
-    
-    OrderBookTableModel::centerIndex = 0;
-    rowOrderBook.askMarker = true;
-    auto iter = asks->end();
-    do {
-        iter--;
-        rowOrderBook.prices = price;
-        rowOrderBook.quantity = nOrders;
-        rows.append(std::move(rowOrderBook));
-        OrderBookTableModel::centerIndex++;
-    } while (iter != asks->begin());
-    rowOrderBook.askMarker = false;
-    iter = bids->end();
-    do {
-        iter--;
-        rowOrderBook.prices = price;
-        rowOrderBook.quantity = nOrders;
-        rows.append(std::move(rowOrderBook));
-    } while (iter != bids->begin());
+    return begin + rand() % (end - begin);
+}
+
+OrderBookTableModel* OrderBookTableModel::getRandomInstance(unsigned int seed)
+{
+    // настройки рандома
+    srand(seed);
+    int nBids = randomBetween(20, 100);
+    int nAsks = randomBetween(20, 100);
+    long long minBidPrice = 100;
+    long long minAskPrice = 10000;
+    long long maxAskPrice = 20000;
+    int maxAmountInOrder = 10000;
+
+    auto randomOrderBook = new OrderBookTableModel;
+    randomOrderBook->centerIndex = 0;
+
+    for (int i = 0; i < nBids; i++) {
+        qreal price = randomBetween(minBidPrice, minAskPrice);
+        price /= 100; // перевод из копеек
+        qreal quantity = randomBetween(1, maxAmountInOrder);
+        randomOrderBook->addBid(price, quantity);
+    }
+
+    for (int i = 0; i < nAsks; i++) {
+        qreal price = randomBetween(minAskPrice, maxAskPrice);
+        price /= 100; // перевод из копеек
+        qreal quantity = randomBetween(1, maxAmountInOrder);
+        randomOrderBook->addAsk(price, quantity);
+    }
+
+    return randomOrderBook;
 }
 
 int OrderBookTableModel::returnCenterIndex()
@@ -97,4 +103,50 @@ bool OrderBookTableModel::setData(const QModelIndex& index, const QVariant&, int
 Qt::ItemFlags OrderBookTableModel::flags(const QModelIndex& index) const
 {
     return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
+}
+
+// НИЖЕ, ОБА МЕТОДА ВСТАВКИ ТРАТЯТ ПО O(n) НА ВСТАВКУ!
+// НАДЕЮСЬ, ЭТО ВРЕМЕННОЕ РЕШЕНИЕ!
+
+void OrderBookTableModel::addBid(qreal price, qreal amount)
+{
+    Order orderToAdd = { price, amount, false };
+    Order reference = { price, 0, false }; // костыль из-за интерфейса STL
+
+    // бинарный поиск позиции с ценой не меньше указанной
+    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
+        [reference](Order& element, const Order reference) { return element.price > reference.price; });
+
+    // если это будет новая самая дешёвая позиция, то создаём её в конце списка
+    if (iter == rows.end()) {
+        rows.append(std::move(orderToAdd));
+    }
+    // если не самая, но конкретно такой цены нет, то создаём её в нужном месте
+    else if (iter->price < price) {
+        rows.insert(iter, std::move(orderToAdd));
+    }
+    // если позиция есть, то приплюсовываем туда количество
+    else {
+        iter->quantity += amount;
+    }
+}
+
+void OrderBookTableModel::addAsk(qreal price, qreal amount)
+{
+    Order orderToAdd = { price, amount, true };
+    Order reference = { price, 0, true }; // костыль из-за интерфейса STL
+
+    // бинарный поиск позиции с ценой не меньше указанной
+    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
+        [reference](Order& element, const Order reference) { return element.price > reference.price; });
+
+    // если позиции с такой ценой нет, то создаём её в нужном месте
+    if (iter->price < price) {
+        rows.insert(iter, std::move(orderToAdd));
+        centerIndex++;
+    }
+    // если позиция есть, то приплюсовываем туда количество
+    else {
+        iter->quantity += amount;
+    }
 }
