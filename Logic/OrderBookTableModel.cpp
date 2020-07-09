@@ -61,34 +61,29 @@ int randomBetween(int begin, int end)
 void OrderBookTableModel::getTestOrderBookTable(unsigned int seed) 
 {
     srand(seed);
-    int nAsks = randomBetween(20, 100);
     int nBids = randomBetween(20, 100);
+    int nAsks = randomBetween(20, 100);
     long long minBidPrice = 100;
     long long minAskPrice = 10000;
     long long maxAskPrice = 20000;
     int maxAmountInOrder = 10000;
 
-    Order order;
     OrderBookTableModel::centerIndex = 0;
 
-    order.askMarker = true;
-    for (int i = 0; i < nAsks; i++) {
-        order.price = qreal(randomBetween(minAskPrice, maxAskPrice))/100;
-        order.quantity = qreal(randomBetween(1, maxAmountInOrder));
-        if (rows.indexOf(order) == -1) {
-            rows.append(std::move(order));
-            OrderBookTableModel::centerIndex++;
-        }
+    for (int i = 0; i < nBids; i++) {
+        qreal price = randomBetween(minBidPrice, minAskPrice);
+        price /= 100; // перевод из копеек
+        qreal quantity = randomBetween(1, maxAmountInOrder);
+        addBid(price, quantity);
     }
 
-    order.askMarker = false;
-    for (int i = 0; i < nBids; i++) {
-        order.price = qreal(randomBetween(minBidPrice, minAskPrice))/100;
-        order.quantity = qreal(randomBetween(1, maxAmountInOrder));
-        if (rows.indexOf(order) == -1) {
-            rows.append(std::move(order));
-        }
+    for (int i = 0; i < nAsks; i++) {
+        qreal price = randomBetween(minAskPrice, maxAskPrice);
+        price /= 100; // перевод из копеек
+        qreal quantity = randomBetween(1, maxAmountInOrder);
+        addAsk(price, quantity);
     }
+
     std::sort(rows.begin(), rows.end());
 }
 
@@ -106,4 +101,17 @@ bool OrderBookTableModel::setData(const QModelIndex& index, const QVariant&, int
 Qt::ItemFlags OrderBookTableModel::flags(const QModelIndex& index) const
 {
     return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
+}
+
+void OrderBookTableModel::addBid(qreal price, qreal amount)
+{
+    Order order = { price, amount, false };
+    rows.append(std::move(order));
+}
+
+void OrderBookTableModel::addAsk(qreal price, qreal amount)
+{
+    Order order = { price, amount, true };
+    rows.append(std::move(order));
+    centerIndex++;
 }

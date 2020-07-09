@@ -41,6 +41,10 @@ public:
     void getTestOrderBookTable(unsigned int seed = time(0));
     int returnCenterIndex();
 
+    // интерфейс для добавления элементов
+    void addBid(qreal price, qreal amount);
+    void addAsk(qreal price, qreal amount);
+
 private:
     QStringList headers;
 };
