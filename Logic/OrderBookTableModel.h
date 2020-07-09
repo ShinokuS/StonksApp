@@ -1,31 +1,13 @@
 ﻿#pragma once
+
 #include <QAbstractTableModel>
+
+#include "Order.h"
 
 class OrderBookTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-
-    struct Order {
-        qreal price;
-        qreal quantity;
-        bool askMarker;
-        bool operator==(const Order& other) {
-            if (this->price != other.price) {
-                return false;
-            }
-            if (this->quantity != other.quantity) {
-                return false;
-            }
-            if (this->askMarker != other.askMarker) {
-                return false;
-            }
-            return true;
-        }
-        bool operator<(const Order& other) {
-            return this->price > other.price;
-        }
-    };
     int centerIndex;
     QList<Order> rows;
 
