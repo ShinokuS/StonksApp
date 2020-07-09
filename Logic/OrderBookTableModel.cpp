@@ -58,7 +58,7 @@ int randomBetween(int begin, int end)
     return begin + rand() % (end - begin);
 }
 
-void OrderBookTableModel::getTestOrderBookTable(unsigned int seed) 
+void OrderBookTableModel::fillRandomly(unsigned int seed) 
 {
     srand(seed);
     int nBids = randomBetween(20, 100);
