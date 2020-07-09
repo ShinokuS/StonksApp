@@ -23,7 +23,9 @@ public:
     static OrderBookTableModel* getRandomInstance(unsigned int seed = time(0));
     int returnCenterIndex();
 
-    // интерфейс для добавления элементов
+    // Интерфейс для добавления элементов.
+    // Вставляют сразу на место, но за O(n). Мб это можно будет улучшить.
+    // Не заменой rows на связный список! Ибо доступ по индексу тоже не должен тупить.
     void addBid(qreal price, qreal amount);
     void addAsk(qreal price, qreal amount);
 

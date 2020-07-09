@@ -105,6 +105,9 @@ Qt::ItemFlags OrderBookTableModel::flags(const QModelIndex& index) const
     return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
 }
 
+// НИЖЕ, ОБА МЕТОДА ВСТАВКИ ТРАТЯТ ПО O(n) НА ВСТАВКУ!
+// НАДЕЮСЬ, ЭТО ВРЕМЕННОЕ РЕШЕНИЕ!
+
 void OrderBookTableModel::addBid(qreal price, qreal amount)
 {
     Order orderToAdd = { price, amount, false };
