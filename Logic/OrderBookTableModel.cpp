@@ -86,10 +86,6 @@ OrderBookTableModel* OrderBookTableModel::getRandomInstance(unsigned int seed)
         randomOrderBook->addAsk(price, quantity);
     }
 
-    // строки таблицы будут идти вниз от дорогих ордеров к дешёвым
-    std::sort(randomOrderBook->rows.begin(), randomOrderBook->rows.end(),
-        [](Order& left, Order& right) { return left.price > right.price; });
-
     return randomOrderBook;
 }
 
@@ -111,13 +107,43 @@ Qt::ItemFlags OrderBookTableModel::flags(const QModelIndex& index) const
 
 void OrderBookTableModel::addBid(qreal price, qreal amount)
 {
-    Order order = { price, amount, false };
-    rows.append(std::move(order));
+    Order orderToAdd = { price, amount, false };
+    Order reference = { price, 0, false }; // костыль из-за интерфейса STL
+
+    // бинарный поиск позиции с ценой не меньше указанной
+    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
+        [reference](Order& element, const Order reference) { return element.price > reference.price; });
+
+    // если это будет новая самая дешёвая позиция, то создаём её в конце списка
+    if (iter == rows.end()) {
+        rows.append(std::move(orderToAdd));
+    }
+    // если не самая, но конкретно такой цены нет, то создаём её в нужном месте
+    else if (iter->price < price) {
+        rows.insert(iter, std::move(orderToAdd));
+    }
+    // если позиция есть, то приплюсовываем туда количество
+    else {
+        iter->quantity += amount;
+    }
 }
 
 void OrderBookTableModel::addAsk(qreal price, qreal amount)
 {
-    Order order = { price, amount, true };
-    rows.append(std::move(order));
-    centerIndex++;
+    Order orderToAdd = { price, amount, true };
+    Order reference = { price, 0, true }; // костыль из-за интерфейса STL
+
+    // бинарный поиск позиции с ценой не меньше указанной
+    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
+        [reference](Order& element, const Order reference) { return element.price > reference.price; });
+
+    // если позиции с такой ценой нет, то создаём её в нужном месте
+    if (iter->price < price) {
+        rows.insert(iter, std::move(orderToAdd));
+        centerIndex++;
+    }
+    // если позиция есть, то приплюсовываем туда количество
+    else {
+        iter->quantity += amount;
+    }
 }
