@@ -23,12 +23,21 @@ public:
     static OrderBookTableModel* getRandomInstance(unsigned int seed = time(0));
     int returnCenterIndex();
 
-    // Интерфейс для добавления элементов.
-    // Вставляют сразу на место, но за O(n). Мб это можно будет улучшить.
-    // Не заменой rows на связный список! Ибо доступ по индексу тоже не должен тупить.
+    // Интерфейс для добавления новых ордеров.
     void addBid(qreal price, qreal amount);
     void addAsk(qreal price, qreal amount);
 
 private:
     QStringList headers;
+
+    // Проводит автосделки по добавляемому ордеру.
+    void makeDealsIfNeededFor(Order& newOrder);
+
+    bool canMakeDealBetween(Order& one, Order& other);
+
+    // Имплементация вставки ордеров в ордербук.
+    // Вставляют сразу на место, но за O(n). Мб это можно будет улучшить.
+    // Не заменой rows на связный список! Ибо доступ по индексу тоже не должен тупить.
+    void addBidToList(Order& newBid);
+    void addAskToList(Order& newAsk);
 };

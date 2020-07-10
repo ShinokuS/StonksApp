@@ -16,7 +16,7 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
 
     // Обрабатываем данные с модели
     auto iter = orderBook->rows.end();
-    do iter--; while (!iter->askMarker);
+    do iter--; while (!iter->isAsk);
     auto centralIter = iter;
     qreal prevY = iter->quantity;
     asksUpLineSeries->append(prevY, iter->price);
