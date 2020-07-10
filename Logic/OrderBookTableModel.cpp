@@ -45,7 +45,7 @@ QVariant OrderBookTableModel::data(const QModelIndex& index, int role) const
     case Qt::TextAlignmentRole:
         return Qt::AlignCenter;
     case Qt::BackgroundRole:
-        if (row.askMarker) {
+        if (row.isAsk) {
             return QBrush(0xff6161);
         }
         else return QBrush(0x7ce670);
@@ -134,7 +134,7 @@ void OrderBookTableModel::makeDealsIfNeededFor(Order& newOrder)
     // Обеспечиваю обобщение под бид/аск
     int endIndex, endIndexStep, indexStep, centerIndexStep;
 
-    if (newOrder.askMarker) {
+    if (newOrder.isAsk) {
         endIndex = rows.size();
         endIndexStep = -1;
         indexStep = 0;
@@ -148,14 +148,9 @@ void OrderBookTableModel::makeDealsIfNeededFor(Order& newOrder)
     }
     
     int rowIndex = centerIndex;
-    if (! newOrder.askMarker) {
+    if (! newOrder.isAsk) {
         rowIndex--;
     }
-    
-    // был один баг, вот решение
-    //if (newOrder.askMarker) {
-    //    return;
-    //}
 
     // Теперь само проведение сделок, начиная с самых выгодных висящих ордеров:
 
@@ -182,10 +177,10 @@ void OrderBookTableModel::makeDealsIfNeededFor(Order& newOrder)
 
 bool OrderBookTableModel::canMakeDealBetween(Order& one, Order& other)
 {
-    if (one.askMarker == other.askMarker) {
+    if (one.isAsk == other.isAsk) {
         return false;
     }
-    else if (one.askMarker) {
+    else if (one.isAsk) {
         return one.price <= other.price;
     }
     else {
