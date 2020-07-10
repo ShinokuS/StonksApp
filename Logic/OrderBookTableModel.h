@@ -31,4 +31,7 @@ public:
 
 private:
     QStringList headers;
+
+    // Проводит автосделки по добавляемому ордеру.
+    void makeDealsIfNeededFor(Order& newOrder);
 };

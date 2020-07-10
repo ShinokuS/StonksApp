@@ -110,7 +110,17 @@ Qt::ItemFlags OrderBookTableModel::flags(const QModelIndex& index) const
 
 void OrderBookTableModel::addBid(qreal price, qreal amount)
 {
+    // Если добавляемый ордер вызывает сделки, проводим их.
     Order orderToAdd = { price, amount, false };
+    makeDealsIfNeededFor(orderToAdd);
+
+    // Если ордер при этом полностью исполнился, то его не надо будет заносить в список.
+    if (orderToAdd.quantity == 0) {
+        return;
+    }
+
+    // Если нет, то собственно заносим:
+
     Order reference = { price, 0, false }; // костыль из-за интерфейса STL
 
     // бинарный поиск позиции с ценой не меньше указанной
@@ -133,7 +143,17 @@ void OrderBookTableModel::addBid(qreal price, qreal amount)
 
 void OrderBookTableModel::addAsk(qreal price, qreal amount)
 {
+    // Если добавляемый ордер вызывает сделки, проводим их.
     Order orderToAdd = { price, amount, true };
+    makeDealsIfNeededFor(orderToAdd);
+
+    // Если ордер при этом полностью исполнился, то его не надо будет заносить в список.
+    if (orderToAdd.quantity == 0) {
+        return;
+    }
+
+    // Если нет, то собственно заносим:
+
     Order reference = { price, 0, true }; // костыль из-за интерфейса STL
 
     // бинарный поиск позиции с ценой не меньше указанной
@@ -149,4 +169,10 @@ void OrderBookTableModel::addAsk(qreal price, qreal amount)
     else {
         iter->quantity += amount;
     }
+}
+
+
+void OrderBookTableModel::makeDealsIfNeededFor(Order& newOrder)
+{
+
 }
