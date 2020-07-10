@@ -67,7 +67,7 @@ OrderBookTableModel* OrderBookTableModel::getRandomInstance(unsigned int seed)
     long long minBidPrice = 100;
     long long minAskPrice = 10000;
     long long maxAskPrice = 20000;
-    int maxAmountInOrder = 10000;
+    int maxQuantityInOrder = 10000;
 
     auto randomOrderBook = new OrderBookTableModel;
     randomOrderBook->centerIndex = 0;
@@ -75,14 +75,14 @@ OrderBookTableModel* OrderBookTableModel::getRandomInstance(unsigned int seed)
     for (int i = 0; i < nBids; i++) {
         qreal price = randomBetween(minBidPrice, minAskPrice);
         price /= 100; // перевод из копеек
-        qreal quantity = randomBetween(1, maxAmountInOrder);
+        qreal quantity = randomBetween(1, maxQuantityInOrder);
         randomOrderBook->addBid(price, quantity);
     }
 
     for (int i = 0; i < nAsks; i++) {
         qreal price = randomBetween(minAskPrice, maxAskPrice);
         price /= 100; // перевод из копеек
-        qreal quantity = randomBetween(1, maxAmountInOrder);
+        qreal quantity = randomBetween(1, maxQuantityInOrder);
         randomOrderBook->addAsk(price, quantity);
     }
 
@@ -105,10 +105,10 @@ Qt::ItemFlags OrderBookTableModel::flags(const QModelIndex& index) const
     return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
 }
 
-void OrderBookTableModel::addBid(qreal price, qreal amount)
+void OrderBookTableModel::addBid(qreal price, qreal quantity)
 {
     // Если добавляемый ордер вызывает сделки, проводим их.
-    Order newBid = { price, amount, false };
+    Order newBid = { price, quantity, false };
     makeDealsIfNeededFor(newBid);
 
     // Если ордер не исполнился полностью, то добавляем его в ордербук.
@@ -117,10 +117,10 @@ void OrderBookTableModel::addBid(qreal price, qreal amount)
     }
 }
 
-void OrderBookTableModel::addAsk(qreal price, qreal amount)
+void OrderBookTableModel::addAsk(qreal price, qreal quantity)
 {
     // Если добавляемый ордер вызывает сделки, проводим их.
-    Order newAsk = { price, amount, true };
+    Order newAsk = { price, quantity, true };
     makeDealsIfNeededFor(newAsk);
 
     // Если ордер не исполнился полностью, то добавляем его в ордербук.
