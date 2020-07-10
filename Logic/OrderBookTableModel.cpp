@@ -131,7 +131,66 @@ void OrderBookTableModel::addAsk(qreal price, qreal quantity)
 
 void OrderBookTableModel::makeDealsIfNeededFor(Order& newOrder)
 {
+    // Обеспечиваю обобщение под бид/аск
+    int endIndex, endIndexStep, indexStep, centerIndexStep;
 
+    if (newOrder.askMarker) {
+        endIndex = rows.size();
+        endIndexStep = -1;
+        indexStep = 0;
+        centerIndexStep = 0;
+    }
+    else {
+        endIndex = -1;
+        endIndexStep = 0;
+        indexStep = -1;
+        centerIndexStep = -1;
+    }
+    
+    int rowIndex = centerIndex;
+    if (! newOrder.askMarker) {
+        rowIndex--;
+    }
+    
+    // был один баг, вот решение
+    //if (newOrder.askMarker) {
+    //    return;
+    //}
+
+    // Теперь само проведение сделок, начиная с самых выгодных висящих ордеров:
+
+    for (/*  */; newOrder.quantity > 0 && rowIndex != endIndex; rowIndex += indexStep)
+    {
+        if (! canMakeDealBetween(newOrder, rows[rowIndex])) {
+            break; // приемлемые сделки закончились
+        }
+
+        // Старые ордеры поглощаются новым
+        if (rows[rowIndex].quantity <= newOrder.quantity) {
+            newOrder.quantity -= rows[rowIndex].quantity;
+            rows.removeAt(rowIndex);
+            endIndex += endIndexStep;
+            centerIndex += centerIndexStep;
+        }
+        // Последний, вероятно, поглотится не полностью:
+        else {
+            rows[rowIndex].quantity -= newOrder.quantity;
+            newOrder.quantity = 0;
+        }
+    }
+}
+
+bool OrderBookTableModel::canMakeDealBetween(Order& one, Order& other)
+{
+    if (one.askMarker == other.askMarker) {
+        return false;
+    }
+    else if (one.askMarker) {
+        return one.price <= other.price;
+    }
+    else {
+        return one.price >= other.price;
+    }
 }
 
 // НИЖЕ, ОБА МЕТОДА ВСТАВКИ ТРАТЯТ ПО O(n) НА ВСТАВКУ!
