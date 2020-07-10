@@ -163,12 +163,14 @@ void OrderBookTableModel::makeDealsIfNeededFor(Order& newOrder)
         // Старые ордеры поглощаются новым
         if (rows[rowIndex].quantity <= newOrder.quantity) {
             newOrder.quantity -= rows[rowIndex].quantity;
+            // <------ ЗДЕСЬ БУДЕТ СОХРАНЕНИЕ СДЕЛКИ В СПИСОК СДЕЛОК
             rows.removeAt(rowIndex);
             endIndex += endIndexStep;
             centerIndex += centerIndexStep;
         }
         // Последний, вероятно, поглотится не полностью:
         else {
+            // <------ ЗДЕСЬ БУДЕТ СОХРАНЕНИЕ СДЕЛКИ В СПИСОК СДЕЛОК
             rows[rowIndex].quantity -= newOrder.quantity;
             newOrder.quantity = 0;
         }
