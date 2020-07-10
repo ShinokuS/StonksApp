@@ -105,23 +105,41 @@ Qt::ItemFlags OrderBookTableModel::flags(const QModelIndex& index) const
     return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
 }
 
-// НИЖЕ, ОБА МЕТОДА ВСТАВКИ ТРАТЯТ ПО O(n) НА ВСТАВКУ!
-// НАДЕЮСЬ, ЭТО ВРЕМЕННОЕ РЕШЕНИЕ!
-
 void OrderBookTableModel::addBid(qreal price, qreal amount)
 {
     // Если добавляемый ордер вызывает сделки, проводим их.
-    Order orderToAdd = { price, amount, false };
-    makeDealsIfNeededFor(orderToAdd);
+    Order newBid = { price, amount, false };
+    makeDealsIfNeededFor(newBid);
 
-    // Если ордер при этом полностью исполнился, то его не надо будет заносить в список.
-    if (orderToAdd.quantity == 0) {
-        return;
+    // Если ордер не исполнился полностью, то добавляем его в ордербук.
+    if (newBid.quantity > 0) {
+        addBidToList(newBid);
     }
+}
 
-    // Если нет, то собственно заносим:
+void OrderBookTableModel::addAsk(qreal price, qreal amount)
+{
+    // Если добавляемый ордер вызывает сделки, проводим их.
+    Order newAsk = { price, amount, true };
+    makeDealsIfNeededFor(newAsk);
 
-    Order reference = { price, 0, false }; // костыль из-за интерфейса STL
+    // Если ордер не исполнился полностью, то добавляем его в ордербук.
+    if (newAsk.quantity > 0) {
+        addAskToList(newAsk);
+    }
+}
+
+void OrderBookTableModel::makeDealsIfNeededFor(Order& newOrder)
+{
+
+}
+
+// НИЖЕ, ОБА МЕТОДА ВСТАВКИ ТРАТЯТ ПО O(n) НА ВСТАВКУ!
+// НАДЕЮСЬ, ЭТО ВРЕМЕННОЕ РЕШЕНИЕ!
+
+void OrderBookTableModel::addBidToList(Order& newBid)
+{
+    Order reference = { newBid.price, 0, false }; // костыль из-за интерфейса STL
 
     // бинарный поиск позиции с ценой не меньше указанной
     auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
@@ -129,50 +147,33 @@ void OrderBookTableModel::addBid(qreal price, qreal amount)
 
     // если это будет новая самая дешёвая позиция, то создаём её в конце списка
     if (iter == rows.end()) {
-        rows.append(std::move(orderToAdd));
+        rows.append(std::move(newBid));
     }
     // если не самая, но конкретно такой цены нет, то создаём её в нужном месте
-    else if (iter->price < price) {
-        rows.insert(iter, std::move(orderToAdd));
+    else if (iter->price < newBid.price) {
+        rows.insert(iter, std::move(newBid));
     }
     // если позиция есть, то приплюсовываем туда количество
     else {
-        iter->quantity += amount;
+        iter->quantity += newBid.quantity;
     }
 }
 
-void OrderBookTableModel::addAsk(qreal price, qreal amount)
+void OrderBookTableModel::addAskToList(Order& newAsk)
 {
-    // Если добавляемый ордер вызывает сделки, проводим их.
-    Order orderToAdd = { price, amount, true };
-    makeDealsIfNeededFor(orderToAdd);
-
-    // Если ордер при этом полностью исполнился, то его не надо будет заносить в список.
-    if (orderToAdd.quantity == 0) {
-        return;
-    }
-
-    // Если нет, то собственно заносим:
-
-    Order reference = { price, 0, true }; // костыль из-за интерфейса STL
+    Order reference = { newAsk.price, 0, true }; // костыль из-за интерфейса STL
 
     // бинарный поиск позиции с ценой не меньше указанной
     auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
         [reference](Order& element, const Order reference) { return element.price > reference.price; });
 
     // если позиции с такой ценой нет, то создаём её в нужном месте
-    if (iter->price < price) {
-        rows.insert(iter, std::move(orderToAdd));
+    if (iter->price < newAsk.price) {
+        rows.insert(iter, std::move(newAsk));
         centerIndex++;
     }
     // если позиция есть, то приплюсовываем туда количество
     else {
-        iter->quantity += amount;
+        iter->quantity += newAsk.quantity;
     }
-}
-
-
-void OrderBookTableModel::makeDealsIfNeededFor(Order& newOrder)
-{
-
 }
