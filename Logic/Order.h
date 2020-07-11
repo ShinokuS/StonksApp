@@ -7,4 +7,5 @@ struct Order
     qreal price;
     qreal quantity;
     bool isAsk;
+    time_t time;
 };

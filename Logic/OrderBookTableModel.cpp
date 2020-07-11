@@ -111,10 +111,10 @@ Qt::ItemFlags OrderBookTableModel::flags(const QModelIndex& index) const
     return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
 }
 
-void OrderBookTableModel::addBid(qreal price, qreal quantity)
+void OrderBookTableModel::addBid(qreal price, qreal quantity, time_t time)
 {
     // Если добавляемый ордер вызывает сделки, проводим их.
-    auto newBid = new Order { price, quantity, false };
+    auto newBid = new Order { price, quantity, false, time };
     makeDealsIfNeededFor(newBid);
 
     // Если ордер не исполнился полностью, то добавляем его в ордербук.
@@ -123,10 +123,10 @@ void OrderBookTableModel::addBid(qreal price, qreal quantity)
     }
 }
 
-void OrderBookTableModel::addAsk(qreal price, qreal quantity)
+void OrderBookTableModel::addAsk(qreal price, qreal quantity, time_t time)
 {
     // Если добавляемый ордер вызывает сделки, проводим их.
-    auto newAsk = new Order { price, quantity, true };
+    auto newAsk = new Order { price, quantity, true, time };
     makeDealsIfNeededFor(newAsk);
 
     // Если ордер не исполнился полностью, то добавляем его в ордербук.

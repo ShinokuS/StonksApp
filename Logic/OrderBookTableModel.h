@@ -24,8 +24,8 @@ public:
     int returnCenterIndex();
 
     // Интерфейс для добавления новых ордеров.
-    void addBid(qreal price, qreal amount);
-    void addAsk(qreal price, qreal amount);
+    void addBid(qreal price, qreal amount, time_t time = time(0));
+    void addAsk(qreal price, qreal amount, time_t time = time(0));
 
     void updateTable();
 
