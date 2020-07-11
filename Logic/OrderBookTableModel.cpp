@@ -6,6 +6,7 @@
 OrderBookTableModel::OrderBookTableModel(QObject* parent)
     : QAbstractTableModel(parent)
 {
+    centerIndex = 0;
     headers << "Price" << "Quantity";
 }
 
@@ -70,7 +71,6 @@ OrderBookTableModel* OrderBookTableModel::getRandomInstance(unsigned int seed)
     int maxQuantityInOrder = 10000;
 
     auto randomOrderBook = new OrderBookTableModel;
-    randomOrderBook->centerIndex = 0;
 
     for (int i = 0; i < nBids; i++) {
         qreal price = randomBetween(minBidPrice, minAskPrice);
