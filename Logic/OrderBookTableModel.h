@@ -9,7 +9,7 @@ class OrderBookTableModel : public QAbstractTableModel
     Q_OBJECT
 public:
     int centerIndex;
-    QList<Order> rows;
+    QList<Order*> rows;
 
     OrderBookTableModel(QObject* parent = nullptr);
 
@@ -24,8 +24,8 @@ public:
     int returnCenterIndex();
 
     // Интерфейс для добавления новых ордеров.
-    void addBid(qreal price, qreal amount);
-    void addAsk(qreal price, qreal amount);
+    void addBid(qreal price, qreal amount, time_t time = time(0));
+    void addAsk(qreal price, qreal amount, time_t time = time(0));
 
     void updateTable();
 
@@ -33,13 +33,13 @@ private:
     QStringList headers;
 
     // Проводит автосделки по добавляемому ордеру.
-    void makeDealsIfNeededFor(Order& newOrder);
+    void makeDealsIfNeededFor(Order* newOrder);
 
-    bool canMakeDealBetween(Order& one, Order& other);
+    bool canMakeDealBetween(Order* one, Order* other);
 
     // Имплементация вставки ордеров в ордербук.
     // Вставляют сразу на место, но за O(n). Мб это можно будет улучшить.
     // Не заменой rows на связный список! Ибо доступ по индексу тоже не должен тупить.
-    void addBidToList(Order& newBid);
-    void addAskToList(Order& newAsk);
+    void addBidToList(Order* newBid);
+    void addAskToList(Order* newAsk);
 };

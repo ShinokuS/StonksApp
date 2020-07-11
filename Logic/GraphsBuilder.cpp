@@ -16,28 +16,28 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
 
     // Обрабатываем данные с модели
     auto iter = orderBook->rows.end();
-    do iter--; while (!iter->isAsk);
+    do iter--; while (! (*iter)->isAsk);
     auto centralIter = iter;
-    qreal prevY = iter->quantity;
-    asksUpLineSeries->append(prevY, iter->price);
+    qreal prevY = (*iter)->quantity;
+    asksUpLineSeries->append(prevY, (*iter)->price);
     do {
         iter--;
-        asksUpLineSeries->append(prevY, iter->price);
-        asksUpLineSeries->append(prevY + iter->quantity, iter->price);
-        prevY += iter->quantity;
+        asksUpLineSeries->append(prevY, (*iter)->price);
+        asksUpLineSeries->append(prevY + (*iter)->quantity, (*iter)->price);
+        prevY += (*iter)->quantity;
     } while (iter!=orderBook->rows.begin());
-    *asksDownLineSeries << QPointF(0, centralIter->price) << QPointF(0, iter->price);
+    *asksDownLineSeries << QPointF(0, (*centralIter)->price) << QPointF(0, (*iter)->price);
 
     iter = centralIter++;
-    prevY = iter->quantity;
+    prevY = (*iter)->quantity;
     iter++;
     for (; iter != orderBook->rows.end(); iter++) {
-        bidsUpLineSeries->append(prevY, iter->price);
-        bidsUpLineSeries->append(prevY + iter->quantity, iter->price);
-        prevY += iter->quantity;
+        bidsUpLineSeries->append(prevY, (*iter)->price);
+        bidsUpLineSeries->append(prevY + (*iter)->quantity, (*iter)->price);
+        prevY += (*iter)->quantity;
     }
     iter--;
-    *bidsDownLineSeries << QPointF(0, centralIter->price) << QPointF(0, iter->price);
+    *bidsDownLineSeries << QPointF(0, (*centralIter)->price) << QPointF(0, (*iter)->price);
 
     // Получаем полную форму каждой половины графика по кривой сверху и дну снизу.
     QAreaSeries* bidsSeries = new QAreaSeries(bidsUpLineSeries, bidsDownLineSeries);
