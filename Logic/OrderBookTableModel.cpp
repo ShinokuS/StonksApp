@@ -89,6 +89,12 @@ OrderBookTableModel* OrderBookTableModel::getRandomInstance(unsigned int seed)
     return randomOrderBook;
 }
 
+void OrderBookTableModel::updateTable()
+{
+    emit layoutAboutToBeChanged();
+    emit layoutChanged();
+}
+
 int OrderBookTableModel::returnCenterIndex()
 {
     return OrderBookTableModel::centerIndex;

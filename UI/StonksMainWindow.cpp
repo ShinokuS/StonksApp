@@ -1,8 +1,7 @@
 ﻿#include "StonksMainWindow.h"
 
-#include <QtCharts/QChartView>
 #include <QHeaderView>
-#include <QGridLayout>
+#include <QTimer>
 
 using namespace QtCharts;
 
@@ -18,6 +17,42 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, QWi
 
     this->placeMarketDepthGraph();
     this->placeOrderBookTable();
+
+    // таймер, чтобы каждую секунду вбрасывать новые ордеры и обновлять окно
+    tmr = new QTimer();
+    tmr->setInterval(1000);
+    connect(tmr, SIGNAL(timeout()), this, SLOT(insertNewDataAndUpdate()));
+    tmr->start();
+}
+
+void StonksMainWindow::insertNewDataAndUpdate() 
+{
+    model->addAsk(rand() % 100 + 30, rand() % 5000 + 1000);
+    model->addBid(rand() % 100 + 30, rand() % 5000 + 1000);
+    
+    updateWindow();
+}
+
+void StonksMainWindow::updateWindow()
+{
+    updateOrderBookTable();
+    updateMarketDepthGraph();
+}
+
+void StonksMainWindow::updateOrderBookTable()
+{
+    model->updateTable();
+    this->centerOrderBookTable();
+    ui.tableView->repaint();
+}
+
+void StonksMainWindow::updateMarketDepthGraph()
+{
+    auto newMarketDepthGraph = GraphsBuilder::buildMarketDepthGraph(model);
+    marketDepthView->setChart(newMarketDepthGraph);
+    delete marketDepthGraph;
+    marketDepthGraph = newMarketDepthGraph;
+    ui.graphWidget->repaint();
 }
 
 void StonksMainWindow::centerOrderBookTable()
@@ -27,16 +62,16 @@ void StonksMainWindow::centerOrderBookTable()
 
 void StonksMainWindow::placeMarketDepthGraph()
 {
-    auto graph = GraphsBuilder::buildMarketDepthGraph(model);
+    marketDepthGraph = GraphsBuilder::buildMarketDepthGraph(model);
 
-    QChartView* MarketDepthView = new QChartView(graph);
-    MarketDepthView->setRenderHint(QPainter::Antialiasing);
+    marketDepthView = new QChartView(marketDepthGraph);
+    marketDepthView->setRenderHint(QPainter::Antialiasing);
 
     // Пока кривой зум, в будущем возможно добавлю нормальный
-    //MarketDepthView->setRubberBand(QChartView::VerticalRubberBand);
+    //marketDepthView->setRubberBand(QChartView::VerticalRubberBand);
     
-    QGridLayout* graphLayout = new QGridLayout(this);
-    graphLayout->addWidget(MarketDepthView);
+    graphLayout = new QGridLayout(this);
+    graphLayout->addWidget(marketDepthView);
     ui.graphWidget->setLayout(graphLayout);
 }
 

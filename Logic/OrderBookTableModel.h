@@ -27,6 +27,8 @@ public:
     void addBid(qreal price, qreal amount);
     void addAsk(qreal price, qreal amount);
 
+    void updateTable();
+
 private:
     QStringList headers;
 
