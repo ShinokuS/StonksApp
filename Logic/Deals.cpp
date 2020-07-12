@@ -3,24 +3,24 @@
 void Deals::addNewDeal(qreal price, qreal quantity, time_t time)
 {
 	auto newDeal = new Order{ price, quantity, 0, time };
-	deals.append(newDeal);
+
+	addDealForLineGraph(newDeal);
 }
 
-void Deals::addDealForLineGraph()
+void Deals::addDealForLineGraph(Order* newDeal)
 {
-	auto newDeal = deals.last();
 	int timeOfInterval = 60;
-	if (!firstTimeOfInterval) {
+	if (!firstIntervalTime) {
 		dealsForLineGraph.append(newDeal);
-		firstTimeOfInterval = newDeal->time;
+		firstIntervalTime = newDeal->time;
 	}
 	else {
-		if (newDeal->time - firstTimeOfInterval < timeOfInterval) {
+		if (newDeal->time - firstIntervalTime < timeOfInterval) {
 			dealsForLineGraph.replace(dealsForLineGraph.indexOf(dealsForLineGraph.last()), newDeal);
 		}
 		else {
 			dealsForLineGraph.append(newDeal);
-			firstTimeOfInterval += timeOfInterval;
+			firstIntervalTime += timeOfInterval;
 		}
 	}
 }
