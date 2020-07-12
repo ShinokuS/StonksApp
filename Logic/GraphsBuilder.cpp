@@ -52,5 +52,9 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
 PriceGraph* GraphsBuilder::buildLinePriceGraph(Deals* deals)
 {
     QLineSeries* priceLineSeries = new QLineSeries();
-
+    auto iter = deals->dealsForLineGraph.begin();
+    for (; iter != deals->dealsForLineGraph.end(); iter++) {
+        priceLineSeries->append(qreal((*iter)->time), (*iter)->price);
+    }
+    return new PriceGraph(priceLineSeries);
 }

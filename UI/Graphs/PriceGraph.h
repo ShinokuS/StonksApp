@@ -8,5 +8,9 @@ using QtCharts::QLineSeries;
 
 class PriceGraph : public QtCharts::QChart
 {
-	void LinePriceGraph(QLineSeries* lineSeries);
+public:
+	PriceGraph(QLineSeries* lineSeries);
+
+private:
+	void priceLineGraph(QLineSeries* lineSeries);
 };

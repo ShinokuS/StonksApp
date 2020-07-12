@@ -1,6 +1,11 @@
 ﻿#include "PriceGraph.h"
 
-void PriceGraph::LinePriceGraph(QLineSeries* lineSeries)
+PriceGraph::PriceGraph(QLineSeries* lineSeries)
+{
+    priceLineGraph(lineSeries);
+}
+
+void PriceGraph::priceLineGraph(QLineSeries* lineSeries)
 {
     this->addSeries(lineSeries);
     this->createDefaultAxes();
