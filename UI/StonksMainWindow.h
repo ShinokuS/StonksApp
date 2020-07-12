@@ -16,7 +16,7 @@ class StonksMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    StonksMainWindow(OrderBookTableModel* orderBookTableModel, QWidget* parent = Q_NULLPTR);
+    StonksMainWindow(OrderBookTableModel* orderBookTableModel, Deals* deals, QWidget* parent = Q_NULLPTR);
 
 private slots:
     void centerOrderBookTable();
@@ -25,16 +25,23 @@ private slots:
 private:
     Ui::StonksAppClass ui;
     OrderBookTableModel* model;
+    Deals* dealsModel;
     QTimer* tmr;
 
     MarketDepthGraph* marketDepthGraph;
     QChartView* marketDepthView;
     QGridLayout* graphLayout;
 
+    LinePriceGraph* linePriceGraph;
+    QChartView* priceGraphView;
+    QGridLayout* priceGraphLayout;
+
     void placeMarketDepthGraph();
+    void placePriceGraph();
     void placeOrderBookTable();
 
     void updateWindow();
     void updateOrderBookTable();
     void updateMarketDepthGraph();
+    void updatePriceGraph();
 };

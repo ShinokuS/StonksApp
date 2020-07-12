@@ -6,7 +6,7 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, QWidget *parent)
+StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, Deals* deals, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
@@ -15,8 +15,11 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, QWi
     model = orderBookTableModel;
     model->setParent(this);
 
+    dealsModel = deals;
+
     this->placeMarketDepthGraph();
     this->placeOrderBookTable();
+    this->placePriceGraph();
 
     // таймер, чтобы каждую секунду вбрасывать новые ордеры и обновлять окно
     tmr = new QTimer();
@@ -37,6 +40,7 @@ void StonksMainWindow::updateWindow()
 {
     updateOrderBookTable();
     updateMarketDepthGraph();
+    updatePriceGraph();
 }
 
 void StonksMainWindow::updateOrderBookTable()
@@ -53,6 +57,15 @@ void StonksMainWindow::updateMarketDepthGraph()
     delete marketDepthGraph;
     marketDepthGraph = newMarketDepthGraph;
     ui.graphWidget->repaint();
+}
+
+void StonksMainWindow::updatePriceGraph()
+{
+    auto newLinePriceGraph = GraphsBuilder::buildLinePriceGraph(dealsModel);
+    priceGraphView->setChart(newLinePriceGraph);
+    delete linePriceGraph;
+    linePriceGraph = newLinePriceGraph;
+    ui.priceGraphWidget->repaint();
 }
 
 void StonksMainWindow::centerOrderBookTable()
@@ -84,4 +97,16 @@ void StonksMainWindow::placeOrderBookTable()
     ui.tableView->verticalHeader()->hide();
 
     StonksMainWindow::centerOrderBookTable();
+}
+
+void StonksMainWindow::placePriceGraph()
+{
+    linePriceGraph = GraphsBuilder::buildLinePriceGraph(dealsModel);
+
+    priceGraphView = new QChartView(linePriceGraph);
+    priceGraphView->setRenderHint(QPainter::Antialiasing);
+
+    priceGraphLayout = new QGridLayout(this);
+    priceGraphLayout->addWidget(priceGraphView);
+    ui.priceGraphWidget->setLayout(priceGraphLayout);
 }

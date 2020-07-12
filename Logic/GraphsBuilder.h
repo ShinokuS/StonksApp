@@ -9,5 +9,5 @@ class GraphsBuilder
 {
 public:
 	static MarketDepthGraph* buildMarketDepthGraph(OrderBookTableModel* orderBook);
-	static PriceGraph* buildLinePriceGraph(Deals* deals);
+	static LinePriceGraph* buildLinePriceGraph(Deals* deals);
 };
