@@ -48,3 +48,9 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
     // На выходе из метода будет полностью готовый график.
     return new MarketDepthGraph(bidsSeries, asksSeries);
 }
+
+PriceGraph* GraphsBuilder::buildLinePriceGraph(Deals* deals)
+{
+    QLineSeries* priceLineSeries = new QLineSeries();
+
+}

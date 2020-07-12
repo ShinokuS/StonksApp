@@ -7,9 +7,11 @@
 class Deals
 {
 public:
-	void addNewDeal(qreal price, time_t time);
-	Order* getLastDeal();
+	void addNewDeal(qreal price, qreal quantity, time_t time);
+	void addDealForLineGraph();
 
 private:
-	Order* lastDeal;
+	QList<Order*> deals;
+	QList<Order*> dealsForLineGraph;
+	int firstTimeOfInterval;
 };

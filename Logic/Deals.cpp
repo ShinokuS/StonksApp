@@ -1,11 +1,26 @@
 ﻿#include "Deals.h"
 
-void Deals::addNewDeal(qreal price, time_t time)
+void Deals::addNewDeal(qreal price, qreal quantity, time_t time)
 {
-	lastDeal = new Order{ price, 0, true, time };
+	auto newDeal = new Order{ price, quantity, 0, time };
+	deals.append(newDeal);
 }
 
-Order* Deals::getLastDeal()
+void Deals::addDealForLineGraph()
 {
-	return lastDeal;
+	auto newDeal = deals.last();
+	int timeOfInterval = 60;
+	if (!firstTimeOfInterval) {
+		dealsForLineGraph.append(newDeal);
+		firstTimeOfInterval = newDeal->time;
+	}
+	else {
+		if (newDeal->time - firstTimeOfInterval < timeOfInterval) {
+			dealsForLineGraph.replace(dealsForLineGraph.indexOf(dealsForLineGraph.last()), newDeal);
+		}
+		else {
+			dealsForLineGraph.append(newDeal);
+			firstTimeOfInterval += timeOfInterval;
+		}
+	}
 }
