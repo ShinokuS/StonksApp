@@ -6,7 +6,7 @@
 using QtCharts::QChart;
 using QtCharts::QLineSeries;
 
-class PriceGraph
+class PriceGraph : public QtCharts::QChart
 {
 	void LinePriceGraph(QLineSeries* lineSeries);
 };
