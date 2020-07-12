@@ -91,6 +91,7 @@
     <QtRcc Include="UI\StonksMainWindow.qrc" />
     <QtUic Include="UI\StonksMainWindow.ui" />
     <QtMoc Include="UI\StonksMainWindow.h" />
+    <ClCompile Include="Logic\Deals.cpp" />
     <ClCompile Include="Logic\GraphsBuilder.cpp" />
     <ClCompile Include="Logic\Order.cpp" />
     <ClCompile Include="Logic\OrderBookTableModel.cpp" />
@@ -99,6 +100,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Logic\Deals.h" />
     <ClInclude Include="Logic\GraphsBuilder.h" />
     <QtMoc Include="Logic\OrderBookTableModel.h" />
     <ClInclude Include="Logic\Order.h" />
