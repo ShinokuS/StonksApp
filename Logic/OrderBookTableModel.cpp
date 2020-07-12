@@ -170,6 +170,7 @@ void OrderBookTableModel::makeDealsIfNeededFor(Order* newOrder)
         if (rows[rowIndex]->quantity <= newOrder->quantity) {
             newOrder->quantity -= rows[rowIndex]->quantity;
             // <------ ЗДЕСЬ БУДЕТ СОХРАНЕНИЕ СДЕЛКИ В СПИСОК СДЕЛОК
+            deals->addNewDeal(rows[rowIndex]->price, rows[rowIndex]->quantity, newOrder->time);
             delete rows[rowIndex];
             rows.removeAt(rowIndex);
             endIndex += endIndexStep;
@@ -178,6 +179,7 @@ void OrderBookTableModel::makeDealsIfNeededFor(Order* newOrder)
         // Последний, вероятно, поглотится не полностью:
         else {
             // <------ ЗДЕСЬ БУДЕТ СОХРАНЕНИЕ СДЕЛКИ В СПИСОК СДЕЛОК
+            deals->addNewDeal(rows[rowIndex]->price, newOrder->quantity, newOrder->time);
             rows[rowIndex]->quantity -= newOrder->quantity;
             newOrder->quantity = 0;
         }

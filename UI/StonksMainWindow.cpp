@@ -16,6 +16,7 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, Dea
     model->setParent(this);
 
     dealsModel = deals;
+    model->deals = dealsModel;
 
     this->placeMarketDepthGraph();
     this->placeOrderBookTable();

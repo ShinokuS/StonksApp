@@ -3,12 +3,14 @@
 #include <QAbstractTableModel>
 
 #include "Order.h"
+#include "Deals.h"
 
 class OrderBookTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
     int centerIndex;
+    Deals* deals;
     QList<Order*> rows;
 
     OrderBookTableModel(QObject* parent = nullptr);
