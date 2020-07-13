@@ -18,6 +18,7 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, Dea
     dealsModel = deals;
     model->deals = dealsModel;
 
+    // Я бы хотел это распараллелить, но Qt не даёт.
     this->placeMarketDepthGraph();
     this->placeOrderBookTable();
     this->placePriceGraph();
@@ -39,6 +40,7 @@ void StonksMainWindow::insertNewDataAndUpdate()
 
 void StonksMainWindow::updateWindow()
 {
+    // Я бы хотел это распараллелить, но Qt не даёт.
     updatePriceGraph();
     updateMarketDepthGraph();
     updateOrderBookTable();
