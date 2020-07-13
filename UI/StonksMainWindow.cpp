@@ -39,9 +39,9 @@ void StonksMainWindow::insertNewDataAndUpdate()
 
 void StonksMainWindow::updateWindow()
 {
-    updateOrderBookTable();
-    updateMarketDepthGraph();
     updatePriceGraph();
+    updateMarketDepthGraph();
+    updateOrderBookTable();
 }
 
 void StonksMainWindow::updateOrderBookTable()
