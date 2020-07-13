@@ -95,11 +95,6 @@ void OrderBookTableModel::updateTable()
     emit layoutChanged();
 }
 
-int OrderBookTableModel::returnCenterIndex()
-{
-    return OrderBookTableModel::centerIndex;
-}
-
 bool OrderBookTableModel::setData(const QModelIndex& index, const QVariant&, int role)
 {
     if (!index.isValid()) return false;

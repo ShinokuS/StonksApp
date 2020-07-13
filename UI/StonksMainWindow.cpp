@@ -73,7 +73,7 @@ void StonksMainWindow::updatePriceGraph()
 
 void StonksMainWindow::centerOrderBookTable()
 {
-    ui.tableView->scrollTo(StonksMainWindow::model->index(model->returnCenterIndex() - 2, 0), QAbstractItemView::PositionAtCenter);
+    ui.tableView->scrollTo(StonksMainWindow::model->index(model->centerIndex - 2, 0), QAbstractItemView::PositionAtCenter);
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
