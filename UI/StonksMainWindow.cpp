@@ -6,7 +6,7 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, QWidget *parent)
+StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, Deals* deals, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
@@ -15,8 +15,13 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, QWi
     model = orderBookTableModel;
     model->setParent(this);
 
+    dealsModel = deals;
+    model->deals = dealsModel;
+
+    // Я бы хотел это распараллелить, но Qt не даёт.
     this->placeMarketDepthGraph();
     this->placeOrderBookTable();
+    this->placePriceGraph();
 
     // таймер, чтобы каждую секунду вбрасывать новые ордеры и обновлять окно
     tmr = new QTimer();
@@ -35,8 +40,10 @@ void StonksMainWindow::insertNewDataAndUpdate()
 
 void StonksMainWindow::updateWindow()
 {
-    updateOrderBookTable();
+    // Я бы хотел это распараллелить, но Qt не даёт.
+    updatePriceGraph();
     updateMarketDepthGraph();
+    updateOrderBookTable();
 }
 
 void StonksMainWindow::updateOrderBookTable()
@@ -55,9 +62,18 @@ void StonksMainWindow::updateMarketDepthGraph()
     ui.graphWidget->repaint();
 }
 
+void StonksMainWindow::updatePriceGraph()
+{
+    auto newLinePriceGraph = GraphsBuilder::buildLinePriceGraph(dealsModel);
+    priceGraphView->setChart(newLinePriceGraph);
+    delete linePriceGraph;
+    linePriceGraph = newLinePriceGraph;
+    ui.priceGraphWidget->repaint();
+}
+
 void StonksMainWindow::centerOrderBookTable()
 {
-    ui.tableView->scrollTo(StonksMainWindow::model->index(model->returnCenterIndex() - 2, 0), QAbstractItemView::PositionAtCenter);
+    ui.tableView->scrollTo(StonksMainWindow::model->index(model->centerIndex - 2, 0), QAbstractItemView::PositionAtCenter);
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
@@ -84,4 +100,16 @@ void StonksMainWindow::placeOrderBookTable()
     ui.tableView->verticalHeader()->hide();
 
     StonksMainWindow::centerOrderBookTable();
+}
+
+void StonksMainWindow::placePriceGraph()
+{
+    linePriceGraph = GraphsBuilder::buildLinePriceGraph(dealsModel);
+
+    priceGraphView = new QChartView(linePriceGraph);
+    priceGraphView->setRenderHint(QPainter::Antialiasing);
+
+    priceGraphLayout = new QGridLayout(this);
+    priceGraphLayout->addWidget(priceGraphView);
+    ui.priceGraphWidget->setLayout(priceGraphLayout);
 }

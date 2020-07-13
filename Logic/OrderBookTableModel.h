@@ -3,12 +3,14 @@
 #include <QAbstractTableModel>
 
 #include "Order.h"
+#include "Deals.h"
 
 class OrderBookTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
     int centerIndex;
+    Deals* deals;
     QList<Order*> rows;
 
     OrderBookTableModel(QObject* parent = nullptr);
@@ -21,7 +23,6 @@ public:
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
     static OrderBookTableModel* getRandomInstance(unsigned int seed = time(0));
-    int returnCenterIndex();
 
     // Интерфейс для добавления новых ордеров.
     void addBid(qreal price, qreal amount, time_t time = time(0));
