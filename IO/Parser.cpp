@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+﻿#define _CRT_SECURE_NO_WARNINGS
 #include "string"
 //#include "IO/rapidjson/rapidjson.h"
 #include "IO/rapidjson/document.h"
@@ -46,7 +46,7 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 				{
 					++left;
 				}
-				if (ch == '}')
+				else if (ch == '}')
 				{
 					++right;
 				}
@@ -62,19 +62,13 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 				{
 					//Здесь должнен быть метод добавления ордера(bid)
 				}
-				else
+				else if (flag == "delete")
 				{
-					if (flag == "delete")
-					{
-						//Здесь должнен быть метод удаления ордера(bid)
-					}
-					else
-					{
-						if (flag == "change")
-						{
-							//Здесь должнен быть метод изменнения ордера(bid)
-						}
-					}
+					//Здесь должнен быть метод удаления ордера(bid)
+				}
+				else if (flag == "change")
+				{
+					//Здесь должнен быть метод изменнения ордера(bid)
 				}
 			} 
 
@@ -85,19 +79,13 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 				{
 					//Здесь должнен быть метод добавления ордера(ask)
 				}
-				else
+				else if (flag == "delete")
 				{
-					if (flag == "delete")
-					{
-						//Здесь должнен быть метод удаления ордера(ask)
-					}
-					else
-					{
-						if (flag == "change")
-						{
-							//Здесь должнен быть метод изменнения ордера(ask)
-						}
-					}
+					//Здесь должнен быть метод удаления ордера(ask)
+				}
+				else if (flag == "change")
+				{
+					//Здесь должнен быть метод изменнения ордера(ask)
 				}
 			}
 
