@@ -15,7 +15,8 @@ void Deals::addDealForLineGraph(Order* newDeal)
 	}
 	else {
 		if (newDeal->time - firstIntervalTime < timeOfInterval) {
-			dealsForLineGraph.replace(dealsForLineGraph.indexOf(dealsForLineGraph.last()), newDeal);
+			delete dealsForLineGraph.last();
+			dealsForLineGraph.last() = newDeal;
 		}
 		else {
 			dealsForLineGraph.append(newDeal);
