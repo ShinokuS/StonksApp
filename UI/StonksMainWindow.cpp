@@ -41,6 +41,9 @@ void StonksMainWindow::insertNewDataAndUpdate()
 void StonksMainWindow::updateWindow()
 {
     // Я бы хотел это распараллелить, но Qt не даёт.
+    time_t curTime = time(0);
+    auto timeX = UnixConverter::timeConverter(curTime);
+    ui.label->setText(QString::number(timeX->hour)+":"+QString::number(timeX->minute)+":"+ QString::number(timeX->second));
     updatePriceGraph();
     updateMarketDepthGraph();
     updateOrderBookTable();

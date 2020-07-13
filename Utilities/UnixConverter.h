@@ -2,8 +2,10 @@
 
 #include "TimeFormat.h"
 
+#include <time.h>
+
 class UnixConverter
 {
 public:
-	TimeFormat* timeConverter(time_t time);
+	static TimeFormat* timeConverter(time_t time = time(0));
 };

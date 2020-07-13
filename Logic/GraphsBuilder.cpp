@@ -3,6 +3,7 @@
 #include <QtGlobal>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QAreaSeries>
+#include <QDateTime>
 
 using namespace QtCharts;
 
@@ -52,9 +53,13 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
 LinePriceGraph* GraphsBuilder::buildLinePriceGraph(Deals* deals)
 {
     QLineSeries* priceLineSeries = new QLineSeries();
+    QDateTime xValue;
+
     auto iter = deals->dealsForLineGraph.begin();
     for (; iter != deals->dealsForLineGraph.end(); iter++) {
-        priceLineSeries->append(qreal((*iter)->time), (*iter)->price);
+        auto timeX = UnixConverter::timeConverter((*iter)->time);
+        xValue.setTime(QTime(timeX->hour, timeX->minute, timeX->second));
+        priceLineSeries->append(xValue.toMSecsSinceEpoch(), (*iter)->price);
     }
     return new LinePriceGraph(priceLineSeries);
 }
