@@ -14,4 +14,5 @@ public:
 
 private:
 	int firstIntervalTime;
+	int timeOfInterval = 5;
 };

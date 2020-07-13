@@ -9,7 +9,6 @@ void Deals::addNewDeal(qreal price, qreal quantity, time_t time)
 
 void Deals::addDealForLineGraph(Order* newDeal)
 {
-	int timeOfInterval = 5;
 	if (!firstIntervalTime) {
 		dealsForLineGraph.append(newDeal);
 		firstIntervalTime = newDeal->time;
