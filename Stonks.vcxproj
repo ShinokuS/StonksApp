@@ -91,20 +91,22 @@
     <QtRcc Include="UI\StonksMainWindow.qrc" />
     <QtUic Include="UI\StonksMainWindow.ui" />
     <QtMoc Include="UI\StonksMainWindow.h" />
+    <ClCompile Include="IO\Parser.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\WeWil\Documents\stonks;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="Logic\Deals.cpp" />
     <ClCompile Include="Logic\GraphsBuilder.cpp" />
     <ClCompile Include="Logic\Order.cpp" />
     <ClCompile Include="Logic\OrderBookTableModel.cpp" />
-    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="UI\Graphs\MarketDepthGraph.cpp" />
     <ClCompile Include="UI\Graphs\PriceGraph.cpp" />
     <ClCompile Include="UI\StonksMainWindow.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IO\Parser.h" />
     <ClInclude Include="Logic\Deals.h" />
     <ClInclude Include="Logic\GraphsBuilder.h" />
-    <ClInclude Include="Parser.h" />
     <ClInclude Include="UI\Graphs\PriceGraph.h" />
     <QtMoc Include="Logic\OrderBookTableModel.h" />
     <ClInclude Include="Logic\Order.h" />

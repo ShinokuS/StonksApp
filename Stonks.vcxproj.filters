@@ -51,7 +51,7 @@
     <ClCompile Include="UI\Graphs\PriceGraph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Parser.cpp">
+    <ClCompile Include="IO\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,7 +71,7 @@
     <ClInclude Include="UI\Graphs\PriceGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Parser.h">
+    <ClInclude Include="IO\Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
