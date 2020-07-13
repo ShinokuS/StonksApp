@@ -1,44 +1,47 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "string"
-#include "IO/rapidjson/rapidjson.h"
+//#include "IO/rapidjson/rapidjson.h"
 #include "IO/rapidjson/document.h"
 #include "Logic/OrderBookTableModel.h"
 #include "IO/Parser.h"
-using namespace rapidjson;
+
 
 OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentName)
 {
-	FILE* DumpFile = fopen(fileName.c_str(), "rb");
-	_fseeki64(DumpFile, 0, SEEK_END);
-	size_t filesize = (size_t)malloc(_ftelli64(DumpFile));
-	_fseeki64(DumpFile, 0, SEEK_SET);
+	FILE* dumpFile = fopen(fileName.c_str(), "rb");
 
-	std::string buffer;
-	buffer.resize(9);
+	_fseeki64(dumpFile, 0, SEEK_END);
+	size_t filesize = (size_t)_ftelli64(dumpFile);//определяем размер файла.
+	_fseeki64(dumpFile, 0, SEEK_SET);
+	
+	std::string search;//Буффер для поиска ключевых слов
+	search.resize(9);
 
-	OrderBookTableModel* orderBookTable = new OrderBookTableModel;
-	for (size_t i = 0; i < filesize; ++i)
+	OrderBookTableModel* orderBookTable = new OrderBookTableModel; //Книжка для заполнения ордерами
+
+	for (size_t i = 0; i < filesize; ++i)//Начинаем поиск по файлу
 	{
-		buffer[0] = buffer[1];
-		buffer[1] = buffer[2];
-		buffer[2] = buffer[3];
-		buffer[3] = buffer[4];
-		buffer[4] = buffer[5];
-		buffer[5] = buffer[6];
-		buffer[6] = buffer[7];
-		buffer[7] = buffer[8];
-		buffer[8] = fgetc(DumpFile);
-		if (buffer == "timestamp")
+		search[0] = search[1];
+		search[1] = search[2];
+		search[2] = search[3];
+		search[3] = search[4];
+		search[4] = search[5];
+		search[5] = search[6];
+		search[6] = search[7];
+		search[7] = search[8];
+		search[8] = fgetc(dumpFile);
+
+		if (search == "timestamp")	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
-			std::string json_str = "{\"timestamp";
-			char ch;
-			int right = 0;
-			int left = 1;
+			std::string json = "{\"timestamp"; //Инициализирую строку прочитанными символами,чтобы не перемещать указатель и считывать их снова.
+			char ch;		//Не знаю, как лучше назвать переменную :-)	
+			int right = 0;	//Количество }
+			int left = 1;	//Количество {
 			while (left != right)
 			{
-				ch = fgetc(DumpFile);
+				ch = fgetc(dumpFile);//Считываем посимвольно json-строку для Document.
 				++i;
-				json_str += ch;
+				json += ch; //Формируем строку для Document.
 				if (ch == '{')
 				{
 					++left;
@@ -48,16 +51,59 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 					++right;
 				}
 			}
-			Document* d = new Document;
-			d->Parse(json_str.c_str());
-			//time_t timestamp = (*d)["timestamp"].GetInt64();
-			//for (auto itr = (*d)["bids"].Begin(); itr != (*d)["bids"].End();++itr)
-			//{
-			//	
-			//}
+			rapidjson::Document* doc = new rapidjson::Document;
+			doc->Parse(json.c_str());
+			time_t timestamp = (*doc)["timestamp"].GetInt64();
 
+			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
+			{
+				std::string flag = (*itr)[0].GetString();
+				if (flag == "new")
+				{
+					//Здесь должнен быть метод добавления ордера(bid)
+				}
+				else
+				{
+					if (flag == "delete")
+					{
+						//Здесь должнен быть метод удаления ордера(bid)
+					}
+					else
+					{
+						if (flag == "change")
+						{
+							//Здесь должнен быть метод изменнения ордера(bid)
+						}
+					}
+				}
+			} 
+
+			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
+			{
+				std::string flag = (*itr)[0].GetString();
+				if (flag == "new")
+				{
+					//Здесь должнен быть метод добавления ордера(ask)
+				}
+				else
+				{
+					if (flag == "delete")
+					{
+						//Здесь должнен быть метод удаления ордера(ask)
+					}
+					else
+					{
+						if (flag == "change")
+						{
+							//Здесь должнен быть метод изменнения ордера(ask)
+						}
+					}
+				}
+			}
+
+			delete[] doc;
 		}
 	}
 
-	return 0;
+	return orderBookTable;
 }
