@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Utilities\UnixConverter.cpp" />
     <QtRcc Include="UI\StonksMainWindow.qrc" />
     <QtUic Include="UI\StonksMainWindow.ui" />
     <QtMoc Include="UI\StonksMainWindow.h" />
@@ -104,6 +105,8 @@
     <ClInclude Include="Logic\Deals.h" />
     <ClInclude Include="Logic\GraphsBuilder.h" />
     <ClInclude Include="UI\Graphs\PriceGraph.h" />
+    <ClInclude Include="Utilities\TimeFormat.h" />
+    <ClInclude Include="Utilities\UnixConverter.h" />
     <QtMoc Include="Logic\OrderBookTableModel.h" />
     <ClInclude Include="Logic\Order.h" />
     <ClInclude Include="UI\Graphs\MarketDepthGraph.h" />
