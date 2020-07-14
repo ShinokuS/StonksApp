@@ -34,21 +34,22 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 		if (search == "timestamp")	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
 			std::string json = "{\"timestamp"; //Инициализирую строку прочитанными символами,чтобы не перемещать указатель и считывать их снова.
-			char ch;		//Не знаю, как лучше назвать переменную :-)	
-			int right = 0;	//Количество }
-			int left = 1;	//Количество {
-			while (left != right)
+			json.reserve(100000);
+			char ch;
+			int rightCurlyBrackets = 0;
+			int leftCurlyBrackets = 1;
+			while (leftCurlyBrackets != rightCurlyBrackets)
 			{
 				ch = fgetc(dumpFile);//Считываем посимвольно json-строку для Document.
 				++i;
 				json += ch; //Формируем строку для Document.
 				if (ch == '{')
 				{
-					++left;
+					++leftCurlyBrackets;
 				}
 				else if (ch == '}')
 				{
-					++right;
+					++rightCurlyBrackets;
 				}
 			}
 			rapidjson::Document* doc = new rapidjson::Document;
