@@ -20,15 +20,23 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 
 	OrderBookTableModel* orderBookTable = new OrderBookTableModel; //Книжка для заполнения ордерами
 
+	int counter = 0;
+
 	for (size_t i = 0; i < filesize; ++i)//Начинаем поиск по файлу
 	{
 		for (int j = 0; j < search.size()-1; ++j)
 		{
-			search[j] = search[++j];
+			search[j] = search[j+1];
 		}
 		search.back() = fgetc(dumpFile);
 		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
+			if (counter == 5)
+			{
+				break;
+			}
+			++counter;
+
 			std::string json = "{";
 			while (fgetc(dumpFile) != '{');
 			json.reserve(100000);
@@ -86,7 +94,7 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 					//Здесь должнен быть метод изменнения ордера(ask)
 				}
 			}
-			delete[] doc;
+			delete doc;
 		}
 	}
 
