@@ -93,6 +93,7 @@
     <QtMoc Include="UI\StonksMainWindow.h" />
     <ClCompile Include="IO\Parser.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\WeWil\Documents\stonks;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\WeWil\Documents\stonks;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Logic\Deals.cpp" />
     <ClCompile Include="Logic\GraphsBuilder.cpp" />

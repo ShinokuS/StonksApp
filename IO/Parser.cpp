@@ -15,29 +15,26 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 	_fseeki64(dumpFile, 0, SEEK_SET);
 	
 	std::string search;//Буффер для поиска ключевых слов
-	search.resize(9);
+	const std::string keyWord = "book." + instrumentName; 
+	search.resize(keyWord.size());
 
 	OrderBookTableModel* orderBookTable = new OrderBookTableModel; //Книжка для заполнения ордерами
 
 	for (size_t i = 0; i < filesize; ++i)//Начинаем поиск по файлу
 	{
-		search[0] = search[1];
-		search[1] = search[2];
-		search[2] = search[3];
-		search[3] = search[4];
-		search[4] = search[5];
-		search[5] = search[6];
-		search[6] = search[7];
-		search[7] = search[8];
-		search[8] = fgetc(dumpFile);
-
-		if (search == "timestamp")	//Если находим ключевое слово, начинаем считывать чистую json-строку
+		for (int j = 0; j < search.size()-1; ++j)
 		{
-			std::string json = "{\"timestamp"; //Инициализирую строку прочитанными символами,чтобы не перемещать указатель и считывать их снова.
+			search[j] = search[++j];
+		}
+		search.back() = fgetc(dumpFile);
+		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
+		{
+			std::string json = "{";
+			while (fgetc(dumpFile) != '{');
 			json.reserve(100000);
 			char ch;
-			int rightCurlyBrackets = 0;
-			int leftCurlyBrackets = 1;
+			short rightCurlyBrackets = 0;
+			short leftCurlyBrackets = 1;
 			while (leftCurlyBrackets != rightCurlyBrackets)
 			{
 				ch = fgetc(dumpFile);//Считываем посимвольно json-строку для Document.
@@ -89,7 +86,6 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 					//Здесь должнен быть метод изменнения ордера(ask)
 				}
 			}
-
 			delete[] doc;
 		}
 	}
