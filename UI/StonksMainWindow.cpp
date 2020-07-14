@@ -41,9 +41,6 @@ void StonksMainWindow::insertNewDataAndUpdate()
 void StonksMainWindow::updateWindow()
 {
     // Я бы хотел это распараллелить, но Qt не даёт.
-    time_t curTime = time(0);
-    auto timeX = UnixConverter::timeConverter(curTime);
-    ui.label->setText(QString::number(timeX->hour)+":"+QString::number(timeX->minute)+":"+ QString::number(timeX->second));
     updatePriceGraph();
     updateMarketDepthGraph();
     updateOrderBookTable();
@@ -67,10 +64,14 @@ void StonksMainWindow::updateMarketDepthGraph()
 
 void StonksMainWindow::updatePriceGraph()
 {
-    auto newLinePriceGraph = GraphsBuilder::buildLinePriceGraph(dealsModel);
-    priceGraphView->setChart(newLinePriceGraph);
     delete linePriceGraph;
-    linePriceGraph = newLinePriceGraph;
+    linePriceGraph = GraphsBuilder::buildLinePriceGraph(dealsModel);
+    
+    //linePriceGraph = newlinePriceGraph;
+    //priceGraphLayout->update();
+    priceGraphLayout->addWidget(linePriceGraph);
+    //ui.priceGraphWidget->setLayout(priceGraphLayout);
+    //linePriceGraph->replot();
     ui.priceGraphWidget->repaint();
 }
 
@@ -108,11 +109,9 @@ void StonksMainWindow::placeOrderBookTable()
 void StonksMainWindow::placePriceGraph()
 {
     linePriceGraph = GraphsBuilder::buildLinePriceGraph(dealsModel);
-
-    priceGraphView = new QChartView(linePriceGraph);
-    priceGraphView->setRenderHint(QPainter::Antialiasing);
-
+    
     priceGraphLayout = new QGridLayout(this);
-    priceGraphLayout->addWidget(priceGraphView);
+    priceGraphLayout->addWidget(linePriceGraph);
     ui.priceGraphWidget->setLayout(priceGraphLayout);
+    linePriceGraph->replot();
 }

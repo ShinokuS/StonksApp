@@ -52,14 +52,10 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
 
 LinePriceGraph* GraphsBuilder::buildLinePriceGraph(Deals* deals)
 {
-    QLineSeries* priceLineSeries = new QLineSeries();
-    QDateTime xValue;
-
-    auto iter = deals->dealsForLineGraph.begin();
-    for (; iter != deals->dealsForLineGraph.end(); iter++) {
-        auto timeX = UnixConverter::timeConverter((*iter)->time);
-        xValue.setTime(QTime(timeX->hour, timeX->minute, timeX->second));
-        priceLineSeries->append(xValue.toMSecsSinceEpoch(), (*iter)->price);
+    QVector <double> time, price;
+    for (auto iter = deals->dealsForLineGraph.begin(); iter != deals->dealsForLineGraph.end(); iter++) {
+        time.push_back((*iter)->time);
+        price.push_back((*iter)->price);
     }
-    return new LinePriceGraph(priceLineSeries);
+    return new LinePriceGraph(time, price);
 }
