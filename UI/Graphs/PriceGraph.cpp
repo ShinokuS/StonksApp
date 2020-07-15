@@ -3,8 +3,8 @@
 LinePriceGraph::LinePriceGraph(QVector <double> time, QVector <double> price)
 {
     this->setInteraction(QCP::iRangeZoom, true);   // Включаем взаимодействие удаления/приближения
-    this->setInteraction(QCP::iRangeDrag, true);  // Включаем взаимодействие перетаскивания графика
-    this->axisRect()->setRangeDrag(Qt::Horizontal);   // Включаем перетаскивание только по горизонтальной оси
+    //this->setInteraction(QCP::iRangeDrag, true);  // Включаем взаимодействие перетаскивания графика
+    //this->axisRect()->setRangeDrag(Qt::Horizontal);   // Включаем перетаскивание только по горизонтальной оси
     this->axisRect()->setRangeZoom(Qt::Horizontal);   // Включаем удаление/приближение только по горизонтальной оси
     this->xAxis->setTickLabelType(QCPAxis::ltDateTime);   // Подпись координат по Оси X в качестве Даты и Времени
     this->xAxis->setDateTimeFormat("hh:mm");  // Устанавливаем формат даты и времени
@@ -12,9 +12,10 @@ LinePriceGraph::LinePriceGraph(QVector <double> time, QVector <double> price)
     // Ставим шрифты на ось
     this->xAxis->setTickLabelFont(QFont(QFont().family(), 8));
     this->yAxis->setTickLabelFont(QFont(QFont().family(), 8));
-
-    // Автоматическое масштабирование тиков по Оси X
-    this->xAxis->setAutoTickStep(true);
+    
+    // Отключаем автоматическое масштабирование тиков по Оси X и ставим шаг 2 часа
+    this->xAxis->setAutoTickStep(false);
+    this->xAxis->setTickStep(7200);
     
     // Делаем видимой всю часть графика
     /* Делаем видимыми оси X и Y по верхней и правой границам графика,
@@ -35,7 +36,6 @@ LinePriceGraph::LinePriceGraph(QVector <double> time, QVector <double> price)
     // Инициализируем график и привязываем его к Осям
     QCPGraph *graphic = new QCPGraph(this->xAxis, this->yAxis);
     this->addPlottable(graphic);  // Устанавливаем график на полотно
-    graphic->setName("Price");       // Устанавливаем
     graphic->setPen(QPen(QColor(Qt::red))); // Устанавливаем цвет графика
     graphic->setAntialiased(true);         // Отключаем сглаживание, по умолчанию включено
     graphic->setLineStyle(QCPGraph::lsLine); // График в виде линии

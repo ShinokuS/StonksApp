@@ -8,6 +8,8 @@ class Deals
 {
 public:
 	QList<Order*> dealsForLineGraph;
+	double maxPrice;
+	double minPrice;
 
 	void addNewDeal(qreal price, qreal quantity, time_t time);
 

@@ -2,6 +2,7 @@
 
 #include <QHeaderView>
 #include <QTimer>
+#include <algorithm>
 
 using namespace QtCharts;
 
@@ -28,6 +29,25 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, Dea
     tmr->setInterval(1000);
     connect(tmr, SIGNAL(timeout()), this, SLOT(insertNewDataAndUpdate()));
     tmr->start();
+
+    connect(linePriceGraph->xAxis, SIGNAL(rangeChanged(QCPRange)),
+        this, SLOT(slotRangeChanged(QCPRange)));
+}
+
+void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
+{
+    int firstDayTime = (int(GraphsBuilder::getTimeForLinePriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
+    int lastDayTime = firstDayTime + 86400;
+    linePriceGraph->xAxis->setTickStep((newRange.size() <= 10800) ? 600 : 7200);
+    QCPRange boundedRange = newRange;
+  
+    if (boundedRange.lower < firstDayTime || boundedRange.upper>lastDayTime) {
+        boundedRange.lower = firstDayTime;
+        boundedRange.upper = lastDayTime;
+    }
+   
+    linePriceGraph->xAxis->setRange(boundedRange);
+
 }
 
 void StonksMainWindow::insertNewDataAndUpdate() 
@@ -65,8 +85,18 @@ void StonksMainWindow::updateMarketDepthGraph()
 void StonksMainWindow::updatePriceGraph()
 {
     linePriceGraph->graph()->clearData();
-    linePriceGraph->graph()->setData(GraphsBuilder::getTimeForLinePriceGraph(dealsModel), GraphsBuilder::getPriceForLinePriceGraph(dealsModel));
-    linePriceGraph->rescaleAxes();
+    if (!GraphsBuilder::getTimeForLinePriceGraph(dealsModel).empty()) {
+        if (isFirstTime) {
+            int firstDayTime = (int(GraphsBuilder::getTimeForLinePriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
+            int lastDayTime = firstDayTime + 86400;
+            linePriceGraph->xAxis->setRange(firstDayTime, lastDayTime);
+            isFirstTime = false;
+        }
+        linePriceGraph->graph()->clearData();
+        linePriceGraph->graph()->setData(GraphsBuilder::getTimeForLinePriceGraph(dealsModel), GraphsBuilder::getPriceForLinePriceGraph(dealsModel));
+        linePriceGraph->yAxis->setRange(dealsModel->dealsForLineGraph.last()->price, dealsModel->maxPrice, Qt::AlignBottom);
+        linePriceGraph->graph()->setName("Close: "+ QString::number(dealsModel->dealsForLineGraph.last()->price));
+    }
     linePriceGraph->replot();
 }
 
@@ -103,8 +133,16 @@ void StonksMainWindow::placeOrderBookTable()
 
 void StonksMainWindow::placePriceGraph()
 {
-    //linePriceGraph = GraphsBuilder::buildLinePriceGraph(dealsModel);
     linePriceGraph = new LinePriceGraph(GraphsBuilder::getTimeForLinePriceGraph(dealsModel), GraphsBuilder::getPriceForLinePriceGraph(dealsModel));
+    if (GraphsBuilder::getTimeForLinePriceGraph(dealsModel).empty()) {
+        isFirstTime = true;
+    }
+    else {
+        int firstDayTime = (int(GraphsBuilder::getTimeForLinePriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
+        int lastDayTime = firstDayTime + 86400;
+        linePriceGraph->xAxis->setRange(firstDayTime, lastDayTime);
+        isFirstTime = false;
+    }
     priceGraphLayout = new QGridLayout(this);
     priceGraphLayout->addWidget(linePriceGraph);
     ui.priceGraphWidget->setLayout(priceGraphLayout);

@@ -21,6 +21,7 @@ public:
 private slots:
     void centerOrderBookTable();
     void insertNewDataAndUpdate();
+    void slotRangeChanged(const QCPRange& newRange);
 
 private:
     Ui::StonksAppClass ui;
@@ -35,6 +36,7 @@ private:
     LinePriceGraph* linePriceGraph;
     QChartView* priceGraphView;
     QGridLayout* priceGraphLayout;
+    bool isFirstTime;
 
     void placeMarketDepthGraph();
     void placePriceGraph();
