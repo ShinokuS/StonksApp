@@ -9,5 +9,6 @@ class GraphsBuilder
 {
 public:
 	static MarketDepthGraph* buildMarketDepthGraph(OrderBookTableModel* orderBook);
-	static LinePriceGraph* buildLinePriceGraph(Deals* deals);
+	static QVector<double> getTimeForLinePriceGraph(Deals* deals);
+	static QVector<double> getPriceForLinePriceGraph(Deals* deals);
 };

@@ -50,12 +50,19 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
     return new MarketDepthGraph(bidsSeries, asksSeries);
 }
 
-LinePriceGraph* GraphsBuilder::buildLinePriceGraph(Deals* deals)
+QVector<double> GraphsBuilder::getTimeForLinePriceGraph(Deals* deals)
 {
-    QVector <double> time, price;
+    QVector <double> time;
     for (auto iter = deals->dealsForLineGraph.begin(); iter != deals->dealsForLineGraph.end(); iter++) {
         time.push_back((*iter)->time);
+    }
+    return time;
+}
+QVector<double> GraphsBuilder::getPriceForLinePriceGraph(Deals* deals)
+{
+    QVector <double> price;
+    for (auto iter = deals->dealsForLineGraph.begin(); iter != deals->dealsForLineGraph.end(); iter++) {
         price.push_back((*iter)->price);
     }
-    return new LinePriceGraph(time, price);
+    return price;
 }

@@ -64,15 +64,10 @@ void StonksMainWindow::updateMarketDepthGraph()
 
 void StonksMainWindow::updatePriceGraph()
 {
-    delete linePriceGraph;
-    linePriceGraph = GraphsBuilder::buildLinePriceGraph(dealsModel);
-    
-    //linePriceGraph = newlinePriceGraph;
-    //priceGraphLayout->update();
-    priceGraphLayout->addWidget(linePriceGraph);
-    //ui.priceGraphWidget->setLayout(priceGraphLayout);
-    //linePriceGraph->replot();
-    ui.priceGraphWidget->repaint();
+    linePriceGraph->graph()->clearData();
+    linePriceGraph->graph()->setData(GraphsBuilder::getTimeForLinePriceGraph(dealsModel), GraphsBuilder::getPriceForLinePriceGraph(dealsModel));
+    linePriceGraph->rescaleAxes();
+    linePriceGraph->replot();
 }
 
 void StonksMainWindow::centerOrderBookTable()
@@ -108,10 +103,9 @@ void StonksMainWindow::placeOrderBookTable()
 
 void StonksMainWindow::placePriceGraph()
 {
-    linePriceGraph = GraphsBuilder::buildLinePriceGraph(dealsModel);
-    
+    //linePriceGraph = GraphsBuilder::buildLinePriceGraph(dealsModel);
+    linePriceGraph = new LinePriceGraph(GraphsBuilder::getTimeForLinePriceGraph(dealsModel), GraphsBuilder::getPriceForLinePriceGraph(dealsModel));
     priceGraphLayout = new QGridLayout(this);
     priceGraphLayout->addWidget(linePriceGraph);
     ui.priceGraphWidget->setLayout(priceGraphLayout);
-    linePriceGraph->replot();
 }

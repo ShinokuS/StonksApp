@@ -15,9 +15,10 @@ LinePriceGraph::LinePriceGraph(QVector <double> time, QVector <double> price)
 
     // Автоматическое масштабирование тиков по Оси X
     this->xAxis->setAutoTickStep(true);
-
+    
+    // Делаем видимой всю часть графика
     /* Делаем видимыми оси X и Y по верхней и правой границам графика,
-     * но отключаем на них тики и подписи координат
+       но отключаем на них тики и подписи координат
      * */
     this->xAxis2->setVisible(true);
     this->yAxis2->setVisible(true);
@@ -36,9 +37,8 @@ LinePriceGraph::LinePriceGraph(QVector <double> time, QVector <double> price)
     this->addPlottable(graphic);  // Устанавливаем график на полотно
     graphic->setName("Price");       // Устанавливаем
     graphic->setPen(QPen(QColor(Qt::red))); // Устанавливаем цвет графика
-    graphic->setAntialiased(false);         // Отключаем сглаживание, по умолчанию включено
+    graphic->setAntialiased(true);         // Отключаем сглаживание, по умолчанию включено
     graphic->setLineStyle(QCPGraph::lsLine); // График в виде линии
     graphic->setData(time, price); // Устанавливаем данные
     this->rescaleAxes();
-
 }
