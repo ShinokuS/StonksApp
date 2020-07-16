@@ -4,6 +4,7 @@
 #include "OrderBookTableModel.h"
 #include "../UI/Graphs/PriceGraph.h"
 #include "Deals.h"
+#include "Time.h"
 
 class GraphsBuilder
 {

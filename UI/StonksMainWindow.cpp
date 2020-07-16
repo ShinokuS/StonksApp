@@ -39,10 +39,10 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel,
 
 void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 {
-    int firstDayTime = (int(graphsBuilder->getTimeForPriceGraph().first()) / 86400)
-                        * 86400 - 10800;
-    int lastDayTime = firstDayTime + 86400;
-    priceGraph->xAxis->setTickStep((newRange.size() <= 10800) ? 600 : 7200);
+    int firstDayTime = (int(graphsBuilder->getTimeForPriceGraph().first()) / Time::DAY)
+                        * Time::DAY - Time::THREE_HOURS;
+    int lastDayTime = firstDayTime + Time::DAY;
+    priceGraph->xAxis->setTickStep((newRange.size() <= Time::THREE_HOURS) ? Time::TEN_MINUTES : Time::TWO_HOURS);
     QCPRange boundedRange = newRange;
   
     if (boundedRange.lower < firstDayTime || boundedRange.upper>lastDayTime) {

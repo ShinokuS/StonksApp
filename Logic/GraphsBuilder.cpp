@@ -62,9 +62,9 @@ PriceGraph* GraphsBuilder::buildPriceGraph(Deals* dealsModel)
         isFirstDeal = true;
     }
     else {
-        int firstDayTime = (int(getTimeForPriceGraph().first()) / 86400)
-                            * 86400 - 10800;
-        int lastDayTime = firstDayTime + 86400;
+        int firstDayTime = (int(getTimeForPriceGraph().first()) / Time::DAY)
+                            * Time::DAY - Time::THREE_HOURS;
+        int lastDayTime = firstDayTime + Time::DAY;
         priceGraph->xAxis->setRange(firstDayTime, lastDayTime);
         isFirstDeal = false;
     }
@@ -77,9 +77,9 @@ void GraphsBuilder::update(PriceGraph* priceGraph)
     priceGraph->graph()->clearData();
     if (! getTimeForPriceGraph().empty()) {
         if (isFirstDeal) {
-            int firstDayTime = (int(getTimeForPriceGraph().first()) / 86400)
-                                * 86400 - 10800;
-            int lastDayTime = firstDayTime + 86400;
+            int firstDayTime = (int(getTimeForPriceGraph().first()) / Time::DAY)
+                                * Time::DAY - Time::THREE_HOURS;
+            int lastDayTime = firstDayTime + Time::DAY;
             priceGraph->xAxis->setRange(firstDayTime, lastDayTime);
             isFirstDeal = false;
         }
