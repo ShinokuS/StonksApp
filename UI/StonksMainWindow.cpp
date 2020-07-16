@@ -42,11 +42,51 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
     int firstDayTime = (int(graphsBuilder->getTimeForPriceGraph().first()) / Time::DAY)
                         * Time::DAY - Time::THREE_HOURS;
     int lastDayTime = firstDayTime + Time::DAY;
-    priceGraph->xAxis->setTickStep((newRange.size() <= Time::THREE_HOURS) ? Time::TEN_MINUTES : Time::TWO_HOURS);
+
+    if (newRange.size() <= Time::THREE_HOURS) {
+        if (newRange.size() <= Time::TWO_HOURS) {
+            if (newRange.size() < Time::ONE_HOUR) {
+                if (newRange.size() < Time::HALF_OF_HOUR) {
+                    if (newRange.size() < Time::TEN_MINUTES) {
+                        if (newRange.size() < Time::FIVE_MINUTES) {
+                            priceGraph->xAxis->setDateTimeFormat("hh:mm:ss");
+                            if (newRange.size() <= Time::ONE_MINUTE) {
+                                priceGraph->xAxis->setTickStep(Time::TEN_SECONDS);
+                            }
+                            else {
+                                priceGraph->xAxis->setTickStep(Time::HALF_OF_MINUTE);
+                            }
+                        }
+                        else {
+                            priceGraph->xAxis->setDateTimeFormat("hh:mm");
+                            priceGraph->xAxis->setTickStep(Time::ONE_MINUTE);
+                        }
+                    }
+                    else {
+                        priceGraph->xAxis->setTickStep(Time::FIVE_MINUTES);
+                    }
+                }
+                else {
+                    priceGraph->xAxis->setTickStep(Time::TEN_MINUTES);
+                }
+            }
+            else {
+                priceGraph->xAxis->setTickStep(Time::HALF_OF_HOUR);
+            }
+        }
+        else {
+            priceGraph->xAxis->setTickStep(Time::ONE_HOUR);
+        }
+    }
+    else {
+        priceGraph->xAxis->setTickStep(Time::TWO_HOURS);
+    }
+
     QCPRange boundedRange = newRange;
-  
-    if (boundedRange.lower < firstDayTime || boundedRange.upper>lastDayTime) {
+    if (boundedRange.lower < firstDayTime) {
         boundedRange.lower = firstDayTime;
+    }
+    if (boundedRange.upper>lastDayTime) {
         boundedRange.upper = lastDayTime;
     }
    
@@ -89,11 +129,6 @@ void StonksMainWindow::updateMarketDepthGraph()
 void StonksMainWindow::updatePriceGraph()
 {
     graphsBuilder->update(priceGraph);
-
-    if (! dealsModel->dealsForPriceGraph.empty()) {
-        ui.OHLC->setText("Close: " + QString::number(
-                                dealsModel->dealsForPriceGraph.last()->price));
-    }
 }
 
 void StonksMainWindow::centerOrderBookTable()

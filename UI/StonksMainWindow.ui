@@ -51,59 +51,10 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>40</y>
+      <y>-10</y>
       <width>661</width>
-      <height>481</height>
+      <height>531</height>
      </rect>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="intervals">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>20</y>
-      <width>101</width>
-      <height>22</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Time interval:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="OHLC">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>20</y>
-      <width>351</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="changeInterval">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>20</y>
-      <width>91</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Change interval</string>
     </property>
    </widget>
   </widget>

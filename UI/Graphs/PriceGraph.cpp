@@ -3,8 +3,8 @@
 PriceGraph::PriceGraph(QVector <double> time, QVector <double> price)
 {
     this->setInteraction(QCP::iRangeZoom, true);   // Включаем взаимодействие удаления/приближения
-    //this->setInteraction(QCP::iRangeDrag, true);  // Включаем взаимодействие перетаскивания графика
-    //this->axisRect()->setRangeDrag(Qt::Horizontal);   // Включаем перетаскивание только по горизонтальной оси
+    this->setInteraction(QCP::iRangeDrag, true);  // Включаем взаимодействие перетаскивания графика
+    this->axisRect()->setRangeDrag(Qt::Horizontal);   // Включаем перетаскивание только по горизонтальной оси
     this->axisRect()->setRangeZoom(Qt::Horizontal);   // Включаем удаление/приближение только по горизонтальной оси
     this->xAxis->setTickLabelType(QCPAxis::ltDateTime);   // Подпись координат по Оси X в качестве Даты и Времени
     this->xAxis->setDateTimeFormat("hh:mm");  // Устанавливаем формат даты и времени

@@ -62,10 +62,10 @@ PriceGraph* GraphsBuilder::buildPriceGraph(Deals* dealsModel)
         isFirstDeal = true;
     }
     else {
-        int firstDayTime = (int(getTimeForPriceGraph().first()) / Time::DAY)
-                            * Time::DAY - Time::THREE_HOURS;
-        int lastDayTime = firstDayTime + Time::DAY;
-        priceGraph->xAxis->setRange(firstDayTime, lastDayTime);
+        priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.last()->time,
+                                    dealsModel->dealsForPriceGraph.last()->time + Time::HALF_OF_MINUTE);
+        priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
+            dealsModel->maxPrice, Qt::AlignBottom);
         isFirstDeal = false;
     }
 
@@ -77,10 +77,8 @@ void GraphsBuilder::update(PriceGraph* priceGraph)
     priceGraph->graph()->clearData();
     if (! getTimeForPriceGraph().empty()) {
         if (isFirstDeal) {
-            int firstDayTime = (int(getTimeForPriceGraph().first()) / Time::DAY)
-                                * Time::DAY - Time::THREE_HOURS;
-            int lastDayTime = firstDayTime + Time::DAY;
-            priceGraph->xAxis->setRange(firstDayTime, lastDayTime);
+            priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.last()->time, 
+                                        dealsModel->dealsForPriceGraph.last()->time + Time::HALF_OF_MINUTE);
             isFirstDeal = false;
         }
         priceGraph->graph()->clearData();
