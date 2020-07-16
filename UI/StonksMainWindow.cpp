@@ -7,7 +7,8 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, Deals* deals, QWidget* parent)
+StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel,
+                                Deals* deals, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
@@ -38,7 +39,8 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, Dea
 
 void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 {
-    int firstDayTime = (int(graphsBuilder->getTimeForPriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
+    int firstDayTime = (int(graphsBuilder->getTimeForPriceGraph(dealsModel).first()) / 86400)
+                        * 86400 - 10800;
     int lastDayTime = firstDayTime + 86400;
     priceGraph->xAxis->setTickStep((newRange.size() <= 10800) ? 600 : 7200);
     QCPRange boundedRange = newRange;
@@ -89,13 +91,15 @@ void StonksMainWindow::updatePriceGraph()
     graphsBuilder->update(priceGraph, dealsModel);
 
     if (! dealsModel->dealsForPriceGraph.empty()) {
-        ui.OHLC->setText("Close: " + QString::number(dealsModel->dealsForPriceGraph.last()->price));
+        ui.OHLC->setText("Close: " + QString::number(
+                                dealsModel->dealsForPriceGraph.last()->price));
     }
 }
 
 void StonksMainWindow::centerOrderBookTable()
 {
-    ui.tableView->scrollTo(StonksMainWindow::model->index(model->centerIndex - 2, 0), QAbstractItemView::PositionAtCenter);
+    ui.tableView->scrollTo(model->index(model->centerIndex - 2, 0),
+                            QAbstractItemView::PositionAtCenter);
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
