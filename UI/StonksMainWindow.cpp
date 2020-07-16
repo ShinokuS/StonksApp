@@ -39,7 +39,7 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel,
 
 void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 {
-    int firstDayTime = (int(graphsBuilder->getTimeForPriceGraph(dealsModel).first()) / 86400)
+    int firstDayTime = (int(graphsBuilder->getTimeForPriceGraph().first()) / 86400)
                         * 86400 - 10800;
     int lastDayTime = firstDayTime + 86400;
     priceGraph->xAxis->setTickStep((newRange.size() <= 10800) ? 600 : 7200);
@@ -88,7 +88,7 @@ void StonksMainWindow::updateMarketDepthGraph()
 
 void StonksMainWindow::updatePriceGraph()
 {
-    graphsBuilder->update(priceGraph, dealsModel);
+    graphsBuilder->update(priceGraph);
 
     if (! dealsModel->dealsForPriceGraph.empty()) {
         ui.OHLC->setText("Close: " + QString::number(

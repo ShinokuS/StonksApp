@@ -11,10 +11,12 @@ public:
 	MarketDepthGraph* buildMarketDepthGraph(OrderBookTableModel* orderBook);
 
 	PriceGraph* buildPriceGraph(Deals* deals);
-	void update(PriceGraph* priceGraph, Deals* dealsModel);
+	void update(PriceGraph* priceGraph);
 
-	QVector<double> getTimeForPriceGraph(Deals* deals);
-	QVector<double> getPriceForPriceGraph(Deals* deals);
+	QVector<double> getTimeForPriceGraph();
+	QVector<double> getPriceForPriceGraph();
 
+private:
+	Deals* dealsModel;
 	bool isFirstDeal;
 };

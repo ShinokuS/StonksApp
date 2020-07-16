@@ -52,14 +52,17 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
 
 PriceGraph* GraphsBuilder::buildPriceGraph(Deals* dealsModel)
 {
-    auto priceGraph = new PriceGraph(getTimeForPriceGraph(dealsModel),
-                                    getPriceForPriceGraph(dealsModel));
+    // сохраняем на будущее
+    this->dealsModel = dealsModel;
+
+    auto priceGraph = new PriceGraph(getTimeForPriceGraph(),
+                                    getPriceForPriceGraph());
     
-    if (getTimeForPriceGraph(dealsModel).empty()) {
+    if (getTimeForPriceGraph().empty()) {
         isFirstDeal = true;
     }
     else {
-        int firstDayTime = (int(getTimeForPriceGraph(dealsModel).first()) / 86400)
+        int firstDayTime = (int(getTimeForPriceGraph().first()) / 86400)
                             * 86400 - 10800;
         int lastDayTime = firstDayTime + 86400;
         priceGraph->xAxis->setRange(firstDayTime, lastDayTime);
@@ -69,40 +72,40 @@ PriceGraph* GraphsBuilder::buildPriceGraph(Deals* dealsModel)
     return priceGraph;
 }
 
-void GraphsBuilder::update(PriceGraph* priceGraph, Deals* dealsModel)
+void GraphsBuilder::update(PriceGraph* priceGraph)
 {
     priceGraph->graph()->clearData();
-    if (! getTimeForPriceGraph(dealsModel).empty()) {
+    if (! getTimeForPriceGraph().empty()) {
         if (isFirstDeal) {
-            int firstDayTime = (int(getTimeForPriceGraph(dealsModel).first()) / 86400)
+            int firstDayTime = (int(getTimeForPriceGraph().first()) / 86400)
                                 * 86400 - 10800;
             int lastDayTime = firstDayTime + 86400;
             priceGraph->xAxis->setRange(firstDayTime, lastDayTime);
             isFirstDeal = false;
         }
         priceGraph->graph()->clearData();
-        priceGraph->graph()->setData(getTimeForPriceGraph(dealsModel),
-                                    getPriceForPriceGraph(dealsModel));
+        priceGraph->graph()->setData(getTimeForPriceGraph(),
+                                    getPriceForPriceGraph());
         priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
                                     dealsModel->maxPrice, Qt::AlignBottom);
     }
     priceGraph->replot();
 }
 
-QVector<double> GraphsBuilder::getTimeForPriceGraph(Deals* deals)
+QVector<double> GraphsBuilder::getTimeForPriceGraph()
 {
     QVector <double> time;
-    for (auto iter = deals->dealsForPriceGraph.begin();
-            iter != deals->dealsForPriceGraph.end(); iter++) {
+    for (auto iter = dealsModel->dealsForPriceGraph.begin();
+            iter != dealsModel->dealsForPriceGraph.end(); iter++) {
         time.push_back((*iter)->time);
     }
     return time;
 }
-QVector<double> GraphsBuilder::getPriceForPriceGraph(Deals* deals)
+QVector<double> GraphsBuilder::getPriceForPriceGraph()
 {
     QVector <double> price;
-    for (auto iter = deals->dealsForPriceGraph.begin();
-            iter != deals->dealsForPriceGraph.end(); iter++) {
+    for (auto iter = dealsModel->dealsForPriceGraph.begin();
+            iter != dealsModel->dealsForPriceGraph.end(); iter++) {
         price.push_back((*iter)->price);
     }
     return price;
