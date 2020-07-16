@@ -101,7 +101,9 @@
     <ClCompile Include="Logic\OrderBookTableModel.cpp" />
     <ClCompile Include="UI\Graphs\MarketDepthGraph.cpp" />
     <ClCompile Include="UI\Graphs\PriceGraph.cpp" />
-    <ClCompile Include="UI\StonksMainWindow.cpp" />
+    <ClCompile Include="UI\StonksMainWindow.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\WeWil\Documents\stonks;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

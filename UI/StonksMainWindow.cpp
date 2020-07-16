@@ -2,6 +2,7 @@
 
 #include <QHeaderView>
 #include <QTimer>
+#include "IO/Parser.h"
 
 using namespace QtCharts;
 
@@ -32,9 +33,7 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, Dea
 
 void StonksMainWindow::insertNewDataAndUpdate() 
 {
-    model->addAsk(rand() % 100 + 30, rand() % 5000 + 1000);
-    model->addBid(rand() % 100 + 30, rand() % 5000 + 1000);
-    
+    Parser::Parse("20200620.deribit.dump", "ETH-PERPETUAL", model);
     updateWindow();
 }
 
