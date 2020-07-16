@@ -33,7 +33,7 @@ private:
     QChartView* marketDepthView;
     QGridLayout* graphLayout;
 
-    LinePriceGraph* linePriceGraph;
+    PriceGraph* priceGraph;
     QChartView* priceGraphView;
     QGridLayout* priceGraphLayout;
     bool isFirstDeal;

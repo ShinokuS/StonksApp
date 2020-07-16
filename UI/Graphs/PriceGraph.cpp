@@ -1,6 +1,6 @@
 ﻿#include "PriceGraph.h"
 
-LinePriceGraph::LinePriceGraph(QVector <double> time, QVector <double> price)
+PriceGraph::PriceGraph(QVector <double> time, QVector <double> price)
 {
     this->setInteraction(QCP::iRangeZoom, true);   // Включаем взаимодействие удаления/приближения
     //this->setInteraction(QCP::iRangeDrag, true);  // Включаем взаимодействие перетаскивания графика

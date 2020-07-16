@@ -4,8 +4,8 @@
 
 #include <QDateTime>
 
-class LinePriceGraph : public QCustomPlot
+class PriceGraph : public QCustomPlot
 {
 public:
-	LinePriceGraph(QVector <double> time, QVector <double> price);
+	PriceGraph(QVector <double> time, QVector <double> price);
 };
