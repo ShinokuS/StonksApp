@@ -71,6 +71,9 @@
     <ClInclude Include="UI\Graphs\PriceGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Logic\Time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="UI\StonksMainWindow.h">

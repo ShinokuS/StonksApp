@@ -105,6 +105,7 @@
     <ClInclude Include="Logic\Deals.h" />
     <ClInclude Include="Logic\GraphsBuilder.h" />
     <QtMoc Include="Logic\QCustomPlot\qcustomplot.h" />
+    <ClInclude Include="Logic\Time.h" />
     <ClInclude Include="UI\Graphs\PriceGraph.h" />
     <QtMoc Include="Logic\OrderBookTableModel.h" />
     <ClInclude Include="Logic\Order.h" />
