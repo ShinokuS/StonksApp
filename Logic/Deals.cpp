@@ -11,16 +11,16 @@ void Deals::addNewDeal(qreal price, qreal quantity, time_t time)
 		maxPrice = price;
 	}
 	if (!firstIntervalTime) {
-		dealsForLineGraph.append(newDeal);
+		dealsForPriceGraph.append(newDeal);
 		firstIntervalTime = newDeal->time;
 	}
 	else {
 		if (newDeal->time - firstIntervalTime < timeOfInterval) {
-			delete dealsForLineGraph.last();
-			dealsForLineGraph.last() = newDeal;
+			delete dealsForPriceGraph.last();
+			dealsForPriceGraph.last() = newDeal;
 		}
 		else {
-			dealsForLineGraph.append(newDeal);
+			dealsForPriceGraph.append(newDeal);
 			firstIntervalTime += timeOfInterval;
 		}
 	}

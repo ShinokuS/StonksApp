@@ -13,8 +13,8 @@ public:
 	PriceGraph* buildPriceGraph(Deals* deals);
 	void update(PriceGraph* priceGraph, Deals* dealsModel);
 
-	QVector<double> getTimeForLinePriceGraph(Deals* deals);
-	QVector<double> getPriceForLinePriceGraph(Deals* deals);
+	QVector<double> getTimeForPriceGraph(Deals* deals);
+	QVector<double> getPriceForPriceGraph(Deals* deals);
 
 	bool isFirstDeal;
 };
