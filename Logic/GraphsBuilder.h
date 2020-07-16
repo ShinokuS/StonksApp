@@ -8,11 +8,13 @@
 class GraphsBuilder
 {
 public:
-	static MarketDepthGraph* buildMarketDepthGraph(OrderBookTableModel* orderBook);
+	MarketDepthGraph* buildMarketDepthGraph(OrderBookTableModel* orderBook);
 
-	static PriceGraph* buildPriceGraph(Deals* deals);
-	static void update(PriceGraph* priceGraph, Deals* dealsModel);
+	PriceGraph* buildPriceGraph(Deals* deals);
+	void update(PriceGraph* priceGraph, Deals* dealsModel);
 
-	static QVector<double> getTimeForLinePriceGraph(Deals* deals);
-	static QVector<double> getPriceForLinePriceGraph(Deals* deals);
+	QVector<double> getTimeForLinePriceGraph(Deals* deals);
+	QVector<double> getPriceForLinePriceGraph(Deals* deals);
+
+	bool isFirstDeal;
 };

@@ -19,6 +19,8 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, Dea
     dealsModel = deals;
     model->deals = dealsModel;
 
+    graphsBuilder = new GraphsBuilder;
+
     // Я бы хотел это распараллелить, но Qt не даёт.
     this->placeMarketDepthGraph();
     this->placeOrderBookTable();
@@ -36,7 +38,7 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel, Dea
 
 void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 {
-    int firstDayTime = (int(GraphsBuilder::getTimeForLinePriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
+    int firstDayTime = (int(graphsBuilder->getTimeForLinePriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
     int lastDayTime = firstDayTime + 86400;
     priceGraph->xAxis->setTickStep((newRange.size() <= 10800) ? 600 : 7200);
     QCPRange boundedRange = newRange;
@@ -75,7 +77,7 @@ void StonksMainWindow::updateOrderBookTable()
 
 void StonksMainWindow::updateMarketDepthGraph()
 {
-    auto newMarketDepthGraph = GraphsBuilder::buildMarketDepthGraph(model);
+    auto newMarketDepthGraph = graphsBuilder->buildMarketDepthGraph(model);
     marketDepthView->setChart(newMarketDepthGraph);
     delete marketDepthGraph;
     marketDepthGraph = newMarketDepthGraph;
@@ -84,7 +86,7 @@ void StonksMainWindow::updateMarketDepthGraph()
 
 void StonksMainWindow::updatePriceGraph()
 {
-    GraphsBuilder::update(priceGraph, dealsModel);
+    graphsBuilder->update(priceGraph, dealsModel);
 
     if (! dealsModel->dealsForLineGraph.empty()) {
         ui.OHLC->setText("Close: " + QString::number(dealsModel->dealsForLineGraph.last()->price));
@@ -98,7 +100,7 @@ void StonksMainWindow::centerOrderBookTable()
 
 void StonksMainWindow::placeMarketDepthGraph()
 {
-    marketDepthGraph = GraphsBuilder::buildMarketDepthGraph(model);
+    marketDepthGraph = graphsBuilder->buildMarketDepthGraph(model);
 
     marketDepthView = new QChartView(marketDepthGraph);
     marketDepthView->setRenderHint(QPainter::Antialiasing);
@@ -121,7 +123,7 @@ void StonksMainWindow::placeOrderBookTable()
 
 void StonksMainWindow::placePriceGraph()
 {
-    priceGraph = GraphsBuilder::buildPriceGraph(dealsModel);
+    priceGraph = graphsBuilder->buildPriceGraph(dealsModel);
     priceGraphLayout = new QGridLayout(this);
     priceGraphLayout->addWidget(priceGraph);
     ui.priceGraphWidget->setLayout(priceGraphLayout);

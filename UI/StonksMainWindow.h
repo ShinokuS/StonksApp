@@ -27,6 +27,7 @@ private:
     Ui::StonksAppClass ui;
     OrderBookTableModel* model;
     Deals* dealsModel;
+    GraphsBuilder* graphsBuilder;
     QTimer* tmr;
 
     MarketDepthGraph* marketDepthGraph;
