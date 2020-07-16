@@ -86,11 +86,11 @@ void StonksMainWindow::updatePriceGraph()
 {
     linePriceGraph->graph()->clearData();
     if (!GraphsBuilder::getTimeForLinePriceGraph(dealsModel).empty()) {
-        if (isFirstTime) {
+        if (isFirstDeal) {
             int firstDayTime = (int(GraphsBuilder::getTimeForLinePriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
             int lastDayTime = firstDayTime + 86400;
             linePriceGraph->xAxis->setRange(firstDayTime, lastDayTime);
-            isFirstTime = false;
+            isFirstDeal = false;
         }
         linePriceGraph->graph()->clearData();
         linePriceGraph->graph()->setData(GraphsBuilder::getTimeForLinePriceGraph(dealsModel), GraphsBuilder::getPriceForLinePriceGraph(dealsModel));
@@ -132,13 +132,13 @@ void StonksMainWindow::placePriceGraph()
 {
     linePriceGraph = new LinePriceGraph(GraphsBuilder::getTimeForLinePriceGraph(dealsModel), GraphsBuilder::getPriceForLinePriceGraph(dealsModel));
     if (GraphsBuilder::getTimeForLinePriceGraph(dealsModel).empty()) {
-        isFirstTime = true;
+        isFirstDeal = true;
     }
     else {
         int firstDayTime = (int(GraphsBuilder::getTimeForLinePriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
         int lastDayTime = firstDayTime + 86400;
         linePriceGraph->xAxis->setRange(firstDayTime, lastDayTime);
-        isFirstTime = false;
+        isFirstDeal = false;
     }
     priceGraphLayout = new QGridLayout(this);
     priceGraphLayout->addWidget(linePriceGraph);
