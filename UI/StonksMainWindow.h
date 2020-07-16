@@ -36,7 +36,6 @@ private:
     PriceGraph* priceGraph;
     QChartView* priceGraphView;
     QGridLayout* priceGraphLayout;
-    bool isFirstDeal;
 
     void placeMarketDepthGraph();
     void placePriceGraph();

@@ -84,20 +84,11 @@ void StonksMainWindow::updateMarketDepthGraph()
 
 void StonksMainWindow::updatePriceGraph()
 {
-    priceGraph->graph()->clearData();
-    if (!GraphsBuilder::getTimeForLinePriceGraph(dealsModel).empty()) {
-        if (isFirstDeal) {
-            int firstDayTime = (int(GraphsBuilder::getTimeForLinePriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
-            int lastDayTime = firstDayTime + 86400;
-            priceGraph->xAxis->setRange(firstDayTime, lastDayTime);
-            isFirstDeal = false;
-        }
-        priceGraph->graph()->clearData();
-        priceGraph->graph()->setData(GraphsBuilder::getTimeForLinePriceGraph(dealsModel), GraphsBuilder::getPriceForLinePriceGraph(dealsModel));
-        priceGraph->yAxis->setRange(dealsModel->dealsForLineGraph.last()->price, dealsModel->maxPrice, Qt::AlignBottom);
-        ui.OHLC->setText("Close: "+ QString::number(dealsModel->dealsForLineGraph.last()->price));
+    GraphsBuilder::update(priceGraph, dealsModel);
+
+    if (! dealsModel->dealsForLineGraph.empty()) {
+        ui.OHLC->setText("Close: " + QString::number(dealsModel->dealsForLineGraph.last()->price));
     }
-    priceGraph->replot();
 }
 
 void StonksMainWindow::centerOrderBookTable()
@@ -130,16 +121,7 @@ void StonksMainWindow::placeOrderBookTable()
 
 void StonksMainWindow::placePriceGraph()
 {
-    priceGraph = new PriceGraph(GraphsBuilder::getTimeForLinePriceGraph(dealsModel), GraphsBuilder::getPriceForLinePriceGraph(dealsModel));
-    if (GraphsBuilder::getTimeForLinePriceGraph(dealsModel).empty()) {
-        isFirstDeal = true;
-    }
-    else {
-        int firstDayTime = (int(GraphsBuilder::getTimeForLinePriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
-        int lastDayTime = firstDayTime + 86400;
-        priceGraph->xAxis->setRange(firstDayTime, lastDayTime);
-        isFirstDeal = false;
-    }
+    priceGraph = GraphsBuilder::buildPriceGraph(dealsModel);
     priceGraphLayout = new QGridLayout(this);
     priceGraphLayout->addWidget(priceGraph);
     ui.priceGraphWidget->setLayout(priceGraphLayout);

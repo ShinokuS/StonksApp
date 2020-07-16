@@ -7,6 +7,8 @@
 
 using namespace QtCharts;
 
+bool isFirstDeal;
+
 MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orderBook) {
 
     // Объявляем серии для хранения точек для линий графика.
@@ -48,6 +50,41 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
     // а он в конструкторе разбирается со стилем их отображения.
     // На выходе из метода будет полностью готовый график.
     return new MarketDepthGraph(bidsSeries, asksSeries);
+}
+
+PriceGraph* GraphsBuilder::buildPriceGraph(Deals* dealsModel)
+{
+    auto priceGraph = new PriceGraph(getTimeForLinePriceGraph(dealsModel),
+                                    getPriceForLinePriceGraph(dealsModel));
+    
+    if (GraphsBuilder::getTimeForLinePriceGraph(dealsModel).empty()) {
+        isFirstDeal = true;
+    }
+    else {
+        int firstDayTime = (int(GraphsBuilder::getTimeForLinePriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
+        int lastDayTime = firstDayTime + 86400;
+        priceGraph->xAxis->setRange(firstDayTime, lastDayTime);
+        isFirstDeal = false;
+    }
+
+    return priceGraph;
+}
+
+void GraphsBuilder::update(PriceGraph* priceGraph, Deals* dealsModel)
+{
+    priceGraph->graph()->clearData();
+    if (!GraphsBuilder::getTimeForLinePriceGraph(dealsModel).empty()) {
+        if (isFirstDeal) {
+            int firstDayTime = (int(GraphsBuilder::getTimeForLinePriceGraph(dealsModel).first()) / 86400) * 86400 - 10800;
+            int lastDayTime = firstDayTime + 86400;
+            priceGraph->xAxis->setRange(firstDayTime, lastDayTime);
+            isFirstDeal = false;
+        }
+        priceGraph->graph()->clearData();
+        priceGraph->graph()->setData(GraphsBuilder::getTimeForLinePriceGraph(dealsModel), GraphsBuilder::getPriceForLinePriceGraph(dealsModel));
+        priceGraph->yAxis->setRange(dealsModel->dealsForLineGraph.last()->price, dealsModel->maxPrice, Qt::AlignBottom);
+    }
+    priceGraph->replot();
 }
 
 QVector<double> GraphsBuilder::getTimeForLinePriceGraph(Deals* deals)
