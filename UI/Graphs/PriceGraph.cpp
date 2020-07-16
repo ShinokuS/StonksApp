@@ -28,15 +28,12 @@ LinePriceGraph::LinePriceGraph(QVector <double> time, QVector <double> price)
     this->xAxis2->setTickLabels(false);
     this->yAxis2->setTickLabels(false);
 
-    this->yAxis->setTickLabelColor(QColor(Qt::red)); // Красный цвет подписей тиков по Оси Y
-    this->legend->setVisible(true);   //Включаем Легенду графика
-    // Устанавливаем Легенду в левый верхний угол графика
-    this->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
+    this->yAxis->setTickLabelColor(QColor(0xff6161)); // Красный цвет подписей тиков по Оси Y
 
     // Инициализируем график и привязываем его к Осям
     QCPGraph *graphic = new QCPGraph(this->xAxis, this->yAxis);
     this->addPlottable(graphic);  // Устанавливаем график на полотно
-    graphic->setPen(QPen(QColor(Qt::red))); // Устанавливаем цвет графика
+    graphic->setPen(QPen(QColor(0xff6161),1.5)); // Устанавливаем цвет графика
     graphic->setAntialiased(true);         // Отключаем сглаживание, по умолчанию включено
     graphic->setLineStyle(QCPGraph::lsLine); // График в виде линии
     graphic->setData(time, price); // Устанавливаем данные

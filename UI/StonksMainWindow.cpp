@@ -95,7 +95,7 @@ void StonksMainWindow::updatePriceGraph()
         linePriceGraph->graph()->clearData();
         linePriceGraph->graph()->setData(GraphsBuilder::getTimeForLinePriceGraph(dealsModel), GraphsBuilder::getPriceForLinePriceGraph(dealsModel));
         linePriceGraph->yAxis->setRange(dealsModel->dealsForLineGraph.last()->price, dealsModel->maxPrice, Qt::AlignBottom);
-        linePriceGraph->graph()->setName("Close: "+ QString::number(dealsModel->dealsForLineGraph.last()->price));
+        ui.OHLC->setText("Close: "+ QString::number(dealsModel->dealsForLineGraph.last()->price));
     }
     linePriceGraph->replot();
 }
@@ -112,9 +112,6 @@ void StonksMainWindow::placeMarketDepthGraph()
     marketDepthView = new QChartView(marketDepthGraph);
     marketDepthView->setRenderHint(QPainter::Antialiasing);
 
-    // Пока кривой зум, в будущем возможно добавлю нормальный
-    //marketDepthView->setRubberBand(QChartView::VerticalRubberBand);
-    
     graphLayout = new QGridLayout(this);
     graphLayout->addWidget(marketDepthView);
     ui.graphWidget->setLayout(graphLayout);
