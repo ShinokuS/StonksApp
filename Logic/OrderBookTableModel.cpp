@@ -166,67 +166,67 @@ void OrderBookTableModel::addAskNew(qreal price, qreal amount, time_t time, std:
     }
 }
 
-//void OrderBookTableModel::makeDealsIfNeededFor(Order* newOrder)
-//{
-//    // Обеспечиваю обобщение под бид/аск
-//    int endIndex, endIndexStep, indexStep, centerIndexStep;
-//
-//    if (newOrder->isAsk) {
-//        endIndex = rows.size();
-//        endIndexStep = -1;
-//        indexStep = 0;
-//        centerIndexStep = 0;
-//    }
-//    else {
-//        endIndex = -1;
-//        endIndexStep = 0;
-//        indexStep = -1;
-//        centerIndexStep = -1;
-//    }
-//    
-//    int rowIndex = centerIndex;
-//    if (! newOrder->isAsk) {
-//        rowIndex--;
-//    }
-//
-//    // Теперь само проведение сделок, начиная с самых выгодных висящих ордеров:
-//
-//    for (/*  */; newOrder->quantity > 0 && rowIndex != endIndex; rowIndex += indexStep)
-//    {
-//        if (! canMakeDealBetween(newOrder, rows[rowIndex])) {
-//            break; // приемлемые сделки закончились
-//        }
-//
-//        // Старые ордеры поглощаются новым
-//        if (rows[rowIndex]->quantity <= newOrder->quantity) {
-//            newOrder->quantity -= rows[rowIndex]->quantity;
-//            deals->addNewDeal(rows[rowIndex]->price, rows[rowIndex]->quantity, newOrder->time);
-//            delete rows[rowIndex];
-//            rows.removeAt(rowIndex);
-//            endIndex += endIndexStep;
-//            centerIndex += centerIndexStep;
-//        }
-//        // Последний, вероятно, поглотится не полностью:
-//        else {
-//            deals->addNewDeal(rows[rowIndex]->price, newOrder->quantity, newOrder->time);
-//            rows[rowIndex]->quantity -= newOrder->quantity;
-//            newOrder->quantity = 0;
-//        }
-//    }
-//}
-//
-//bool OrderBookTableModel::canMakeDealBetween(Order* one, Order* other)
-//{
-//    if (one->isAsk == other->isAsk) {
-//        return false;
-//    }
-//    else if (one->isAsk) {
-//        return one->price <= other->price;
-//    }
-//    else {
-//        return one->price >= other->price;
-//    }
-//}
+void OrderBookTableModel::makeDealsIfNeededFor(Order* newOrder)
+{
+    // Обеспечиваю обобщение под бид/аск
+    int endIndex, endIndexStep, indexStep, centerIndexStep;
+
+    if (newOrder->isAsk) {
+        endIndex = rows.size();
+        endIndexStep = -1;
+        indexStep = 0;
+        centerIndexStep = 0;
+    }
+    else {
+        endIndex = -1;
+        endIndexStep = 0;
+        indexStep = -1;
+        centerIndexStep = -1;
+    }
+    
+    int rowIndex = centerIndex;
+    if (! newOrder->isAsk) {
+        rowIndex--;
+    }
+
+    // Теперь само проведение сделок, начиная с самых выгодных висящих ордеров:
+
+    for (/*  */; newOrder->quantity > 0 && rowIndex != endIndex; rowIndex += indexStep)
+    {
+        if (! canMakeDealBetween(newOrder, rows[rowIndex])) {
+            break; // приемлемые сделки закончились
+        }
+
+        // Старые ордеры поглощаются новым
+        if (rows[rowIndex]->quantity <= newOrder->quantity) {
+            newOrder->quantity -= rows[rowIndex]->quantity;
+            deals->addNewDeal(rows[rowIndex]->price, rows[rowIndex]->quantity, newOrder->time);
+            delete rows[rowIndex];
+            rows.removeAt(rowIndex);
+            endIndex += endIndexStep;
+            centerIndex += centerIndexStep;
+        }
+        // Последний, вероятно, поглотится не полностью:
+        else {
+            deals->addNewDeal(rows[rowIndex]->price, newOrder->quantity, newOrder->time);
+            rows[rowIndex]->quantity -= newOrder->quantity;
+            newOrder->quantity = 0;
+        }
+    }
+}
+
+bool OrderBookTableModel::canMakeDealBetween(Order* one, Order* other)
+{
+    if (one->isAsk == other->isAsk) {
+        return false;
+    }
+    else if (one->isAsk) {
+        return one->price <= other->price;
+    }
+    else {
+        return one->price >= other->price;
+    }
+}
 
 // НИЖЕ, ОБА МЕТОДА ВСТАВКИ ТРАТЯТ ПО O(n) НА ВСТАВКУ!
 // НАДЕЮСЬ, ЭТО ВРЕМЕННОЕ РЕШЕНИЕ!
@@ -301,7 +301,7 @@ void OrderBookTableModel::deleteBidFromListNew(Order* newBid)
 {
     for (auto it = rows.begin(); it != rows.end();++it)
     {
-        if ((*it)->price == newBid->price)
+        if (((*it)->price == newBid->price)&&((*it)->isAsk == newBid->isAsk))
         {
             rows.erase(it);
             return;
@@ -313,7 +313,7 @@ void OrderBookTableModel::deleteAskFromListNew(Order* newAsk)
 {
     for (auto it = rows.begin(); it != rows.end(); ++it)
     {
-        if ((*it)->price == newAsk->price)
+        if (((*it)->price == newAsk->price) && ((*it)->isAsk == newAsk->isAsk))
         {
             rows.erase(it);
             --centerIndex;
@@ -326,7 +326,7 @@ void OrderBookTableModel::changeBidInListNew(Order* newBid)
 {
     for (auto it = rows.begin(); it != rows.end(); ++it)
     {
-        if ((*it)->price == newBid->price)
+        if (((*it)->price == newBid->price) && ((*it)->isAsk == newBid->isAsk))
         {
             *it = newBid;
             return;
@@ -338,7 +338,7 @@ void OrderBookTableModel::changeAskInListNew(Order* newAsk)
 {
     for (auto it = rows.begin(); it != rows.end(); ++it)
     {
-        if ((*it)->price == newAsk->price)
+        if (((*it)->price == newAsk->price) && ((*it)->isAsk == newAsk->isAsk))
         {
             *it = newAsk;
             return;

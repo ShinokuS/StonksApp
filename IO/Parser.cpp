@@ -1,10 +1,11 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
+#define time_space 600
 #include "string"
 #include "IO/rapidjson/document.h"
 #include "Logic/OrderBookTableModel.h"
 #include "IO/Parser.h"
 size_t place = 0; //Это для файлового указателя, чтобы знать, где уже прочитан файл, а где нет.
-
+time_t times;
 //Метод для парса в новую таблицу ордеров
 OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentName)
 {
@@ -15,7 +16,7 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 	_fseeki64(dumpFile, place, SEEK_SET);
 	
 	std::string search;//Буффер для поиска ключевых слов
-	const std::string keyWord = "book." + instrumentName; 
+	const std::string keyWord = "book."+instrumentName; 
 	search.resize(keyWord.size());
 
 	OrderBookTableModel* orderBookTable = new OrderBookTableModel; //Книжка для заполнения ордерами
@@ -31,7 +32,7 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 		search.back() = fgetc(dumpFile);
 		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
-			if (counter == 5)
+			if (counter == 10)
 			{
 				break;
 			}
@@ -72,6 +73,7 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 				std::string flag = (*itr)[0].GetString();
 				orderBookTable->addAskNew((qreal)(*itr)[1].GetDouble(), (qreal)(*itr)[2].GetDouble(), timestamp, flag);
 			}
+			times = timestamp;
 			delete doc;
 		}
 	}
@@ -92,8 +94,6 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 	search.resize(keyWord.size());
 
 
-	int counter = 0;
-
 	for (size_t i = place; i < filesize; ++i)//Начинаем поиск по файлу
 	{
 		for (int j = 0; j < search.size() - 1; ++j)
@@ -103,12 +103,6 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 		search.back() = fgetc(dumpFile);
 		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
-			if (counter == 1000)
-			{
-				break;
-			}
-			++counter;
-
 			std::string json = "{";
 			while (fgetc(dumpFile) != '{');
 			json.reserve(100000);
@@ -145,8 +139,15 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 				orderBookTable->addAskNew((qreal)(*itr)[1].GetDouble(), (qreal)(*itr)[2].GetDouble(), timestamp, flag);
 			}
 			delete doc;
+			if (times + time_space < timestamp)
+			{
+				times = timestamp;
+				break;
+			}
+
 		}
 	}
+
 	place = (size_t)_ftelli64(dumpFile);
 	return orderBookTable;
 }
