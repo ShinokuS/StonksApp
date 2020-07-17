@@ -1,5 +1,5 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
-#define time_space 600
+#define time_space 600000
 #include "string"
 #include "IO/rapidjson/document.h"
 #include "Logic/OrderBookTableModel.h"
