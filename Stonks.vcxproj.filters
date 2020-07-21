@@ -51,6 +51,10 @@
     <ClCompile Include="UI\Graphs\PriceGraph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+
+    <ClCompile Include="IO\Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Logic\QCustomPlot\qcustomplot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -72,6 +76,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logic\Time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IO\Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

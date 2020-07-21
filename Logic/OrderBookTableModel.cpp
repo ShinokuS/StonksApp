@@ -1,5 +1,6 @@
 ﻿#include "OrderBookTableModel.h"
 
+
 #include <QSize>
 #include <QBrush>
 
@@ -59,35 +60,35 @@ int randomBetween(int begin, int end)
     return begin + rand() % (end - begin);
 }
 
-OrderBookTableModel* OrderBookTableModel::getRandomInstance(unsigned int seed)
-{
-    // настройки рандома
-    srand(seed);
-    int nBids = randomBetween(20, 100);
-    int nAsks = randomBetween(20, 100);
-    long long minBidPrice = 100;
-    long long minAskPrice = 10000;
-    long long maxAskPrice = 20000;
-    int maxQuantityInOrder = 10000;
-
-    auto randomOrderBook = new OrderBookTableModel;
-
-    for (int i = 0; i < nBids; i++) {
-        qreal price = randomBetween(minBidPrice, minAskPrice);
-        price /= 100; // перевод из копеек
-        qreal quantity = randomBetween(1, maxQuantityInOrder);
-        randomOrderBook->addBid(price, quantity);
-    }
-
-    for (int i = 0; i < nAsks; i++) {
-        qreal price = randomBetween(minAskPrice, maxAskPrice);
-        price /= 100; // перевод из копеек
-        qreal quantity = randomBetween(1, maxQuantityInOrder);
-        randomOrderBook->addAsk(price, quantity);
-    }
-
-    return randomOrderBook;
-}
+//OrderBookTableModel* OrderBookTableModel::getRandomInstance(unsigned int seed)
+//{
+//    // настройки рандома
+//    srand(seed);
+//    int nBids = randomBetween(20, 100);
+//    int nAsks = randomBetween(20, 100);
+//    long long minBidPrice = 100;
+//    long long minAskPrice = 10000;
+//    long long maxAskPrice = 20000;
+//    int maxQuantityInOrder = 10000;
+//
+//    auto randomOrderBook = new OrderBookTableModel;
+//
+//    for (int i = 0; i < nBids; i++) {
+//        qreal price = randomBetween(minBidPrice, minAskPrice);
+//        price /= 100; // перевод из копеек
+//        qreal quantity = randomBetween(1, maxQuantityInOrder);
+//        randomOrderBook->addBid(price, quantity);
+//    }
+//
+//    for (int i = 0; i < nAsks; i++) {
+//        qreal price = randomBetween(minAskPrice, maxAskPrice);
+//        price /= 100; // перевод из копеек
+//        qreal quantity = randomBetween(1, maxQuantityInOrder);
+//        randomOrderBook->addAsk(price, quantity);
+//    }
+//
+//    return randomOrderBook;
+//}
 
 void OrderBookTableModel::updateTable()
 {
@@ -109,7 +110,7 @@ Qt::ItemFlags OrderBookTableModel::flags(const QModelIndex& index) const
 void OrderBookTableModel::addBid(qreal price, qreal quantity, time_t time)
 {
     // Если добавляемый ордер вызывает сделки, проводим их.
-    auto newBid = new Order { price, quantity, false, time };
+    auto newBid = new Order{ price, quantity, false, time };
     makeDealsIfNeededFor(newBid);
 
     // Если ордер не исполнился полностью, то добавляем его в ордербук.
@@ -119,14 +120,49 @@ void OrderBookTableModel::addBid(qreal price, qreal quantity, time_t time)
 }
 
 void OrderBookTableModel::addAsk(qreal price, qreal quantity, time_t time)
-{
-    // Если добавляемый ордер вызывает сделки, проводим их.
-    auto newAsk = new Order { price, quantity, true, time };
-    makeDealsIfNeededFor(newAsk);
+    {
+        // Если добавляемый ордер вызывает сделки, проводим их.
+        auto newAsk = new Order{ price, quantity, true, time };
+        makeDealsIfNeededFor(newAsk);
 
-    // Если ордер не исполнился полностью, то добавляем его в ордербук.
-    if (newAsk->quantity > 0) {
-        addAskToList(newAsk);
+        // Если ордер не исполнился полностью, то добавляем его в ордербук.
+        if (newAsk->quantity > 0) {
+            addAskToList(newAsk);
+        }
+    }
+
+//Создал пока что новые функции для работы с bids и asks. Они пока не оптимизированны.
+void OrderBookTableModel::addBidNew(qreal price, qreal amount, time_t time, std::string flag)
+{
+    auto newBid= new Order{ price, amount, false, time };
+    if (flag == "new")
+    {
+        addBidToListNew(newBid);
+    }
+    else if (flag == "delete")
+    {
+        deleteBidFromListNew(newBid);
+    }
+    else if (flag == "change")
+    {
+        changeBidInListNew(newBid);
+    }
+}
+
+void OrderBookTableModel::addAskNew(qreal price, qreal amount, time_t time, std::string flag)
+{
+    auto newAsk = new Order{ price, amount, true, time };
+    if (flag == "new")
+    {
+        addAskToListNew(newAsk);
+    }
+    else if (flag == "delete")
+    {
+        deleteAskFromListNew(newAsk);
+    }
+    else if (flag == "change")
+    {
+        changeAskInListNew(newAsk);
     }
 }
 
@@ -233,5 +269,79 @@ void OrderBookTableModel::addAskToList(Order* newAsk)
     // если позиция есть, то приплюсовываем туда количество
     else {
         (*iter)->quantity += newAsk->quantity;
+    }
+}
+
+//Создал пока что новые функции для работы с bids и asks. Они пока не оптимизированны.
+void OrderBookTableModel::addBidToListNew(Order* newBid)
+{
+    Order reference = { newBid->price, 0, false }; // костыль из-за интерфейса STL
+
+    // бинарный поиск позиции с ценой не меньше указанной
+    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
+        [reference](Order* element, const Order reference) { return element->price > reference.price; });
+
+        rows.insert(iter, newBid);
+    
+}
+
+void OrderBookTableModel::addAskToListNew(Order* newAsk)
+{
+    Order reference = { newAsk->price, 0, true }; // костыль из-за интерфейса STL
+
+    // бинарный поиск позиции с ценой не меньше указанной
+    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
+        [reference](Order* element, const Order reference) { return element->price > reference.price; });
+
+        rows.insert(iter, newAsk);
+        centerIndex++;
+}
+
+void OrderBookTableModel::deleteBidFromListNew(Order* newBid)
+{
+    for (auto it = rows.begin(); it != rows.end();++it)
+    {
+        if (((*it)->price == newBid->price)&&((*it)->isAsk == newBid->isAsk))
+        {
+            rows.erase(it);
+            return;
+        }
+    }
+}
+
+void OrderBookTableModel::deleteAskFromListNew(Order* newAsk)
+{
+    for (auto it = rows.begin(); it != rows.end(); ++it)
+    {
+        if (((*it)->price == newAsk->price) && ((*it)->isAsk == newAsk->isAsk))
+        {
+            rows.erase(it);
+            --centerIndex;
+            return;
+        }
+    }
+}
+
+void OrderBookTableModel::changeBidInListNew(Order* newBid)
+{
+    for (auto it = rows.begin(); it != rows.end(); ++it)
+    {
+        if (((*it)->price == newBid->price) && ((*it)->isAsk == newBid->isAsk))
+        {
+            *it = newBid;
+            return;
+        }
+    }
+}
+
+void OrderBookTableModel::changeAskInListNew(Order* newAsk)
+{
+    for (auto it = rows.begin(); it != rows.end(); ++it)
+    {
+        if (((*it)->price == newAsk->price) && ((*it)->isAsk == newAsk->isAsk))
+        {
+            *it = newAsk;
+            return;
+        }
     }
 }

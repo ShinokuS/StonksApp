@@ -22,11 +22,14 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
-    static OrderBookTableModel* getRandomInstance(unsigned int seed = time(0));
+    //static OrderBookTableModel* getRandomInstance(unsigned int seed = time(0));
 
     // Интерфейс для добавления новых ордеров.
-    void addBid(qreal price, qreal amount, time_t time = time(0));
-    void addAsk(qreal price, qreal amount, time_t time = time(0));
+    void addBid(qreal price, qreal amount,time_t time = time(0));
+    void addAsk(qreal price, qreal amount,time_t time = time(0));
+
+    void addBidNew(qreal price, qreal amount, time_t time,std::string flag);
+    void addAskNew(qreal price, qreal amount, time_t time,std::string flag);
 
     void updateTable();
 
@@ -43,4 +46,11 @@ private:
     // Не заменой rows на связный список! Ибо доступ по индексу тоже не должен тупить.
     void addBidToList(Order* newBid);
     void addAskToList(Order* newAsk);
+
+    void addBidToListNew(Order* newBid);
+    void addAskToListNew(Order* newAsk);
+    void deleteBidFromListNew(Order* newBid);
+    void deleteAskFromListNew(Order* newAsk);
+    void changeBidInListNew(Order* newBid);
+    void changeAskInListNew(Order* newAsk);
 };
