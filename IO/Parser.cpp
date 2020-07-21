@@ -1,5 +1,4 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
-#define time_space 600000
 
 #include <string>
 
@@ -10,6 +9,7 @@
 
 size_t place = 0; //Это для файлового указателя, чтобы знать, где уже прочитан файл, а где нет.
 time_t times;
+const int TIME_SPACE = 600000;
 
 //Метод для парса в новую таблицу ордеров
 OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string instrumentName)
@@ -151,7 +151,7 @@ OrderBookTableModel* Parser::ParseDaytimeOrders(std::string fileName, std::strin
 				orderBookTable->addAskNew(newAsk);
 			}
 			delete doc;
-			if (times + time_space < timestamp)
+			if (times + TIME_SPACE < timestamp)
 			{
 				times = timestamp;
 				break;
