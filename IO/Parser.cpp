@@ -1,9 +1,9 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #define time_space 600000
-#include "string"
-#include "IO/rapidjson/document.h"
-#include "Logic/OrderBookTableModel.h"
-#include "IO/Parser.h"
+#include <string>
+#include "rapidjson/document.h"
+#include "../Logic/OrderBookTableModel.h"
+#include "Parser.h"
 size_t place = 0; //Это для файлового указателя, чтобы знать, где уже прочитан файл, а где нет.
 time_t times;
 //Метод для парса в новую таблицу ордеров

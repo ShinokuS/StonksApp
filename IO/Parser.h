@@ -1,4 +1,4 @@
-#include "Logic/OrderBookTableModel.h"
+﻿#include "../Logic/OrderBookTableModel.h"
 #include "string"
 
 class Parser

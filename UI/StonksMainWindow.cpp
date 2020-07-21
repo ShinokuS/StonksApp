@@ -2,7 +2,7 @@
 
 #include <QHeaderView>
 #include <QTimer>
-#include "IO/Parser.h"
+#include "../IO/Parser.h"
 
 using namespace QtCharts;
 
