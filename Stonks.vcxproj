@@ -48,13 +48,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>$(DefaultQtVersion)</QtInstall>
-    <QtModules>core;gui;widgets;charts</QtModules>
+    <QtModules>core;gui;widgets;charts;printsupport</QtModules>
     <QtBuildConfig>
     </QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>$(DefaultQtVersion)</QtInstall>
-    <QtModules>core;gui;widgets;charts</QtModules>
+    <QtModules>core;gui;widgets;charts;printsupport</QtModules>
     <QtBuildConfig>
     </QtBuildConfig>
   </PropertyGroup>
@@ -101,6 +101,7 @@
     <ClCompile Include="Logic\OrderBookTableModel.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\WeWil\Documents\stonks;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Logic\QCustomPlot\qcustomplot.cpp" />
     <ClCompile Include="UI\Graphs\MarketDepthGraph.cpp" />
     <ClCompile Include="UI\Graphs\PriceGraph.cpp" />
     <ClCompile Include="UI\StonksMainWindow.cpp">
@@ -113,6 +114,8 @@
     <ClInclude Include="IO\Parser.h" />
     <ClInclude Include="Logic\Deals.h" />
     <ClInclude Include="Logic\GraphsBuilder.h" />
+    <QtMoc Include="Logic\QCustomPlot\qcustomplot.h" />
+    <ClInclude Include="Logic\Time.h" />
     <ClInclude Include="UI\Graphs\PriceGraph.h" />
     <QtMoc Include="Logic\OrderBookTableModel.h" />
     <ClInclude Include="Logic\Order.h" />

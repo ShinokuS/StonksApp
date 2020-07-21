@@ -1,13 +1,11 @@
 ﻿#pragma once
 
-#include "QtCharts/qchart.h"
-#include <QtCharts/QLineSeries>
+#include "../../Logic/QCustomPlot/qcustomplot.h"
 
-using QtCharts::QChart;
-using QtCharts::QLineSeries;
+#include <QDateTime>
 
-class LinePriceGraph : public QtCharts::QChart
+class PriceGraph : public QCustomPlot
 {
 public:
-	LinePriceGraph(QLineSeries* lineSeries);
+	PriceGraph(QVector <double> time, QVector <double> price);
 };
