@@ -63,13 +63,15 @@ OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string
 			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				orderBookTable->addBidNew((qreal)(*itr)[1].GetDouble(), (qreal)(*itr)[2].GetDouble(), timestamp, flag);
+				auto newBid = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), false, timestamp };
+				orderBookTable->addBidNew(newBid, flag);
 			} 
 
 			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				orderBookTable->addAskNew((qreal)(*itr)[1].GetDouble(), (qreal)(*itr)[2].GetDouble(), timestamp, flag);
+				auto newAsk = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), true, timestamp };
+				orderBookTable->addAskNew(newAsk, flag);
 			}
 
 			times = timestamp;
@@ -130,13 +132,15 @@ OrderBookTableModel* Parser::ParseDaytimeOrders(std::string fileName, std::strin
 			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				orderBookTable->addBidNew((qreal)(*itr)[1].GetDouble(), (qreal)(*itr)[2].GetDouble(), timestamp, flag);
+				auto newBid = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), false, timestamp };
+				orderBookTable->addBidNew(newBid, flag);
 			}
 
 			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				orderBookTable->addAskNew((qreal)(*itr)[1].GetDouble(), (qreal)(*itr)[2].GetDouble(), timestamp, flag);
+				auto newAsk = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), true, timestamp };
+				orderBookTable->addAskNew(newAsk, flag);
 			}
 			delete doc;
 			if (times + time_space < timestamp)
