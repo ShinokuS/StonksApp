@@ -63,14 +63,18 @@ OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string
 			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				auto newBid = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), false, timestamp, flag };
+				qreal price = (*itr)[1].GetDouble();
+				qreal quantity = (*itr)[2].GetDouble();
+				auto newBid = new Order{ price, quantity, false, timestamp, flag };
 				orderBookTable->addBidNew(newBid);
 			} 
 
 			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				auto newAsk = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), true, timestamp, flag };
+				qreal price = (*itr)[1].GetDouble();
+				qreal quantity = (*itr)[2].GetDouble();
+				auto newAsk = new Order{ price, quantity, true, timestamp, flag };
 				orderBookTable->addAskNew(newAsk);
 			}
 
@@ -132,14 +136,18 @@ OrderBookTableModel* Parser::ParseDaytimeOrders(std::string fileName, std::strin
 			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				auto newBid = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), false, timestamp, flag };
+				qreal price = (*itr)[1].GetDouble();
+				qreal quantity = (*itr)[2].GetDouble();
+				auto newBid = new Order{ price, quantity, false, timestamp, flag };
 				orderBookTable->addBidNew(newBid);
 			}
 
 			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				auto newAsk = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), true, timestamp, flag };
+				qreal price = (*itr)[1].GetDouble();
+				qreal quantity = (*itr)[2].GetDouble();
+				auto newAsk = new Order{ price, quantity, true, timestamp, flag };
 				orderBookTable->addAskNew(newAsk);
 			}
 			delete doc;
