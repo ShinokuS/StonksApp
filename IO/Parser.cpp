@@ -26,8 +26,6 @@ OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string
 
 	OrderBookTableModel* orderBookTable = new OrderBookTableModel; //Книжка для заполнения ордерами
 
-	int counter = 0;
-
 	for (size_t i = place; i < filesize; ++i)//Начинаем поиск по файлу
 	{
 		for (int j = 0; j < search.size()-1; ++j)
@@ -35,14 +33,9 @@ OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string
 			search[j] = search[j+1];
 		}
 		search.back() = fgetc(dumpFile);
+
 		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
-			if (counter == 10)
-			{
-				break;
-			}
-			++counter;
-
 			std::string json = "{";
 			while (fgetc(dumpFile) != '{');
 			json.reserve(100000);
@@ -78,8 +71,10 @@ OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string
 				std::string flag = (*itr)[0].GetString();
 				orderBookTable->addAskNew((qreal)(*itr)[1].GetDouble(), (qreal)(*itr)[2].GetDouble(), timestamp, flag);
 			}
+
 			times = timestamp;
 			delete doc;
+			break;
 		}
 	}
 	place = (size_t)_ftelli64(dumpFile);
