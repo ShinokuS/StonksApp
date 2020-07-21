@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     auto deals = new Deals();
-    auto model = Parser::Parse("20200620.deribit.dump","ETH-PERPETUAL");
+    auto model = Parser::parsePreDayOrders("20200620.deribit.dump","ETH-PERPETUAL");
     
     QApplication a(argc, argv);
     StonksMainWindow mainWindow(model, deals);

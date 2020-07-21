@@ -5,8 +5,8 @@
 class Parser
 {
 public:
-	 static OrderBookTableModel* Parse(std::string fileName, std::string instrumentName);
-	 static OrderBookTableModel* Parse(std::string fileName, std::string instrumentName, OrderBookTableModel* orderBookTable);
+	 static OrderBookTableModel* parsePreDayOrders(std::string fileName, std::string instrumentName);
+	 static OrderBookTableModel* ParseDaytimeOrders(std::string fileName, std::string instrumentName, OrderBookTableModel* orderBookTable);
 };
 
 

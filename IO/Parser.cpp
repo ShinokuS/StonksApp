@@ -12,7 +12,7 @@ size_t place = 0; //Это для файлового указателя, что�
 time_t times;
 
 //Метод для парса в новую таблицу ордеров
-OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentName)
+OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string instrumentName)
 {
 	FILE* dumpFile = fopen(fileName.c_str(), "rb");
 
@@ -86,7 +86,7 @@ OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentN
 	return orderBookTable;
 }
 //Второй метод для парса в уже существующуу таблицу
-OrderBookTableModel* Parser::Parse(std::string fileName, std::string instrumentName, OrderBookTableModel* orderBookTable) 
+OrderBookTableModel* Parser::ParseDaytimeOrders(std::string fileName, std::string instrumentName, OrderBookTableModel* orderBookTable) 
 {
 	FILE* dumpFile = fopen(fileName.c_str(), "rb");
 
