@@ -132,33 +132,33 @@ void OrderBookTableModel::addAsk(qreal price, qreal quantity, time_t time)
     }
 
 //Создал пока что новые функции для работы с bids и asks. Они пока не оптимизированны.
-void OrderBookTableModel::addBidNew(Order* newBid, const std::string& flag)
+void OrderBookTableModel::addBidNew(Order* newBid)
 {
-    if (flag == "new")
+    if (newBid->flag == "new")
     {
         addBidToListNew(newBid);
     }
-    else if (flag == "delete")
+    else if (newBid->flag == "delete")
     {
         deleteBidFromListNew(newBid);
     }
-    else if (flag == "change")
+    else if (newBid->flag == "change")
     {
         changeBidInListNew(newBid);
     }
 }
 
-void OrderBookTableModel::addAskNew(Order* newAsk, const std::string& flag)
+void OrderBookTableModel::addAskNew(Order* newAsk)
 {
-    if (flag == "new")
+    if (newAsk->flag == "new")
     {
         addAskToListNew(newAsk);
     }
-    else if (flag == "delete")
+    else if (newAsk->flag == "delete")
     {
         deleteAskFromListNew(newAsk);
     }
-    else if (flag == "change")
+    else if (newAsk->flag == "change")
     {
         changeAskInListNew(newAsk);
     }

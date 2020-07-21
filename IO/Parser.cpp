@@ -63,15 +63,15 @@ OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string
 			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				auto newBid = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), false, timestamp };
-				orderBookTable->addBidNew(newBid, flag);
+				auto newBid = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), false, timestamp, flag };
+				orderBookTable->addBidNew(newBid);
 			} 
 
 			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				auto newAsk = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), true, timestamp };
-				orderBookTable->addAskNew(newAsk, flag);
+				auto newAsk = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), true, timestamp, flag };
+				orderBookTable->addAskNew(newAsk);
 			}
 
 			times = timestamp;
@@ -132,15 +132,15 @@ OrderBookTableModel* Parser::ParseDaytimeOrders(std::string fileName, std::strin
 			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				auto newBid = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), false, timestamp };
-				orderBookTable->addBidNew(newBid, flag);
+				auto newBid = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), false, timestamp, flag };
+				orderBookTable->addBidNew(newBid);
 			}
 
 			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
 			{
 				std::string flag = (*itr)[0].GetString();
-				auto newAsk = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), true, timestamp };
-				orderBookTable->addAskNew(newAsk, flag);
+				auto newAsk = new Order{ (*itr)[1].GetDouble(), (*itr)[2].GetDouble(), true, timestamp, flag };
+				orderBookTable->addAskNew(newAsk);
 			}
 			delete doc;
 			if (times + time_space < timestamp)

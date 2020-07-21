@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <string>
+
 #include <QAbstractTableModel>
 
 struct Order
@@ -8,4 +10,5 @@ struct Order
     qreal quantity;
     bool isAsk;
     time_t time;
+    std::string flag;
 };

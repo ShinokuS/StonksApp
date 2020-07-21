@@ -28,8 +28,8 @@ public:
     void addBid(qreal price, qreal amount,time_t time = time(0));
     void addAsk(qreal price, qreal amount,time_t time = time(0));
 
-    void addBidNew(Order* newBid, const std::string& flag);
-    void addAskNew(Order* newAsk, const std::string& flag);
+    void addBidNew(Order* newBid);
+    void addAskNew(Order* newAsk);
 
     void updateTable();
 
