@@ -1,7 +1,7 @@
-﻿#include "StonksMainWindow.h"
-
-#include <QHeaderView>
+﻿#include <QHeaderView>
 #include <QTimer>
+
+#include "StonksMainWindow.h"
 #include "../IO/Parser.h"
 
 using namespace QtCharts;

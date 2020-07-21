@@ -1,7 +1,7 @@
-﻿#include "UI\StonksMainWindow.h"
-#include "IO/Parser.h"
-#include <QtWidgets/QApplication>
+﻿#include <QtWidgets/QApplication>
 
+#include "UI\StonksMainWindow.h"
+#include "IO/Parser.h"
 
 int main(int argc, char *argv[])
 {
