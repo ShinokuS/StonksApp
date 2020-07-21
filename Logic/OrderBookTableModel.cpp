@@ -301,6 +301,7 @@ void OrderBookTableModel::deleteBidFromListNew(Order* newBid)
     {
         if (((*it)->price == newBid->price)&&((*it)->isAsk == newBid->isAsk))
         {
+            delete *it;
             rows.erase(it);
             return;
         }
@@ -313,6 +314,7 @@ void OrderBookTableModel::deleteAskFromListNew(Order* newAsk)
     {
         if (((*it)->price == newAsk->price) && ((*it)->isAsk == newAsk->isAsk))
         {
+            delete *it;
             rows.erase(it);
             --centerIndex;
             return;
@@ -326,6 +328,7 @@ void OrderBookTableModel::changeBidInListNew(Order* newBid)
     {
         if (((*it)->price == newBid->price) && ((*it)->isAsk == newBid->isAsk))
         {
+            delete *it;
             *it = newBid;
             return;
         }
@@ -338,6 +341,7 @@ void OrderBookTableModel::changeAskInListNew(Order* newAsk)
     {
         if (((*it)->price == newAsk->price) && ((*it)->isAsk == newAsk->isAsk))
         {
+            delete *it;
             *it = newAsk;
             return;
         }
