@@ -4,10 +4,20 @@
 #include "OrderBookTableModel.h"
 #include "../UI/Graphs/PriceGraph.h"
 #include "Deals.h"
+#include "Time.h"
 
 class GraphsBuilder
 {
 public:
-	static MarketDepthGraph* buildMarketDepthGraph(OrderBookTableModel* orderBook);
-	static LinePriceGraph* buildLinePriceGraph(Deals* deals);
+	MarketDepthGraph* buildMarketDepthGraph(OrderBookTableModel* orderBook);
+
+	PriceGraph* buildPriceGraph(Deals* deals);
+	void update(PriceGraph* priceGraph);
+
+	QVector<double> getTimeForPriceGraph();
+	QVector<double> getPriceForPriceGraph();
+
+private:
+	Deals* dealsModel;
+	bool isFirstDeal;
 };

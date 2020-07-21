@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1217</width>
+    <width>1242</width>
     <height>539</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <widget class="QWidget" name="graphWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>890</x>
+      <x>910</x>
       <y>10</y>
       <width>331</width>
       <height>521</height>
@@ -27,7 +27,7 @@
    <widget class="QPushButton" name="centerButton">
     <property name="geometry">
      <rect>
-      <x>640</x>
+      <x>660</x>
       <y>500</y>
       <width>251</width>
       <height>23</height>
@@ -40,7 +40,7 @@
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
-      <x>640</x>
+      <x>660</x>
       <y>11</y>
       <width>251</width>
       <height>481</height>
@@ -50,10 +50,10 @@
    <widget class="QWidget" name="priceGraphWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>-1</x>
-      <y>10</y>
-      <width>641</width>
-      <height>511</height>
+      <x>0</x>
+      <y>-10</y>
+      <width>661</width>
+      <height>531</height>
      </rect>
     </property>
    </widget>

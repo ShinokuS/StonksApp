@@ -3,6 +3,7 @@
 #include <QtGlobal>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QAreaSeries>
+#include <QDateTime>
 
 using namespace QtCharts;
 
@@ -49,12 +50,61 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
     return new MarketDepthGraph(bidsSeries, asksSeries);
 }
 
-LinePriceGraph* GraphsBuilder::buildLinePriceGraph(Deals* deals)
+PriceGraph* GraphsBuilder::buildPriceGraph(Deals* dealsModel)
 {
-    QLineSeries* priceLineSeries = new QLineSeries();
-    auto iter = deals->dealsForLineGraph.begin();
-    for (; iter != deals->dealsForLineGraph.end(); iter++) {
-        priceLineSeries->append(qreal((*iter)->time), (*iter)->price);
+    // сохраняем на будущее
+    this->dealsModel = dealsModel;
+
+    auto priceGraph = new PriceGraph(getTimeForPriceGraph(),
+                                    getPriceForPriceGraph());
+    
+    if (getTimeForPriceGraph().empty()) {
+        isFirstDeal = true;
     }
-    return new LinePriceGraph(priceLineSeries);
+    else {
+        priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.last()->time,
+                                    dealsModel->dealsForPriceGraph.last()->time + Time::THREE_MINUTES);
+        priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
+            dealsModel->maxPrice, Qt::AlignBottom);
+        isFirstDeal = false;
+    }
+
+    return priceGraph;
+}
+
+void GraphsBuilder::update(PriceGraph* priceGraph)
+{
+    priceGraph->graph()->clearData();
+    if (! getTimeForPriceGraph().empty()) {
+        if (isFirstDeal) {
+            priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.last()->time, 
+                                        dealsModel->dealsForPriceGraph.last()->time + Time::THREE_MINUTES);
+            isFirstDeal = false;
+        }
+        priceGraph->graph()->clearData();
+        priceGraph->graph()->setData(getTimeForPriceGraph(),
+                                    getPriceForPriceGraph());
+        priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
+                                    dealsModel->maxPrice, Qt::AlignBottom);
+    }
+    priceGraph->replot();
+}
+
+QVector<double> GraphsBuilder::getTimeForPriceGraph()
+{
+    QVector <double> time;
+    for (auto iter = dealsModel->dealsForPriceGraph.begin();
+            iter != dealsModel->dealsForPriceGraph.end(); iter++) {
+        time.push_back((*iter)->time);
+    }
+    return time;
+}
+QVector<double> GraphsBuilder::getPriceForPriceGraph()
+{
+    QVector <double> price;
+    for (auto iter = dealsModel->dealsForPriceGraph.begin();
+            iter != dealsModel->dealsForPriceGraph.end(); iter++) {
+        price.push_back((*iter)->price);
+    }
+    return price;
 }
