@@ -27,15 +27,20 @@ void OrderBook::insertOrder(Order* newOrder)
     // Костыль из-за интерфейса STL
     Order reference = { newOrder->price };
 
-    if (newOrder->isAsk && countOfAsks <= 10) countOfAsks++;
-    if (countOfAsks > 10 && newOrder->isAsk) {
-        indexOfFirstVisibleElement++;
-    }
     // Бинарный поиск позиции с ценой не меньше указанной
     auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
         [reference](Order* element, const Order reference) { return element->price > reference.price; });
 
     orders.insert(iter, newOrder);
+
+    if (newOrder->isAsk) {
+        if (countOfAsks > 10) {
+            indexOfFirstVisibleElement++;
+        }
+        else {
+            countOfAsks++;
+        }
+    }
 }
 
 void OrderBook::deleteOrder(Order* newOrder)
@@ -43,9 +48,6 @@ void OrderBook::deleteOrder(Order* newOrder)
     // Костыль из-за интерфейса STL
     Order reference = { newOrder->price, 0, false };
 
-    if (countOfAsks > 10 && newOrder->isAsk) {
-        indexOfFirstVisibleElement--;
-    }
     // Бинарный поиск позиции с ценой не меньше указанной
     auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
         [reference](Order* element, const Order reference) { return element->price > reference.price; });
@@ -55,6 +57,10 @@ void OrderBook::deleteOrder(Order* newOrder)
 
     delete* iter;
     orders.erase(iter);
+
+    if (newOrder->isAsk && countOfAsks > 10) {
+        indexOfFirstVisibleElement--;
+    }
 }
 
 void OrderBook::changeOrder(Order* newOrder)

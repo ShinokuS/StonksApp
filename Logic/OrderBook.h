@@ -16,8 +16,6 @@ public:
     // Интерфейс для добавления новых ордеров.
     void addOrder(Order* newOrder);
 
-    void updateTable();
-
 private:
 
     // Имплементация операций над ордерами в ордербуке.
