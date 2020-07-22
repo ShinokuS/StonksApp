@@ -87,7 +87,7 @@ OrderBook* Parser::parsePreDayOrders(std::string fileName, std::string instrumen
 	return orderBookTable;
 }
 //Второй метод для парса в уже существующуу таблицу
-OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrumentName, OrderBook* orderBookTable) 
+OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrumentName, OrderBook* orderBook) 
 {
 	FILE* dumpFile = fopen(fileName.c_str(), "rb");
 
@@ -139,7 +139,7 @@ OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrume
 				qreal price = (*itr)[1].GetDouble();
 				qreal quantity = (*itr)[2].GetDouble();
 				auto newBid = new Order{ price, quantity, false, timestamp, flag };
-				orderBookTable->addOrder(newBid);
+				orderBook->addOrder(newBid);
 			}
 
 			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
@@ -148,7 +148,7 @@ OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrume
 				qreal price = (*itr)[1].GetDouble();
 				qreal quantity = (*itr)[2].GetDouble();
 				auto newAsk = new Order{ price, quantity, true, timestamp, flag };
-				orderBookTable->addOrder(newAsk);
+				orderBook->addOrder(newAsk);
 			}
 			delete doc;
 			if (times + TIME_SPACE < timestamp)
@@ -161,5 +161,5 @@ OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrume
 	}
 
 	place = (size_t)_ftelli64(dumpFile);
-	return orderBookTable;
+	return orderBook;
 }

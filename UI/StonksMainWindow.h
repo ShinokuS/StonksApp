@@ -27,7 +27,7 @@ private slots:
 private:
     Ui::StonksAppClass ui;
     SmallOrderBookTableModel* visibleOrders;
-    OrderBook* allOrders;
+    OrderBook* orderBook;
     Deals* dealsModel;
     GraphsBuilder* graphsBuilder;
     QTimer* tmr;

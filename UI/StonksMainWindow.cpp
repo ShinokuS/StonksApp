@@ -8,13 +8,13 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBook* orderBookTableModel ,SmallOrderBookTableModel* smallOrderBookTableModel,
+StonksMainWindow::StonksMainWindow(OrderBook* orderBook, SmallOrderBookTableModel* smallOrderBookTableModel,
                                 Deals* deals, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
     
-    allOrders = orderBookTableModel;
+    this->orderBook = orderBook;
     visibleOrders = smallOrderBookTableModel;
 
     dealsModel = deals;
@@ -75,7 +75,7 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 
 void StonksMainWindow::insertNewDataAndUpdate() 
 {
-    Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", allOrders);
+    Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", orderBook);
     updateWindow();
 }
 
@@ -89,14 +89,14 @@ void StonksMainWindow::updateWindow()
 
 void StonksMainWindow::updateOrderBookTable()
 {
-    visibleOrders->changeData(allOrders);
+    visibleOrders->changeData(orderBook);
     visibleOrders->updateTable();
     ui.tableView->repaint();
 }
 
 void StonksMainWindow::updateMarketDepthGraph()
 {
-    auto newMarketDepthGraph = graphsBuilder->buildMarketDepthGraph(allOrders);
+    auto newMarketDepthGraph = graphsBuilder->buildMarketDepthGraph(orderBook);
     marketDepthView->setChart(newMarketDepthGraph);
     delete marketDepthGraph;
     marketDepthGraph = newMarketDepthGraph;
@@ -110,7 +110,7 @@ void StonksMainWindow::updatePriceGraph()
 
 void StonksMainWindow::placeMarketDepthGraph()
 {
-    marketDepthGraph = graphsBuilder->buildMarketDepthGraph(allOrders);
+    marketDepthGraph = graphsBuilder->buildMarketDepthGraph(orderBook);
 
     marketDepthView = new QChartView(marketDepthGraph);
     marketDepthView->setRenderHint(QPainter::Antialiasing);
