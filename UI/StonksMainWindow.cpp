@@ -8,17 +8,14 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBook* orderBook, SmallOrderBookTableModel* smallOrderBookTableModel,
-                                Deals* deals, QWidget* parent)
+StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
     
     this->orderBook = orderBook;
-    visibleOrders = smallOrderBookTableModel;
 
     dealsModel = deals;
-    //model->deals = dealsModel;
 
     graphsBuilder = new GraphsBuilder;
 
@@ -122,6 +119,9 @@ void StonksMainWindow::placeMarketDepthGraph()
 
 void StonksMainWindow::placeOrderBookTable()
 {
+    visibleOrders = new SmallOrderBookTableModel();
+    visibleOrders->changeData(orderBook);
+
     ui.tableView->setModel(visibleOrders);
 
     ui.tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
