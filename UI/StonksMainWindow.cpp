@@ -91,9 +91,10 @@ void StonksMainWindow::updateWindow()
 
 void StonksMainWindow::updateOrderBookTable()
 {
-    //model->updateTable();
+    visibleOrders->changeData(allOrders);
+    visibleOrders->updateTable();
     //this->centerOrderBookTable();
-    //ui.tableView->repaint();
+    ui.tableView->repaint();
 }
 
 void StonksMainWindow::updateMarketDepthGraph()

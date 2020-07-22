@@ -19,6 +19,10 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
+    // Изменение данных таблицы
+    void changeData(OrderBookTableModel* orderBook);
+    void updateTable();
+
 private:
     QStringList headers;
 

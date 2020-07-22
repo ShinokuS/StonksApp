@@ -1,6 +1,5 @@
 ﻿#include "SmallOrderBookTableModel.h"
 
-
 #include <QSize>
 #include <QBrush>
 
@@ -63,4 +62,29 @@ bool SmallOrderBookTableModel::setData(const QModelIndex& index, const QVariant&
 Qt::ItemFlags SmallOrderBookTableModel::flags(const QModelIndex& index) const
 {
     return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
+}
+
+void SmallOrderBookTableModel::changeData(OrderBookTableModel* orderBook)
+{
+    int countOfVisibleOrders = 20;
+
+    if(orderBook->rowCount() <= countOfVisibleOrders){
+        rows = orderBook->rows;
+    }
+    else {
+        for (int i = 0;i < countOfVisibleOrders; i++) {
+            if (rowCount()<countOfVisibleOrders) {
+                rows.append(orderBook->rows[i + orderBook->indexOfFirstVisibleElement]);
+            }
+            else {
+                rows.replace(i, orderBook->rows[i + orderBook->indexOfFirstVisibleElement]);
+            }
+        }
+    }
+}
+
+void SmallOrderBookTableModel::updateTable()
+{
+    emit layoutAboutToBeChanged();
+    emit layoutChanged();
 }

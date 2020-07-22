@@ -9,7 +9,9 @@ class OrderBookTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    int centerIndex;
+    int indexOfFirstVisibleElement;
+    int countOfAsks;
+    //int centerIndex;
     Deals* deals;
     QList<Order*> rows;
 

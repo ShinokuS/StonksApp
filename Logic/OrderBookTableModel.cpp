@@ -7,7 +7,9 @@
 OrderBookTableModel::OrderBookTableModel(QObject* parent)
     : QAbstractTableModel(parent)
 {
-    centerIndex = 0;
+    indexOfFirstVisibleElement = 0;
+    countOfAsks = 0;
+    //centerIndex = 0;
     headers << "Price" << "Quantity";
 }
 
@@ -55,12 +57,6 @@ QVariant OrderBookTableModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-void OrderBookTableModel::updateTable()
-{
-    emit layoutAboutToBeChanged();
-    emit layoutChanged();
-}
-
 bool OrderBookTableModel::setData(const QModelIndex& index, const QVariant&, int role)
 {
     if (!index.isValid()) return false;
@@ -93,6 +89,10 @@ void OrderBookTableModel::insertOrder(Order* newOrder)
     // Костыль из-за интерфейса STL
     Order reference = { newOrder->price };
 
+    if (newOrder->isAsk && countOfAsks <= 10) countOfAsks++;
+    if (countOfAsks > 10 && newOrder->isAsk) {
+        indexOfFirstVisibleElement++;
+    }
     // Бинарный поиск позиции с ценой не меньше указанной
     auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
         [reference](Order* element, const Order reference) { return element->price > reference.price; });
@@ -100,7 +100,7 @@ void OrderBookTableModel::insertOrder(Order* newOrder)
     rows.insert(iter, newOrder);
 
     if (newOrder->isAsk) {
-        centerIndex++;
+        //centerIndex++;
     }
 }
 
@@ -109,6 +109,9 @@ void OrderBookTableModel::deleteOrder(Order* newOrder)
     // Костыль из-за интерфейса STL
     Order reference = { newOrder->price, 0, false };
 
+    if (countOfAsks > 10 && newOrder->isAsk) {
+        indexOfFirstVisibleElement--;
+    }
     // Бинарный поиск позиции с ценой не меньше указанной
     auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
         [reference](Order* element, const Order reference) { return element->price > reference.price; });
@@ -120,7 +123,7 @@ void OrderBookTableModel::deleteOrder(Order* newOrder)
     rows.erase(iter);
 
     if (newOrder->isAsk) {
-        --centerIndex;
+        //--centerIndex;
     }
 }
 
