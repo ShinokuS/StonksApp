@@ -32,10 +32,10 @@ void OrderBook::insertOrder(Order* newOrder)
         indexOfFirstVisibleElement++;
     }
     // Бинарный поиск позиции с ценой не меньше указанной
-    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
+    auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
         [reference](Order* element, const Order reference) { return element->price > reference.price; });
 
-    rows.insert(iter, newOrder);
+    orders.insert(iter, newOrder);
 }
 
 void OrderBook::deleteOrder(Order* newOrder)
@@ -47,14 +47,14 @@ void OrderBook::deleteOrder(Order* newOrder)
         indexOfFirstVisibleElement--;
     }
     // Бинарный поиск позиции с ценой не меньше указанной
-    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
+    auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
         [reference](Order* element, const Order reference) { return element->price > reference.price; });
 
     // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
     // Как и на то, совпадает ли маркер бида/аска.
 
     delete* iter;
-    rows.erase(iter);
+    orders.erase(iter);
 }
 
 void OrderBook::changeOrder(Order* newOrder)
@@ -63,7 +63,7 @@ void OrderBook::changeOrder(Order* newOrder)
     Order reference = { newOrder->price, 0, false };
 
     // Бинарный поиск позиции с ценой не меньше указанной
-    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
+    auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
         [reference](Order* element, const Order reference) { return element->price > reference.price; });
 
     // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!

@@ -9,7 +9,7 @@ public:
     int indexOfFirstVisibleElement;
     int countOfAsks;
     Deals* deals;
-    QList<Order*> rows;
+    QList<Order*> orders;
 
     OrderBook();
 

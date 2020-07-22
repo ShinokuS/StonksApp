@@ -68,16 +68,16 @@ void SmallOrderBookTableModel::changeData(OrderBook* orderBook)
 {
     int countOfVisibleOrders = 20;
 
-    if(orderBook->rows.size() <= countOfVisibleOrders){
-        rows = orderBook->rows;
+    if(orderBook->orders.size() <= countOfVisibleOrders){
+        rows = orderBook->orders;
     }
     else {
         for (int i = 0;i < countOfVisibleOrders; i++) {
             if (rowCount()<countOfVisibleOrders) {
-                rows.append(orderBook->rows[i + orderBook->indexOfFirstVisibleElement]);
+                rows.append(orderBook->orders[i + orderBook->indexOfFirstVisibleElement]);
             }
             else {
-                rows.replace(i, orderBook->rows[i + orderBook->indexOfFirstVisibleElement]);
+                rows.replace(i, orderBook->orders[i + orderBook->indexOfFirstVisibleElement]);
             }
         }
     }
