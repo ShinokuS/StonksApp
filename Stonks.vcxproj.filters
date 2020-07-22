@@ -39,9 +39,6 @@
     <ClCompile Include="UI\StonksMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Logic\OrderBookTableModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Logic\Order.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -58,6 +55,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Logic\SmallOrderBookTableModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Logic\OrderBook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,12 +83,12 @@
     <ClInclude Include="IO\Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Logic\OrderBook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="UI\StonksMainWindow.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Logic\OrderBookTableModel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Logic\QCustomPlot\qcustomplot.h">

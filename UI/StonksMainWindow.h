@@ -7,7 +7,7 @@
 
 #include "ui_StonksMainWindow.h"
 #include "../Logic/GraphsBuilder.h"
-#include "../Logic/OrderBookTableModel.h"
+#include "../Logic/OrderBook.h"
 #include "../Logic/SmallOrderBookTableModel.h"
 #include "Graphs/MarketDepthGraph.h"
 
@@ -17,7 +17,7 @@ class StonksMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    StonksMainWindow(OrderBookTableModel* orderBookTableModel, SmallOrderBookTableModel* smallOrderBookTableModel, Deals* deals,
+    StonksMainWindow(OrderBook* orderBookTableModel, SmallOrderBookTableModel* smallOrderBookTableModel, Deals* deals,
                     QWidget* parent = Q_NULLPTR);
 
 private slots:
@@ -27,7 +27,7 @@ private slots:
 private:
     Ui::StonksAppClass ui;
     SmallOrderBookTableModel* visibleOrders;
-    OrderBookTableModel* allOrders;
+    OrderBook* allOrders;
     Deals* dealsModel;
     GraphsBuilder* graphsBuilder;
     QTimer* tmr;

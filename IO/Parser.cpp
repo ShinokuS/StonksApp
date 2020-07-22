@@ -4,7 +4,7 @@
 
 #include "rapidjson/document.h"
 
-#include "../Logic/OrderBookTableModel.h"
+#include "../Logic/OrderBook.h"
 #include "Parser.h"
 
 size_t place = 0; //Это для файлового указателя, чтобы знать, где уже прочитан файл, а где нет.
@@ -12,7 +12,7 @@ time_t times;
 const int TIME_SPACE = 600000;
 
 //Метод для парса в новую таблицу ордеров
-OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string instrumentName)
+OrderBook* Parser::parsePreDayOrders(std::string fileName, std::string instrumentName)
 {
 	FILE* dumpFile = fopen(fileName.c_str(), "rb");
 
@@ -24,7 +24,7 @@ OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string
 	const std::string keyWord = "book."+instrumentName; 
 	search.resize(keyWord.size());
 
-	OrderBookTableModel* orderBookTable = new OrderBookTableModel; //Книжка для заполнения ордерами
+	OrderBook* orderBookTable = new OrderBook; //Книжка для заполнения ордерами
 
 	for (size_t i = place; i < filesize; ++i)//Начинаем поиск по файлу
 	{
@@ -87,7 +87,7 @@ OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string
 	return orderBookTable;
 }
 //Второй метод для парса в уже существующуу таблицу
-OrderBookTableModel* Parser::ParseDaytimeOrders(std::string fileName, std::string instrumentName, OrderBookTableModel* orderBookTable) 
+OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrumentName, OrderBook* orderBookTable) 
 {
 	FILE* dumpFile = fopen(fileName.c_str(), "rb");
 

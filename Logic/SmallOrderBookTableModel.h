@@ -3,7 +3,7 @@
 #include <QAbstractTableModel>
 
 #include "Order.h"
-#include "OrderBookTableModel.h"
+#include "OrderBook.h"
 
 class SmallOrderBookTableModel : public QAbstractTableModel
 {
@@ -20,7 +20,7 @@ public:
 	bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
 	// Изменение данных таблицы
-	void changeData(OrderBookTableModel* orderBook);
+	void changeData(OrderBook* orderBook);
 	void updateTable();
 
 private:

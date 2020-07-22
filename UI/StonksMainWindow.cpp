@@ -8,7 +8,7 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel ,SmallOrderBookTableModel* smallOrderBookTableModel,
+StonksMainWindow::StonksMainWindow(OrderBook* orderBookTableModel ,SmallOrderBookTableModel* smallOrderBookTableModel,
                                 Deals* deals, QWidget* parent)
     : QMainWindow(parent)
 {

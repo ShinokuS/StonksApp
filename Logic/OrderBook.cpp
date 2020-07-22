@@ -1,73 +1,12 @@
-﻿#include "OrderBookTableModel.h"
+﻿#include "OrderBook.h"
 
-
-#include <QSize>
-#include <QBrush>
-
-OrderBookTableModel::OrderBookTableModel(QObject* parent)
-    : QAbstractTableModel(parent)
+OrderBook::OrderBook()
 {
     indexOfFirstVisibleElement = 0;
     countOfAsks = 0;
-    headers << "Price" << "Quantity";
 }
 
-QVariant OrderBookTableModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole && section < headers.size()) {
-        return headers.at(section);
-    }
-    return {};
-}
-
-int OrderBookTableModel::rowCount(const QModelIndex& parent) const
-{
-    if (parent.isValid()) return 0;
-        return rows.size();
-}
-
-int OrderBookTableModel::columnCount(const QModelIndex& parent) const
-{
-    if (parent.isValid()) return 0;
-        return headers.size();
-}
-
-QVariant OrderBookTableModel::data(const QModelIndex& index, int role) const
-{
-    if (!index.isValid())
-        return QVariant();
-
-    auto row = rows.at(index.row());
-    switch (role) {
-    case Qt::DisplayRole:
-    case Qt::EditRole:
-        switch (index.column()) {
-        case 0: return row->price;
-        case 1: return row->quantity;
-        }
-    case Qt::TextAlignmentRole:
-        return Qt::AlignCenter;
-    case Qt::BackgroundRole:
-        if (row->isAsk) {
-            return QBrush(0xff6161);
-        }
-        else return QBrush(0x7ce670);
-    }
-    return QVariant();
-}
-
-bool OrderBookTableModel::setData(const QModelIndex& index, const QVariant&, int role)
-{
-    if (!index.isValid()) return false;
-    return true;
-}
-
-Qt::ItemFlags OrderBookTableModel::flags(const QModelIndex& index) const
-{
-    return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
-}
-
-void OrderBookTableModel::addOrder(Order* newOrder)
+void OrderBook::addOrder(Order* newOrder)
 {
     if (newOrder->flag == "new")
     {
@@ -83,7 +22,7 @@ void OrderBookTableModel::addOrder(Order* newOrder)
     }
 }
 
-void OrderBookTableModel::insertOrder(Order* newOrder)
+void OrderBook::insertOrder(Order* newOrder)
 {
     // Костыль из-за интерфейса STL
     Order reference = { newOrder->price };
@@ -99,7 +38,7 @@ void OrderBookTableModel::insertOrder(Order* newOrder)
     rows.insert(iter, newOrder);
 }
 
-void OrderBookTableModel::deleteOrder(Order* newOrder)
+void OrderBook::deleteOrder(Order* newOrder)
 {
     // Костыль из-за интерфейса STL
     Order reference = { newOrder->price, 0, false };
@@ -114,11 +53,11 @@ void OrderBookTableModel::deleteOrder(Order* newOrder)
     // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
     // Как и на то, совпадает ли маркер бида/аска.
 
-    delete *iter;
+    delete* iter;
     rows.erase(iter);
 }
 
-void OrderBookTableModel::changeOrder(Order* newOrder)
+void OrderBook::changeOrder(Order* newOrder)
 {
     // Костыль из-за интерфейса STL
     Order reference = { newOrder->price, 0, false };

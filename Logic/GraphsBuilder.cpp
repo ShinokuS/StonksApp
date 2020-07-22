@@ -7,7 +7,7 @@
 
 using namespace QtCharts;
 
-MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orderBook) {
+MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
 
     // Объявляем серии для хранения точек для линий графика.
     QLineSeries* bidsUpLineSeries = new QLineSeries();

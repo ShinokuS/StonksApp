@@ -64,11 +64,11 @@ Qt::ItemFlags SmallOrderBookTableModel::flags(const QModelIndex& index) const
     return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
 }
 
-void SmallOrderBookTableModel::changeData(OrderBookTableModel* orderBook)
+void SmallOrderBookTableModel::changeData(OrderBook* orderBook)
 {
     int countOfVisibleOrders = 20;
 
-    if(orderBook->rowCount() <= countOfVisibleOrders){
+    if(orderBook->rows.size() <= countOfVisibleOrders){
         rows = orderBook->rows;
     }
     else {
