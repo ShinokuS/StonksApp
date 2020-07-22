@@ -7,7 +7,7 @@
 
 using namespace QtCharts;
 
-MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orderBook) {
+MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
 
     // Объявляем серии для хранения точек для линий графика.
     QLineSeries* bidsUpLineSeries = new QLineSeries();
@@ -16,7 +16,7 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
     QLineSeries* asksDownLineSeries = new QLineSeries();
 
     // Обрабатываем данные с модели
-    auto iter = orderBook->rows.end();
+    auto iter = orderBook->orders.end();
     do iter--; while (! (*iter)->isAsk);
     auto centralIter = iter;
     qreal prevY = (*iter)->quantity;
@@ -26,13 +26,13 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBookTableModel* orde
         asksUpLineSeries->append(prevY, (*iter)->price);
         asksUpLineSeries->append(prevY + (*iter)->quantity, (*iter)->price);
         prevY += (*iter)->quantity;
-    } while (iter!=orderBook->rows.begin());
+    } while (iter!=orderBook->orders.begin());
     *asksDownLineSeries << QPointF(0, (*centralIter)->price) << QPointF(0, (*iter)->price);
 
     iter = centralIter++;
     prevY = (*iter)->quantity;
     iter++;
-    for (; iter != orderBook->rows.end(); iter++) {
+    for (; iter != orderBook->orders.end(); iter++) {
         bidsUpLineSeries->append(prevY, (*iter)->price);
         bidsUpLineSeries->append(prevY + (*iter)->quantity, (*iter)->price);
         prevY += (*iter)->quantity;
