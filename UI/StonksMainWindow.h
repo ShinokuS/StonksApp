@@ -21,7 +21,6 @@ public:
                     QWidget* parent = Q_NULLPTR);
 
 private slots:
-    void centerOrderBookTable();
     void insertNewDataAndUpdate();
     void slotRangeChanged(const QCPRange& newRange);
 

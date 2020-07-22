@@ -13,8 +13,6 @@ StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel ,Sma
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    connect(ui.centerButton, SIGNAL(clicked()), this, SLOT(centerOrderBookTable()));
-    
     
     allOrders = orderBookTableModel;
     visibleOrders = smallOrderBookTableModel;
@@ -93,7 +91,6 @@ void StonksMainWindow::updateOrderBookTable()
 {
     visibleOrders->changeData(allOrders);
     visibleOrders->updateTable();
-    //this->centerOrderBookTable();
     ui.tableView->repaint();
 }
 
@@ -109,14 +106,6 @@ void StonksMainWindow::updateMarketDepthGraph()
 void StonksMainWindow::updatePriceGraph()
 {
     graphsBuilder->update(priceGraph);
-}
-
-void StonksMainWindow::centerOrderBookTable()
-{
-    /*
-    ui.tableView->scrollTo(model->index(model->centerIndex - 2, 0),
-                            QAbstractItemView::PositionAtCenter);
-    */
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
@@ -138,8 +127,6 @@ void StonksMainWindow::placeOrderBookTable()
     ui.tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui.tableView->verticalHeader()->hide();
-
-    //StonksMainWindow::centerOrderBookTable();
 }
 
 void StonksMainWindow::placePriceGraph()
