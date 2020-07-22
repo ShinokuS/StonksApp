@@ -35,11 +35,9 @@ void OrderBook::insertOrder(Order* newOrder)
     orders.insert(iter, newOrder);
 
     if (newOrder->isAsk) {
+        countOfAsks++;
         if (countOfAsks > SmallOrderBookTableModel::MAX_VISIBLE_ASKS_AMOUNT) {
             indexOfFirstVisibleElement++;
-        }
-        else {
-            countOfAsks++;
         }
     }
 }
@@ -59,8 +57,11 @@ void OrderBook::deleteOrder(Order* newOrder)
     delete* iter;
     orders.erase(iter);
 
-    if (newOrder->isAsk && countOfAsks > SmallOrderBookTableModel::MAX_VISIBLE_ASKS_AMOUNT) {
-        indexOfFirstVisibleElement--;
+    if (newOrder->isAsk) {
+        countOfAsks--;
+        if (countOfAsks > SmallOrderBookTableModel::MAX_VISIBLE_ASKS_AMOUNT) {
+            indexOfFirstVisibleElement--;
+        }
     }
 }
 
