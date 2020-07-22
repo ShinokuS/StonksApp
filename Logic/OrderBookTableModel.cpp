@@ -136,6 +136,6 @@ void OrderBookTableModel::changeOrder(Order* newOrder)
     // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
     // Как и на то, совпадает ли маркер бида/аска.
 
-    delete *iter;
-    *iter = newOrder;
+    (*iter)->quantity = newOrder->quantity;
+    delete newOrder;
 }
