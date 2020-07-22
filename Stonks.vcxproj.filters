@@ -51,11 +51,13 @@
     <ClCompile Include="UI\Graphs\PriceGraph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-
     <ClCompile Include="IO\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Logic\QCustomPlot\qcustomplot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Logic\SmallOrderBookTableModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -90,6 +92,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Logic\QCustomPlot\qcustomplot.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Logic\SmallOrderBookTableModel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

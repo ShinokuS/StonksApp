@@ -8,18 +8,19 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel,
+StonksMainWindow::StonksMainWindow(OrderBookTableModel* orderBookTableModel ,SmallOrderBookTableModel* smallOrderBookTableModel,
                                 Deals* deals, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
     connect(ui.centerButton, SIGNAL(clicked()), this, SLOT(centerOrderBookTable()));
     
-    model = orderBookTableModel;
-    model->setParent(this);
+    
+    allOrders = orderBookTableModel;
+    visibleOrders = smallOrderBookTableModel;
 
     dealsModel = deals;
-    model->deals = dealsModel;
+    //model->deals = dealsModel;
 
     graphsBuilder = new GraphsBuilder;
 
@@ -76,7 +77,7 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 
 void StonksMainWindow::insertNewDataAndUpdate() 
 {
-    Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", model);
+    Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", allOrders);
     updateWindow();
 }
 
@@ -90,14 +91,14 @@ void StonksMainWindow::updateWindow()
 
 void StonksMainWindow::updateOrderBookTable()
 {
-    model->updateTable();
-    this->centerOrderBookTable();
-    ui.tableView->repaint();
+    //model->updateTable();
+    //this->centerOrderBookTable();
+    //ui.tableView->repaint();
 }
 
 void StonksMainWindow::updateMarketDepthGraph()
 {
-    auto newMarketDepthGraph = graphsBuilder->buildMarketDepthGraph(model);
+    auto newMarketDepthGraph = graphsBuilder->buildMarketDepthGraph(allOrders);
     marketDepthView->setChart(newMarketDepthGraph);
     delete marketDepthGraph;
     marketDepthGraph = newMarketDepthGraph;
@@ -111,13 +112,15 @@ void StonksMainWindow::updatePriceGraph()
 
 void StonksMainWindow::centerOrderBookTable()
 {
+    /*
     ui.tableView->scrollTo(model->index(model->centerIndex - 2, 0),
                             QAbstractItemView::PositionAtCenter);
+    */
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
 {
-    marketDepthGraph = graphsBuilder->buildMarketDepthGraph(model);
+    marketDepthGraph = graphsBuilder->buildMarketDepthGraph(allOrders);
 
     marketDepthView = new QChartView(marketDepthGraph);
     marketDepthView->setRenderHint(QPainter::Antialiasing);
@@ -129,13 +132,13 @@ void StonksMainWindow::placeMarketDepthGraph()
 
 void StonksMainWindow::placeOrderBookTable()
 {
-    ui.tableView->setModel(model);
+    ui.tableView->setModel(visibleOrders);
 
     ui.tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui.tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui.tableView->verticalHeader()->hide();
 
-    StonksMainWindow::centerOrderBookTable();
+    //StonksMainWindow::centerOrderBookTable();
 }
 
 void StonksMainWindow::placePriceGraph()
