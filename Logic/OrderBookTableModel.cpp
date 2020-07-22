@@ -9,7 +9,6 @@ OrderBookTableModel::OrderBookTableModel(QObject* parent)
 {
     indexOfFirstVisibleElement = 0;
     countOfAsks = 0;
-    //centerIndex = 0;
     headers << "Price" << "Quantity";
 }
 
@@ -98,10 +97,6 @@ void OrderBookTableModel::insertOrder(Order* newOrder)
         [reference](Order* element, const Order reference) { return element->price > reference.price; });
 
     rows.insert(iter, newOrder);
-
-    if (newOrder->isAsk) {
-        //centerIndex++;
-    }
 }
 
 void OrderBookTableModel::deleteOrder(Order* newOrder)
@@ -121,10 +116,6 @@ void OrderBookTableModel::deleteOrder(Order* newOrder)
 
     delete *iter;
     rows.erase(iter);
-
-    if (newOrder->isAsk) {
-        //--centerIndex;
-    }
 }
 
 void OrderBookTableModel::changeOrder(Order* newOrder)

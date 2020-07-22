@@ -11,7 +11,6 @@ class OrderBookTableModel : public QAbstractTableModel
 public:
     int indexOfFirstVisibleElement;
     int countOfAsks;
-    //int centerIndex;
     Deals* deals;
     QList<Order*> rows;
 
