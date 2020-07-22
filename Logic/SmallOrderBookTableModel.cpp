@@ -66,14 +66,12 @@ Qt::ItemFlags SmallOrderBookTableModel::flags(const QModelIndex& index) const
 
 void SmallOrderBookTableModel::changeData(OrderBook* orderBook)
 {
-    int countOfVisibleOrders = 20;
-
-    if(orderBook->orders.size() <= countOfVisibleOrders){
+    if(orderBook->orders.size() <= MAX_VISIBLE_ORDERS_AMOUNT){
         rows = orderBook->orders;
     }
     else {
-        for (int i = 0;i < countOfVisibleOrders; i++) {
-            if (rowCount()<countOfVisibleOrders) {
+        for (int i = 0;i < MAX_VISIBLE_ORDERS_AMOUNT; i++) {
+            if (rowCount()<MAX_VISIBLE_ORDERS_AMOUNT) {
                 rows.append(orderBook->orders[i + orderBook->indexOfFirstVisibleElement]);
             }
             else {

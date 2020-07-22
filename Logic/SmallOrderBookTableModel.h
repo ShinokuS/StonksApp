@@ -9,6 +9,9 @@ class SmallOrderBookTableModel : public QAbstractTableModel
 {
 	Q_OBJECT
 public:
+	static const int MAX_VISIBLE_ASKS_AMOUNT = 10;
+	static const int MAX_VISIBLE_ORDERS_AMOUNT = MAX_VISIBLE_ASKS_AMOUNT * 2;
+
 	QList<Order*> rows;
 	SmallOrderBookTableModel(QObject* parent = nullptr);
 

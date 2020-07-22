@@ -1,4 +1,5 @@
 ﻿#include "OrderBook.h"
+#include "SmallOrderBookTableModel.h"
 
 OrderBook::OrderBook()
 {
@@ -34,7 +35,7 @@ void OrderBook::insertOrder(Order* newOrder)
     orders.insert(iter, newOrder);
 
     if (newOrder->isAsk) {
-        if (countOfAsks > 10) {
+        if (countOfAsks > SmallOrderBookTableModel::MAX_VISIBLE_ASKS_AMOUNT) {
             indexOfFirstVisibleElement++;
         }
         else {
@@ -58,7 +59,7 @@ void OrderBook::deleteOrder(Order* newOrder)
     delete* iter;
     orders.erase(iter);
 
-    if (newOrder->isAsk && countOfAsks > 10) {
+    if (newOrder->isAsk && countOfAsks > SmallOrderBookTableModel::MAX_VISIBLE_ASKS_AMOUNT) {
         indexOfFirstVisibleElement--;
     }
 }
