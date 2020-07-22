@@ -76,7 +76,7 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 
 void StonksMainWindow::insertNewDataAndUpdate() 
 {
-    Parser::Parse("20200620.deribit.dump", "ETH-PERPETUAL", model);
+    Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", model);
     updateWindow();
 }
 

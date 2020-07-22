@@ -132,35 +132,33 @@ void OrderBookTableModel::addAsk(qreal price, qreal quantity, time_t time)
     }
 
 //Создал пока что новые функции для работы с bids и asks. Они пока не оптимизированны.
-void OrderBookTableModel::addBidNew(qreal price, qreal amount, time_t time, std::string flag)
+void OrderBookTableModel::addBidNew(Order* newBid)
 {
-    auto newBid= new Order{ price, amount, false, time };
-    if (flag == "new")
+    if (newBid->flag == "new")
     {
         addBidToListNew(newBid);
     }
-    else if (flag == "delete")
+    else if (newBid->flag == "delete")
     {
         deleteBidFromListNew(newBid);
     }
-    else if (flag == "change")
+    else if (newBid->flag == "change")
     {
         changeBidInListNew(newBid);
     }
 }
 
-void OrderBookTableModel::addAskNew(qreal price, qreal amount, time_t time, std::string flag)
+void OrderBookTableModel::addAskNew(Order* newAsk)
 {
-    auto newAsk = new Order{ price, amount, true, time };
-    if (flag == "new")
+    if (newAsk->flag == "new")
     {
         addAskToListNew(newAsk);
     }
-    else if (flag == "delete")
+    else if (newAsk->flag == "delete")
     {
         deleteAskFromListNew(newAsk);
     }
-    else if (flag == "change")
+    else if (newAsk->flag == "change")
     {
         changeAskInListNew(newAsk);
     }
@@ -303,6 +301,7 @@ void OrderBookTableModel::deleteBidFromListNew(Order* newBid)
     {
         if (((*it)->price == newBid->price)&&((*it)->isAsk == newBid->isAsk))
         {
+            delete *it;
             rows.erase(it);
             return;
         }
@@ -315,6 +314,7 @@ void OrderBookTableModel::deleteAskFromListNew(Order* newAsk)
     {
         if (((*it)->price == newAsk->price) && ((*it)->isAsk == newAsk->isAsk))
         {
+            delete *it;
             rows.erase(it);
             --centerIndex;
             return;
@@ -328,6 +328,7 @@ void OrderBookTableModel::changeBidInListNew(Order* newBid)
     {
         if (((*it)->price == newBid->price) && ((*it)->isAsk == newBid->isAsk))
         {
+            delete *it;
             *it = newBid;
             return;
         }
@@ -340,6 +341,7 @@ void OrderBookTableModel::changeAskInListNew(Order* newAsk)
     {
         if (((*it)->price == newAsk->price) && ((*it)->isAsk == newAsk->isAsk))
         {
+            delete *it;
             *it = newAsk;
             return;
         }
