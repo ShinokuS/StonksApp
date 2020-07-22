@@ -6,6 +6,7 @@
 int main(int argc, char *argv[])
 {
     auto deals = new Deals();
+    deals->randomListOfDeals();
     auto orderBook = Parser::parsePreDayOrders("20200620.deribit.dump","ETH-PERPETUAL");
     
     QApplication a(argc, argv);
