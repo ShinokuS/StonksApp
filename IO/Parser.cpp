@@ -66,7 +66,7 @@ OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string
 				qreal price = (*itr)[1].GetDouble();
 				qreal quantity = (*itr)[2].GetDouble();
 				auto newBid = new Order{ price, quantity, false, timestamp, flag };
-				orderBookTable->addBidNew(newBid);
+				orderBookTable->addOrder(newBid);
 			} 
 
 			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
@@ -75,7 +75,7 @@ OrderBookTableModel* Parser::parsePreDayOrders(std::string fileName, std::string
 				qreal price = (*itr)[1].GetDouble();
 				qreal quantity = (*itr)[2].GetDouble();
 				auto newAsk = new Order{ price, quantity, true, timestamp, flag };
-				orderBookTable->addAskNew(newAsk);
+				orderBookTable->addOrder(newAsk);
 			}
 
 			times = timestamp;
@@ -139,7 +139,7 @@ OrderBookTableModel* Parser::ParseDaytimeOrders(std::string fileName, std::strin
 				qreal price = (*itr)[1].GetDouble();
 				qreal quantity = (*itr)[2].GetDouble();
 				auto newBid = new Order{ price, quantity, false, timestamp, flag };
-				orderBookTable->addBidNew(newBid);
+				orderBookTable->addOrder(newBid);
 			}
 
 			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
@@ -148,7 +148,7 @@ OrderBookTableModel* Parser::ParseDaytimeOrders(std::string fileName, std::strin
 				qreal price = (*itr)[1].GetDouble();
 				qreal quantity = (*itr)[2].GetDouble();
 				auto newAsk = new Order{ price, quantity, true, timestamp, flag };
-				orderBookTable->addAskNew(newAsk);
+				orderBookTable->addOrder(newAsk);
 			}
 			delete doc;
 			if (times + TIME_SPACE < timestamp)

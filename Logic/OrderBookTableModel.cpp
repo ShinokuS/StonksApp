@@ -72,111 +72,70 @@ Qt::ItemFlags OrderBookTableModel::flags(const QModelIndex& index) const
     return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
 }
 
-void OrderBookTableModel::addBidNew(Order* newBid)
+void OrderBookTableModel::addOrder(Order* newOrder)
 {
-    if (newBid->flag == "new")
+    if (newOrder->flag == "new")
     {
-        addBidToListNew(newBid);
+        insertOrder(newOrder);
     }
-    else if (newBid->flag == "delete")
+    else if (newOrder->flag == "delete")
     {
-        deleteBidFromListNew(newBid);
+        deleteOrder(newOrder);
     }
-    else if (newBid->flag == "change")
+    else if (newOrder->flag == "change")
     {
-        changeBidInListNew(newBid);
+        changeOrder(newOrder);
     }
 }
 
-void OrderBookTableModel::addAskNew(Order* newAsk)
+void OrderBookTableModel::insertOrder(Order* newOrder)
 {
-    if (newAsk->flag == "new")
-    {
-        addAskToListNew(newAsk);
-    }
-    else if (newAsk->flag == "delete")
-    {
-        deleteAskFromListNew(newAsk);
-    }
-    else if (newAsk->flag == "change")
-    {
-        changeAskInListNew(newAsk);
-    }
-}
+    // Костыль из-за интерфейса STL
+    Order reference = { newOrder->price };
 
-void OrderBookTableModel::addBidToListNew(Order* newBid)
-{
-    Order reference = { newBid->price, 0, false }; // костыль из-за интерфейса STL
-
-    // бинарный поиск позиции с ценой не меньше указанной
+    // Бинарный поиск позиции с ценой не меньше указанной
     auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
         [reference](Order* element, const Order reference) { return element->price > reference.price; });
 
-        rows.insert(iter, newBid);
-    
-}
+    rows.insert(iter, newOrder);
 
-void OrderBookTableModel::addAskToListNew(Order* newAsk)
-{
-    Order reference = { newAsk->price, 0, true }; // костыль из-за интерфейса STL
-
-    // бинарный поиск позиции с ценой не меньше указанной
-    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
-        [reference](Order* element, const Order reference) { return element->price > reference.price; });
-
-        rows.insert(iter, newAsk);
+    if (newOrder->isAsk) {
         centerIndex++;
-}
-
-void OrderBookTableModel::deleteBidFromListNew(Order* newBid)
-{
-    for (auto it = rows.begin(); it != rows.end();++it)
-    {
-        if (((*it)->price == newBid->price)&&((*it)->isAsk == newBid->isAsk))
-        {
-            delete *it;
-            rows.erase(it);
-            return;
-        }
     }
 }
 
-void OrderBookTableModel::deleteAskFromListNew(Order* newAsk)
+void OrderBookTableModel::deleteOrder(Order* newOrder)
 {
-    for (auto it = rows.begin(); it != rows.end(); ++it)
-    {
-        if (((*it)->price == newAsk->price) && ((*it)->isAsk == newAsk->isAsk))
-        {
-            delete *it;
-            rows.erase(it);
-            --centerIndex;
-            return;
-        }
+    // Костыль из-за интерфейса STL
+    Order reference = { newOrder->price, 0, false };
+
+    // Бинарный поиск позиции с ценой не меньше указанной
+    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
+        [reference](Order* element, const Order reference) { return element->price > reference.price; });
+
+    // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
+    // Как и на то, совпадает ли маркер бида/аска.
+
+    delete *iter;
+    rows.erase(iter);
+
+    if (newOrder->isAsk) {
+        --centerIndex;
     }
 }
 
-void OrderBookTableModel::changeBidInListNew(Order* newBid)
+void OrderBookTableModel::changeOrder(Order* newOrder)
 {
-    for (auto it = rows.begin(); it != rows.end(); ++it)
-    {
-        if (((*it)->price == newBid->price) && ((*it)->isAsk == newBid->isAsk))
-        {
-            delete *it;
-            *it = newBid;
-            return;
-        }
-    }
-}
+    // Костыль из-за интерфейса STL
+    Order reference = { newOrder->price, 0, false };
 
-void OrderBookTableModel::changeAskInListNew(Order* newAsk)
-{
-    for (auto it = rows.begin(); it != rows.end(); ++it)
-    {
-        if (((*it)->price == newAsk->price) && ((*it)->isAsk == newAsk->isAsk))
-        {
-            delete *it;
-            *it = newAsk;
-            return;
-        }
-    }
+    // Бинарный поиск позиции с ценой не меньше указанной
+    auto iter = std::lower_bound(rows.begin(), rows.end(), reference,
+        [reference](Order* element, const Order reference) { return element->price > reference.price; });
+
+    // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
+    // Как и на то, совпадает ли маркер бида/аска.
+
+    delete *iter;
+    *iter = newOrder;
 }

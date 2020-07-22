@@ -23,19 +23,15 @@ public:
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
     // Интерфейс для добавления новых ордеров.
-    void addBidNew(Order* newBid);
-    void addAskNew(Order* newAsk);
+    void addOrder(Order* newOrder);
 
     void updateTable();
 
 private:
     QStringList headers;
 
-    // Имплементация вставки ордеров в ордербук.
-    void addBidToListNew(Order* newBid);
-    void addAskToListNew(Order* newAsk);
-    void deleteBidFromListNew(Order* newBid);
-    void deleteAskFromListNew(Order* newAsk);
-    void changeBidInListNew(Order* newBid);
-    void changeAskInListNew(Order* newAsk);
+    // Имплементация операций над ордерами в ордербуке.
+    void insertOrder(Order* newOrder);
+    void deleteOrder(Order* newOrder);
+    void changeOrder(Order* newOrder);
 };
