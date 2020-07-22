@@ -95,12 +95,14 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\WeWil\Documents\stonks;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\WeWil\Documents\stonks;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Logic\BotLogic.cpp" />
     <ClCompile Include="Logic\Deals.cpp" />
     <ClCompile Include="Logic\GraphsBuilder.cpp" />
     <ClCompile Include="Logic\Order.cpp" />
     <ClCompile Include="Logic\OrderBook.cpp" />
     <ClCompile Include="Logic\QCustomPlot\qcustomplot.cpp" />
     <ClCompile Include="Logic\SmallOrderBookTableModel.cpp" />
+    <ClCompile Include="UI\Graphs\BotGraph.cpp" />
     <ClCompile Include="UI\Graphs\MarketDepthGraph.cpp" />
     <ClCompile Include="UI\Graphs\PriceGraph.cpp" />
     <ClCompile Include="UI\StonksMainWindow.cpp">
@@ -111,12 +113,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IO\Parser.h" />
+    <ClInclude Include="Logic\BotLogic.h" />
     <ClInclude Include="Logic\Deals.h" />
     <ClInclude Include="Logic\GraphsBuilder.h" />
     <QtMoc Include="Logic\QCustomPlot\qcustomplot.h" />
     <QtMoc Include="Logic\SmallOrderBookTableModel.h" />
     <ClInclude Include="Logic\OrderBook.h" />
     <ClInclude Include="Logic\Time.h" />
+    <ClInclude Include="UI\Graphs\BotGraph.h" />
     <ClInclude Include="UI\Graphs\PriceGraph.h" />
     <ClInclude Include="Logic\Order.h" />
     <ClInclude Include="UI\Graphs\MarketDepthGraph.h" />
