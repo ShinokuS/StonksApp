@@ -60,28 +60,10 @@ OrderBook* Parser::parsePreDayOrders()
 
 		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
-			std::string json = "{";
-			while (fgetc(dumpFile) != '{');
-			json.reserve(100000);
-			char ch;
-			short rightCurlyBrackets = 0;
-			short leftCurlyBrackets = 1;
-			while (leftCurlyBrackets != rightCurlyBrackets)
-			{
-				ch = fgetc(dumpFile);//Считываем посимвольно json-строку для Document.
-				++i;
-				json += ch; //Формируем строку для Document.
-				if (ch == '{')
-				{
-					++leftCurlyBrackets;
-				}
-				else if (ch == '}')
-				{
-					++rightCurlyBrackets;
-				}
-			}
+			auto json = readOrdersJsonFromPoint(i);
 			rapidjson::Document* doc = new rapidjson::Document;
-			doc->Parse(json.c_str());
+			doc->Parse(json->c_str());
+
 			// деление это отбрасывание долей секунд для конвертации в юникстайм
 			time_t timestamp = (*doc)["timestamp"].GetInt64() / 10000;
 
@@ -104,7 +86,9 @@ OrderBook* Parser::parsePreDayOrders()
 			}
 
 			times = timestamp;
+
 			delete doc;
+			delete json;
 			break;
 		}
 	}
@@ -130,28 +114,10 @@ OrderBook* Parser::ParseDaytimeOrders(OrderBook* orderBook)
 		search.back() = fgetc(dumpFile);
 		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
-			std::string json = "{";
-			while (fgetc(dumpFile) != '{');
-			json.reserve(100000);
-			char ch;
-			short rightCurlyBrackets = 0;
-			short leftCurlyBrackets = 1;
-			while (leftCurlyBrackets != rightCurlyBrackets)
-			{
-				ch = fgetc(dumpFile);//Считываем посимвольно json-строку для Document.
-				++i;
-				json += ch; //Формируем строку для Document.
-				if (ch == '{')
-				{
-					++leftCurlyBrackets;
-				}
-				else if (ch == '}')
-				{
-					++rightCurlyBrackets;
-				}
-			}
+			auto json = readOrdersJsonFromPoint(i);
 			rapidjson::Document* doc = new rapidjson::Document;
-			doc->Parse(json.c_str());
+			doc->Parse(json->c_str());
+
 			// деление это отбрасывание долей секунд для конвертации в юникстайм
 			time_t timestamp = (*doc)["timestamp"].GetInt64() / 10000;
 
@@ -172,7 +138,10 @@ OrderBook* Parser::ParseDaytimeOrders(OrderBook* orderBook)
 				auto newAsk = new Order{ price, quantity, true, timestamp, flag };
 				orderBook->addOrder(newAsk);
 			}
+
 			delete doc;
+			delete json;
+
 			if (times + TIME_SPACE < timestamp)
 			{
 				times = timestamp;
@@ -204,29 +173,10 @@ void Parser::ParseDaytimeDeal()
 		search.back() = fgetc(dumpFile);
 		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
-			std::string json = "{\"data\":[";
-			while (fgetc(dumpFile) != '[');
-			json.reserve(100000);
-			char ch;
-			short rightCurlyBrackets = 0;
-			short leftCurlyBrackets = 1;
-			while (leftCurlyBrackets != rightCurlyBrackets)
-			{
-				ch = fgetc(dumpFile);//Считываем посимвольно json-строку для Document.
-				++i;
-				json += ch; //Формируем строку для Document.
-				if (ch == '[')
-				{
-					++leftCurlyBrackets;
-				}
-				else if (ch == ']')
-				{
-					++rightCurlyBrackets;
-				}
-			}
-			json += "}";
+			auto json = readDealsJsonFromPoint(i);
 			rapidjson::Document* doc = new rapidjson::Document;
-			doc->Parse(json.c_str());
+			doc->Parse(json->c_str());
+
 			for (auto it = (*doc)["data"].Begin(); it != (*doc)["data"].End(); ++it)
 			{
 				// деление это отбрасывание долей секунд для конвертации в юникстайм
@@ -236,9 +186,62 @@ void Parser::ParseDaytimeDeal()
 				auto newDeal = new Order{ price, quantity, false, time };
 				dealsStorage->push_back(newDeal);
 			}
+			
 			delete doc;
+			delete json;
 			break;
 		}
 	}
 	dealsPlace = (size_t)_ftelli64(dumpFile);
+}
+
+std::string* Parser::readOrdersJsonFromPoint(size_t& i)
+{
+	auto json = new std::string("{");
+	while (fgetc(dumpFile) != '{'); // Мотаем поток до начала тела джейсона
+	json->reserve(100000);
+	char ch;
+	short rightCurlyBrackets = 0;
+	short leftCurlyBrackets = 1;
+	while (leftCurlyBrackets != rightCurlyBrackets)
+	{
+		ch = fgetc(dumpFile); // Считываем по одному символу из файла
+		++i;
+		*json += ch; // И дописываем их в json-строку
+		if (ch == '{')
+		{
+			++leftCurlyBrackets;
+		}
+		else if (ch == '}')
+		{
+			++rightCurlyBrackets;
+		}
+	}
+	return json;
+}
+
+std::string* Parser::readDealsJsonFromPoint(size_t& i)
+{
+	auto json = new std::string("{\"data\":[");
+	while (fgetc(dumpFile) != '[');  // Мотаем поток до начала тела джейсона
+	json->reserve(100000);
+	char ch;
+	short rightCurlyBrackets = 0;
+	short leftCurlyBrackets = 1;
+	while (leftCurlyBrackets != rightCurlyBrackets)
+	{
+		ch = fgetc(dumpFile); // Считываем по одному символу из файла
+		++i;
+		*json += ch; // И дописываем их в json-строку
+		if (ch == '[')
+		{
+			++leftCurlyBrackets;
+		}
+		else if (ch == ']')
+		{
+			++rightCurlyBrackets;
+		}
+	}
+	*json += "}";
+	return json;
 }
