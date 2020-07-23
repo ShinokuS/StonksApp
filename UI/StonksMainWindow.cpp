@@ -90,6 +90,9 @@ void StonksMainWindow::updateWindow()
     updatePriceGraph();
     updateMarketDepthGraph();
     updateOrderBookTable();
+
+    ui.label->setText("Bot Balance: " + QString::number(botLogic->botBalance) +
+        " Things Quantity: " + QString::number(botLogic->botThingsQuantity));
 }
 
 void StonksMainWindow::updateOrderBookTable()
