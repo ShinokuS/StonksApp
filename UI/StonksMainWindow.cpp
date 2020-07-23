@@ -8,7 +8,7 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, QWidget* parent)
+StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic* bot, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
@@ -16,6 +16,7 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, QWidget* 
     this->orderBook = orderBook;
 
     dealsModel = deals;
+    botLogic = bot;
 
     graphsBuilder = new GraphsBuilder;
 
@@ -37,7 +38,7 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, QWidget* 
 void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 {
     int firstDayTime = (int(graphsBuilder->getTimeForPriceGraph().first()) / Time::DAY)
-                        * Time::DAY - Time::THREE_HOURS;
+                        * Time::DAY;
     int lastDayTime = firstDayTime + Time::DAY;
 
     if (newRange.size() < Time::ONE_MINUTE) {
@@ -72,7 +73,13 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 
 void StonksMainWindow::insertNewDataAndUpdate() 
 {
-    Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", orderBook);
+    //Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", orderBook);
+    
+    if (dealsModel->canLoadNextDealFromSource()) {
+        dealsModel->loadNextDealFromSource();
+        botLogic->reactAtNewDeal(dealsModel->getLastDeal());
+    }
+
     updateWindow();
 }
 
@@ -102,7 +109,7 @@ void StonksMainWindow::updateMarketDepthGraph()
 
 void StonksMainWindow::updatePriceGraph()
 {
-    graphsBuilder->update(priceGraph);
+    graphsBuilder->update(priceGraph, botLogic);
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
@@ -132,6 +139,8 @@ void StonksMainWindow::placeOrderBookTable()
 void StonksMainWindow::placePriceGraph()
 {
     priceGraph = graphsBuilder->buildPriceGraph(dealsModel);
+    botGraph = new BotGraph(botLogic->timeBuy, botLogic->priceBuy, 
+                            botLogic->timeSell, botLogic->priceSell, priceGraph);
     priceGraphLayout = new QGridLayout(this);
     priceGraphLayout->addWidget(priceGraph);
     ui.priceGraphWidget->setLayout(priceGraphLayout);

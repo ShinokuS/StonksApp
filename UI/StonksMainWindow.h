@@ -9,7 +9,9 @@
 #include "../Logic/GraphsBuilder.h"
 #include "../Logic/OrderBook.h"
 #include "../Logic/SmallOrderBookTableModel.h"
+#include "../Logic/BotLogic.h"
 #include "Graphs/MarketDepthGraph.h"
+#include "Graphs/BotGraph.h"
 
 
 class StonksMainWindow : public QMainWindow
@@ -17,8 +19,8 @@ class StonksMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    StonksMainWindow(OrderBook* orderBookTableModel, Deals* deals,
-                    QWidget* parent = Q_NULLPTR);
+    StonksMainWindow(OrderBook* orderBookTableModel, Deals* deals, 
+                    BotLogic* bot, QWidget* parent = Q_NULLPTR);
 
 private slots:
     void insertNewDataAndUpdate();
@@ -26,6 +28,9 @@ private slots:
 
 private:
     Ui::StonksAppClass ui;
+    BotLogic* botLogic;
+    BotGraph* botGraph;
+
     SmallOrderBookTableModel* visibleOrders;
     OrderBook* orderBook;
     Deals* dealsModel;

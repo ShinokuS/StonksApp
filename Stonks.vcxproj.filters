@@ -60,6 +60,12 @@
     <ClCompile Include="Logic\OrderBook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UI\Graphs\BotGraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Logic\BotLogic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UI\Graphs\MarketDepthGraph.h">
@@ -84,6 +90,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logic\OrderBook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Graphs\BotGraph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Logic\BotLogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
