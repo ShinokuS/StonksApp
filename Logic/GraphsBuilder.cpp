@@ -72,7 +72,7 @@ PriceGraph* GraphsBuilder::buildPriceGraph(Deals* deals)
     return priceGraph;
 }
 
-void GraphsBuilder::update(PriceGraph* priceGraph)
+void GraphsBuilder::update(PriceGraph* priceGraph, BotLogic* bot)
 {
     priceGraph->graph()->clearData();
     if (! getTimeForPriceGraph().empty()) {
@@ -86,6 +86,8 @@ void GraphsBuilder::update(PriceGraph* priceGraph)
         else {
             priceGraph->graph(0)->setData(getTimeForPriceGraph(),
                 getPriceForPriceGraph());
+            priceGraph->graph(1)->setData(bot->timeBuy, bot->priceBuy);
+            priceGraph->graph(2)->setData(bot->timeSell, bot->priceSell);
             priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
                 dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
         }

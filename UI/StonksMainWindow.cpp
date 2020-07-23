@@ -109,7 +109,7 @@ void StonksMainWindow::updateMarketDepthGraph()
 
 void StonksMainWindow::updatePriceGraph()
 {
-    graphsBuilder->update(priceGraph);
+    graphsBuilder->update(priceGraph, botLogic);
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
