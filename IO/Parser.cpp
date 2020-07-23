@@ -217,7 +217,8 @@ std::vector<Order*>* Parser::ParseDaytimeDeal(std::string fileName, std::string 
 			doc->Parse(json.c_str());
 			for (auto it = (*doc)["data"].Begin(); it != (*doc)["data"].End(); ++it)
 			{
-				time_t time = (*it)["timestamp"].GetInt64();
+				// деление это отбрасывание долей секунд для конвертации в юникстайм
+				time_t time = (*it)["timestamp"].GetInt64() / 10000;
 				qreal price = (*it)["price"].GetDouble();
 				qreal quantity = (*it)["amount"].GetDouble();
 				auto newDeal = new Order{ price, quantity, false, time };
