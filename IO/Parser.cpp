@@ -14,6 +14,8 @@ size_t dealsPlace = 0;
 time_t times;
 const int TIME_SPACE = 600000;
 
+std::vector<Order*>* dealsStorage;
+
 //Метод для парса в новую таблицу ордеров
 OrderBook* Parser::parsePreDayOrders(std::string fileName, std::string instrumentName)
 {
@@ -169,11 +171,13 @@ OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrume
 	return orderBook;
 }
 
-std::vector<Order*>* Parser::ParseDaytimeDeal(std::string fileName, std::string instrumentName)
+void Parser::setDealsStorage(std::vector<Order*>* newDealsStorage)
 {
-	auto result = new std::vector<Order*>();
-	result->reserve(1000000);
+	dealsStorage = newDealsStorage;
+}
 
+void Parser::ParseDaytimeDeal(std::string fileName, std::string instrumentName)
+{
 	FILE* dumpFile = fopen(fileName.c_str(), "rb");
 
 	_fseeki64(dumpFile, 0, SEEK_END);
@@ -224,12 +228,11 @@ std::vector<Order*>* Parser::ParseDaytimeDeal(std::string fileName, std::string 
 				qreal price = (*it)["price"].GetDouble();
 				qreal quantity = (*it)["amount"].GetDouble();
 				auto newDeal = new Order{ price, quantity, false, time };
-				result->push_back(newDeal);
+				dealsStorage->push_back(newDeal);
 			}
 			delete doc;
 			break;
 		}
 	}
 	dealsPlace = (size_t)_ftelli64(dumpFile);
-	return result;
 }

@@ -6,9 +6,10 @@
 class Parser
 {
 public:
-	 static OrderBook* parsePreDayOrders(std::string fileName, std::string instrumentName);
-	 static OrderBook* ParseDaytimeOrders(std::string fileName, std::string instrumentName, OrderBook* orderBook);
-	 static std::vector<Order*>* Parser::ParseDaytimeDeal(std::string fileName, std::string instrumentName);
+	static void setDealsStorage(std::vector<Order*>* newDealsStorage);
+	static OrderBook* parsePreDayOrders(std::string fileName, std::string instrumentName);
+	static OrderBook* ParseDaytimeOrders(std::string fileName, std::string instrumentName, OrderBook* orderBook);
+	static void Parser::ParseDaytimeDeal(std::string fileName, std::string instrumentName);
 };
 
 
