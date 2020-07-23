@@ -61,7 +61,8 @@ OrderBook* Parser::parsePreDayOrders(std::string fileName, std::string instrumen
 			}
 			rapidjson::Document* doc = new rapidjson::Document;
 			doc->Parse(json.c_str());
-			time_t timestamp = (*doc)["timestamp"].GetInt64();
+			// деление это отбрасывание долей секунд для конвертации в юникстайм
+			time_t timestamp = (*doc)["timestamp"].GetInt64() / 10000;
 
 			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
 			{
@@ -134,7 +135,8 @@ OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrume
 			}
 			rapidjson::Document* doc = new rapidjson::Document;
 			doc->Parse(json.c_str());
-			time_t timestamp = (*doc)["timestamp"].GetInt64();
+			// деление это отбрасывание долей секунд для конвертации в юникстайм
+			time_t timestamp = (*doc)["timestamp"].GetInt64() / 10000;
 
 			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
 			{
