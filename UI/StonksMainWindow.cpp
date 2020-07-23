@@ -79,7 +79,8 @@ void StonksMainWindow::insertNewDataAndUpdate()
         dealsModel->loadNextDealFromSource();
         botLogic->reactAtNewDeal(dealsModel->getLastDeal());
     }
-
+    ui.label->setText("Bot Balance: " + QString::number(botLogic->botBalance) +
+        " Things Quantity: " + QString::number(botLogic->botThingsQuantity));
     updateWindow();
 }
 
