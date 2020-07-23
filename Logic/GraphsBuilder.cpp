@@ -50,10 +50,10 @@ MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
     return new MarketDepthGraph(bidsSeries, asksSeries);
 }
 
-PriceGraph* GraphsBuilder::buildPriceGraph(Deals* dealsModel)
+PriceGraph* GraphsBuilder::buildPriceGraph(Deals* deals)
 {
     // сохраняем на будущее
-    this->dealsModel = dealsModel;
+    this->dealsModel = deals;
 
     auto priceGraph = new PriceGraph(getTimeForPriceGraph(),
                                     getPriceForPriceGraph());
@@ -62,10 +62,10 @@ PriceGraph* GraphsBuilder::buildPriceGraph(Deals* dealsModel)
         isFirstDeal = true;
     }
     else {
-        priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.first()->time,
-                                    dealsModel->dealsForPriceGraph.last()->time);
+        priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.last()->time,
+            dealsModel->dealsForPriceGraph.last()->time + Time::THREE_MINUTES);
         priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
-            dealsModel->maxPrice, Qt::AlignBottom);
+                                    dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
         isFirstDeal = false;
     }
 
@@ -77,7 +77,7 @@ void GraphsBuilder::update(PriceGraph* priceGraph)
     priceGraph->graph()->clearData();
     if (! getTimeForPriceGraph().empty()) {
         if (isFirstDeal) {
-            priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.last()->time, 
+            priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.first()->time, 
                                         dealsModel->dealsForPriceGraph.last()->time + Time::THREE_MINUTES);
             isFirstDeal = false;
         }
@@ -85,7 +85,7 @@ void GraphsBuilder::update(PriceGraph* priceGraph)
         priceGraph->graph()->setData(getTimeForPriceGraph(),
                                     getPriceForPriceGraph());
         priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
-                                    dealsModel->maxPrice, Qt::AlignBottom);
+                                    dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
     }
     priceGraph->replot();
 }
