@@ -14,5 +14,5 @@ public:
 	QVector <double> priceBuy;
 	QVector <double> priceSell;
 
-	BotLogic(QList<Order*> deals);
+	void reactAtNewDeal(Order* newDeal);
 };

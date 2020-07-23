@@ -5,6 +5,8 @@
 
 #include <QtGlobal>
 
+#include <vector>
+
 class Deals
 {
 public:
@@ -12,10 +14,19 @@ public:
 	double maxPrice;
 	double minPrice;
 
-	void addNewDeal(qreal price, qreal quantity, time_t time);
-	void randomListOfDeals(unsigned int seed = time(0));
+	Deals(std::vector<Order*>* dealsSource);
+
+	static std::vector<Order*>* makeRandomListOfDeals(unsigned int seed = time(0));
+
+	bool canLoadNextDealFromSource();
+	void loadNextDealFromSource();
+	Order* getLastDeal();
 
 private:
+	std::vector<Order*>* dealsSource;
+	int activeDealIndexInSource;
 	int firstIntervalTime;
 	int timeOfInterval = 5;
+
+	void addNewDeal(Order* deal);
 };

@@ -74,13 +74,19 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 void StonksMainWindow::insertNewDataAndUpdate() 
 {
     //Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", orderBook);
+    
+    if (dealsModel->canLoadNextDealFromSource()) {
+        dealsModel->loadNextDealFromSource();
+        botLogic->reactAtNewDeal(dealsModel->getLastDeal());
+    }
+
     updateWindow();
 }
 
 void StonksMainWindow::updateWindow()
 {
     // Я бы хотел это распараллелить, но Qt не даёт.
-    //updatePriceGraph();
+    updatePriceGraph();
     updateMarketDepthGraph();
     updateOrderBookTable();
 }
