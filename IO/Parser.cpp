@@ -34,6 +34,11 @@ void Parser::setInstrumentName(std::string nameToSet)
 	instrumentName = nameToSet;
 }
 
+void Parser::setDealsStorage(std::vector<Order*>* newDealsStorage)
+{
+	dealsStorage = newDealsStorage;
+}
+
 //Метод для парса в новую таблицу ордеров
 OrderBook* Parser::parsePreDayOrders()
 {
@@ -179,11 +184,6 @@ OrderBook* Parser::ParseDaytimeOrders(OrderBook* orderBook)
 
 	ordersPlace = (size_t)_ftelli64(dumpFile);
 	return orderBook;
-}
-
-void Parser::setDealsStorage(std::vector<Order*>* newDealsStorage)
-{
-	dealsStorage = newDealsStorage;
 }
 
 void Parser::ParseDaytimeDeal()
