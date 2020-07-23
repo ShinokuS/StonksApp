@@ -75,10 +75,11 @@ void StonksMainWindow::insertNewDataAndUpdate()
 {
     //Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", orderBook);
     
-    if (dealsModel->canLoadNextDealFromSource()) {
-        dealsModel->loadNextDealFromSource();
-        botLogic->reactAtNewDeal(dealsModel->getLastDeal());
+    if (! dealsModel->canLoadNextDealFromSource()) {
+        Parser::ParseDaytimeDeal("20200620.deribit.dump", "ETH-PERPETUAL");
     }
+    dealsModel->loadNextDealFromSource();
+    botLogic->reactAtNewDeal(dealsModel->getLastDeal());
 
     updateWindow();
 }
