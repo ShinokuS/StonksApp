@@ -7,10 +7,11 @@ class Parser
 {
 public:
 	static void openFile(std::string fileName);
+	static void setInstrumentName(std::string nameToSet);
 	static void setDealsStorage(std::vector<Order*>* newDealsStorage);
-	static OrderBook* parsePreDayOrders(std::string instrumentName);
-	static OrderBook* ParseDaytimeOrders(std::string instrumentName, OrderBook* orderBook);
-	static void Parser::ParseDaytimeDeal(std::string instrumentName);
+	static OrderBook* parsePreDayOrders();
+	static OrderBook* ParseDaytimeOrders(OrderBook* orderBook);
+	static void Parser::ParseDaytimeDeal();
 };
 
 

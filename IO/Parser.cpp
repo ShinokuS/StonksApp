@@ -17,6 +17,8 @@ const int TIME_SPACE = 600000;
 FILE* dumpFile;
 size_t filesize;
 
+std::string instrumentName;
+
 std::vector<Order*>* dealsStorage;
 
 void Parser::openFile(std::string fileName)
@@ -27,8 +29,13 @@ void Parser::openFile(std::string fileName)
 	filesize = (size_t)_ftelli64(dumpFile);//определяем размер файла.
 }
 
+void Parser::setInstrumentName(std::string nameToSet)
+{
+	instrumentName = nameToSet;
+}
+
 //Метод для парса в новую таблицу ордеров
-OrderBook* Parser::parsePreDayOrders(std::string instrumentName)
+OrderBook* Parser::parsePreDayOrders()
 {
 	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
 
@@ -100,7 +107,7 @@ OrderBook* Parser::parsePreDayOrders(std::string instrumentName)
 	return orderBookTable;
 }
 //Второй метод для парса в уже существующуу таблицу
-OrderBook* Parser::ParseDaytimeOrders(std::string instrumentName, OrderBook* orderBook) 
+OrderBook* Parser::ParseDaytimeOrders(OrderBook* orderBook) 
 {
 	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
 
@@ -179,7 +186,7 @@ void Parser::setDealsStorage(std::vector<Order*>* newDealsStorage)
 	dealsStorage = newDealsStorage;
 }
 
-void Parser::ParseDaytimeDeal(std::string instrumentName)
+void Parser::ParseDaytimeDeal()
 {
 	_fseeki64(dumpFile, dealsPlace, SEEK_SET);
 

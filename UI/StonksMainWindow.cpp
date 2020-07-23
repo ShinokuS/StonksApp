@@ -73,10 +73,10 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 
 void StonksMainWindow::insertNewDataAndUpdate() 
 {
-    //Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", orderBook);
+    //Parser::ParseDaytimeOrders(orderBook);
     
     if (! dealsModel->canLoadNextDealFromSource()) {
-        Parser::ParseDaytimeDeal("ETH-PERPETUAL");
+        Parser::ParseDaytimeDeal();
     }
     dealsModel->loadNextDealFromSource();
     botLogic->reactAtNewDeal(dealsModel->getLastDeal());
