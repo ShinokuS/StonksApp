@@ -75,10 +75,12 @@ void StonksMainWindow::insertNewDataAndUpdate()
 {
     //Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", orderBook);
     
-    if (dealsModel->canLoadNextDealFromSource()) {
-        dealsModel->loadNextDealFromSource();
-        botLogic->reactAtNewDeal(dealsModel->getLastDeal());
+    if (! dealsModel->canLoadNextDealFromSource()) {
+        Parser::ParseDaytimeDeal("20200620.deribit.dump", "ETH-PERPETUAL");
     }
+    dealsModel->loadNextDealFromSource();
+    botLogic->reactAtNewDeal(dealsModel->getLastDeal());
+
     ui.label->setText("Bot Balance: " + QString::number(botLogic->botBalance) +
         " Things Quantity: " + QString::number(botLogic->botThingsQuantity));
     updateWindow();
