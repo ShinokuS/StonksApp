@@ -7,7 +7,10 @@
 #include "../Logic/OrderBook.h"
 #include "Parser.h"
 
-size_t place = 0; //Это для файлового указателя, чтобы знать, где уже прочитан файл, а где нет.
+//Это для файлового указателя, чтобы знать, где уже прочитан файл, а где нет.
+size_t ordersPlace = 0;
+size_t dealsPlace = 0;
+
 time_t times;
 const int TIME_SPACE = 600000;
 
@@ -18,7 +21,7 @@ OrderBook* Parser::parsePreDayOrders(std::string fileName, std::string instrumen
 
 	_fseeki64(dumpFile, 0, SEEK_END);
 	size_t filesize = (size_t)_ftelli64(dumpFile);//определяем размер файла.
-	_fseeki64(dumpFile, place, SEEK_SET);
+	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
 	
 	std::string search;//Буффер для поиска ключевых слов
 	const std::string keyWord = "book."+instrumentName; 
@@ -26,7 +29,7 @@ OrderBook* Parser::parsePreDayOrders(std::string fileName, std::string instrumen
 
 	OrderBook* orderBookTable = new OrderBook; //Книжка для заполнения ордерами
 
-	for (size_t i = place; i < filesize; ++i)//Начинаем поиск по файлу
+	for (size_t i = ordersPlace; i < filesize; ++i)//Начинаем поиск по файлу
 	{
 		for (int j = 0; j < search.size()-1; ++j)
 		{
@@ -83,7 +86,7 @@ OrderBook* Parser::parsePreDayOrders(std::string fileName, std::string instrumen
 			break;
 		}
 	}
-	place = (size_t)_ftelli64(dumpFile);
+	ordersPlace = (size_t)_ftelli64(dumpFile);
 	return orderBookTable;
 }
 //Второй метод для парса в уже существующуу таблицу
@@ -93,14 +96,14 @@ OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrume
 
 	_fseeki64(dumpFile, 0, SEEK_END);
 	size_t filesize = (size_t)_ftelli64(dumpFile);//определяем размер файла.
-	_fseeki64(dumpFile, place, SEEK_SET);
+	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
 
 	std::string search;//Буффер для поиска ключевых слов
 	const std::string keyWord = "book." + instrumentName;
 	search.resize(keyWord.size());
 
 
-	for (size_t i = place; i < filesize; ++i)//Начинаем поиск по файлу
+	for (size_t i = ordersPlace; i < filesize; ++i)//Начинаем поиск по файлу
 	{
 		for (int j = 0; j < search.size() - 1; ++j)
 		{
@@ -160,6 +163,70 @@ OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrume
 		}
 	}
 
-	place = (size_t)_ftelli64(dumpFile);
+	ordersPlace = (size_t)_ftelli64(dumpFile);
 	return orderBook;
+}
+
+std::vector<Order*>* Parser::ParseDaytimeDeal(std::string fileName, std::string instrumentName)
+{
+	auto result = new std::vector<Order*>();
+	result->reserve(1000000);
+
+	FILE* dumpFile = fopen(fileName.c_str(), "rb");
+
+	_fseeki64(dumpFile, 0, SEEK_END);
+	size_t filesize = (size_t)_ftelli64(dumpFile);//определяем размер файла.
+	_fseeki64(dumpFile, dealsPlace, SEEK_SET);
+
+	std::string search;//Буффер для поиска ключевых слов
+	const std::string keyWord = "trades." + instrumentName;
+	search.resize(keyWord.size());
+
+
+	for (size_t i = dealsPlace; i < filesize; ++i)//Начинаем поиск по файлу
+	{
+		for (int j = 0; j < search.size() - 1; ++j)
+		{
+			search[j] = search[j + 1];
+		}
+		search.back() = fgetc(dumpFile);
+		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
+		{
+			std::string json = "{\"data\":[";
+			while (fgetc(dumpFile) != '[');
+			json.reserve(100000);
+			char ch;
+			short rightCurlyBrackets = 0;
+			short leftCurlyBrackets = 1;
+			while (leftCurlyBrackets != rightCurlyBrackets)
+			{
+				ch = fgetc(dumpFile);//Считываем посимвольно json-строку для Document.
+				++i;
+				json += ch; //Формируем строку для Document.
+				if (ch == '[')
+				{
+					++leftCurlyBrackets;
+				}
+				else if (ch == ']')
+				{
+					++rightCurlyBrackets;
+				}
+			}
+			json += "}";
+			rapidjson::Document* doc = new rapidjson::Document;
+			doc->Parse(json.c_str());
+			for (auto it = (*doc)["data"].Begin(); it != (*doc)["data"].End(); ++it)
+			{
+				time_t time = (*it)["timestamp"].GetInt64();
+				qreal price = (*it)["price"].GetDouble();
+				qreal quantity = (*it)["amount"].GetDouble();
+				auto newDeal = new Order{ price, quantity, false, time };
+				result->push_back(newDeal);
+			}
+			delete doc;
+			break;
+		}
+	}
+	dealsPlace = (size_t)_ftelli64(dumpFile);
+	return result;
 }

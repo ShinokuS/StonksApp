@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[])
 {
-    auto dealsSource = Deals::makeRandomListOfDeals();
+    auto dealsSource = Parser::ParseDaytimeDeal("20200620.deribit.dump", "ETH-PERPETUAL");
     auto dealsModel = new Deals(dealsSource);
     auto bot = new BotLogic();
     auto orderBook = Parser::parsePreDayOrders("20200620.deribit.dump","ETH-PERPETUAL");
