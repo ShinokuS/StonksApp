@@ -15,9 +15,9 @@ BotGraph::BotGraph(QVector <double> timeBuy, QVector <double> priceBuy,
 	priceGraph->graph(2)->setScatterStyle(QCPScatterStyle(shapes.at(1), 10));
 
 	QPen pen;
-	pen.setColor(0x7ce670);
+	pen.setColor(0x059605);
 	priceGraph->graph(1)->setPen(pen);
-	pen.setColor(0xff6161);
+	pen.setColor(0x940000);
 	priceGraph->graph(2)->setPen(pen);
 
 	priceGraph->graph(1)->setData(timeBuy, priceBuy);

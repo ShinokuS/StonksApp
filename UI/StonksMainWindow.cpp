@@ -8,7 +8,7 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, QWidget* parent)
+StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic* bot, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
@@ -16,6 +16,7 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, QWidget* 
     this->orderBook = orderBook;
 
     dealsModel = deals;
+    botLogic = bot;
 
     graphsBuilder = new GraphsBuilder;
 
@@ -132,6 +133,8 @@ void StonksMainWindow::placeOrderBookTable()
 void StonksMainWindow::placePriceGraph()
 {
     priceGraph = graphsBuilder->buildPriceGraph(dealsModel);
+    botGraph = new BotGraph(botLogic->timeBuy, botLogic->priceBuy, 
+                            botLogic->timeSell, botLogic->priceSell, priceGraph);
     priceGraphLayout = new QGridLayout(this);
     priceGraphLayout->addWidget(priceGraph);
     ui.priceGraphWidget->setLayout(priceGraphLayout);
