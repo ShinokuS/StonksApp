@@ -8,7 +8,7 @@ Deals::Deals(std::vector<Order*>* dealsSource)
 
 bool Deals::canLoadNextDealFromSource()
 {
-	return activeDealIndexInSource < dealsSource->size() - 1;
+	return activeDealIndexInSource < (int)dealsSource->size() - 1;
 }
 
 void Deals::loadNextDealFromSource()
