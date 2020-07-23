@@ -5,6 +5,7 @@
 
 int main(int argc, char *argv[])
 {
+    Parser::openFile("20200620.deribit.dump");
     auto dealsSource = new std::vector<Order*>();
     dealsSource->reserve(1000000);
     Parser::setDealsStorage(dealsSource);

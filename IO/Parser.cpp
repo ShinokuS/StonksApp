@@ -14,17 +14,24 @@ size_t dealsPlace = 0;
 time_t times;
 const int TIME_SPACE = 600000;
 
+FILE* dumpFile;
+size_t filesize;
+
 std::vector<Order*>* dealsStorage;
+
+void Parser::openFile(std::string fileName)
+{
+	dumpFile = fopen(fileName.c_str(), "rb");
+
+	_fseeki64(dumpFile, 0, SEEK_END);
+	filesize = (size_t)_ftelli64(dumpFile);//определяем размер файла.
+}
 
 //Метод для парса в новую таблицу ордеров
 OrderBook* Parser::parsePreDayOrders(std::string fileName, std::string instrumentName)
 {
-	FILE* dumpFile = fopen(fileName.c_str(), "rb");
-
-	_fseeki64(dumpFile, 0, SEEK_END);
-	size_t filesize = (size_t)_ftelli64(dumpFile);//определяем размер файла.
 	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
-	
+
 	std::string search;//Буффер для поиска ключевых слов
 	const std::string keyWord = "book."+instrumentName; 
 	search.resize(keyWord.size());
@@ -95,10 +102,6 @@ OrderBook* Parser::parsePreDayOrders(std::string fileName, std::string instrumen
 //Второй метод для парса в уже существующуу таблицу
 OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrumentName, OrderBook* orderBook) 
 {
-	FILE* dumpFile = fopen(fileName.c_str(), "rb");
-
-	_fseeki64(dumpFile, 0, SEEK_END);
-	size_t filesize = (size_t)_ftelli64(dumpFile);//определяем размер файла.
 	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
 
 	std::string search;//Буффер для поиска ключевых слов
@@ -178,10 +181,6 @@ void Parser::setDealsStorage(std::vector<Order*>* newDealsStorage)
 
 void Parser::ParseDaytimeDeal(std::string fileName, std::string instrumentName)
 {
-	FILE* dumpFile = fopen(fileName.c_str(), "rb");
-
-	_fseeki64(dumpFile, 0, SEEK_END);
-	size_t filesize = (size_t)_ftelli64(dumpFile);//определяем размер файла.
 	_fseeki64(dumpFile, dealsPlace, SEEK_SET);
 
 	std::string search;//Буффер для поиска ключевых слов
