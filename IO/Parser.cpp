@@ -28,7 +28,7 @@ void Parser::openFile(std::string fileName)
 }
 
 //Метод для парса в новую таблицу ордеров
-OrderBook* Parser::parsePreDayOrders(std::string fileName, std::string instrumentName)
+OrderBook* Parser::parsePreDayOrders(std::string instrumentName)
 {
 	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
 
@@ -100,7 +100,7 @@ OrderBook* Parser::parsePreDayOrders(std::string fileName, std::string instrumen
 	return orderBookTable;
 }
 //Второй метод для парса в уже существующуу таблицу
-OrderBook* Parser::ParseDaytimeOrders(std::string fileName, std::string instrumentName, OrderBook* orderBook) 
+OrderBook* Parser::ParseDaytimeOrders(std::string instrumentName, OrderBook* orderBook) 
 {
 	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
 
@@ -179,7 +179,7 @@ void Parser::setDealsStorage(std::vector<Order*>* newDealsStorage)
 	dealsStorage = newDealsStorage;
 }
 
-void Parser::ParseDaytimeDeal(std::string fileName, std::string instrumentName)
+void Parser::ParseDaytimeDeal(std::string instrumentName)
 {
 	_fseeki64(dumpFile, dealsPlace, SEEK_SET);
 
