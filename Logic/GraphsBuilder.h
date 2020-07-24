@@ -18,9 +18,15 @@ public:
 	QVector<double> getTimeForPriceGraph();
 	QVector<double> getPriceForPriceGraph();
 
+	QVector<double> getPriceAskForMarketDepthGraph();
+	QVector<double> getPriceBidForMarketDepthGraph();
+	QVector<double> getQuantityAskForMarketDepthGraph();
+	QVector<double> getQuantityBidForMarketDepthGraph();
+
 private:
 	double minPrice=0;
 	double maxPrice=0;
 	Deals* dealsModel;
+	OrderBook* orderBook;
 	bool isFirstDeal;
 };

@@ -105,6 +105,7 @@ QVector<double> GraphsBuilder::getTimeForPriceGraph()
     }
     return time;
 }
+
 QVector<double> GraphsBuilder::getPriceForPriceGraph()
 {
     QVector <double> price;
@@ -119,4 +120,62 @@ QVector<double> GraphsBuilder::getPriceForPriceGraph()
         }
     }
     return price;
+}
+
+QVector<double> GraphsBuilder::getPriceAskForMarketDepthGraph()
+{
+    QVector <double> price;
+    auto iter = orderBook->orders.end();
+    do iter--; while (!(*iter)->isAsk);
+    price.append((*iter)->price);
+    do {
+        iter--;
+        price.append((*iter)->price);
+        price.append((*iter)->price);
+    } while (iter != orderBook->orders.begin());
+    return price;
+}
+
+QVector<double> GraphsBuilder::getPriceBidForMarketDepthGraph()
+{
+    QVector <double> price;
+    auto iter = orderBook->orders.end();
+    do iter--; while (!(*iter)->isAsk);
+    iter++; iter++;
+    for (; iter != orderBook->orders.end(); iter++) {
+        price.append((*iter)->price);
+        price.append((*iter)->price);
+    }
+    return price;
+}
+
+QVector<double> GraphsBuilder::getQuantityAskForMarketDepthGraph()
+{
+    QVector <double> quantity;
+    auto iter = orderBook->orders.end();
+    do iter--; while (!(*iter)->isAsk);
+    double prevY = (*iter)->quantity;
+    quantity.append(prevY);
+    do {
+        iter--;
+        quantity.append(prevY);
+        quantity.append(prevY+(*iter)->quantity);
+        prevY += (*iter)->quantity;
+    } while (iter != orderBook->orders.begin());
+    return quantity;
+}
+
+QVector<double> GraphsBuilder::getQuantityBidForMarketDepthGraph() {
+    QVector <double> quantity;
+    auto iter = orderBook->orders.end();
+    do iter--; while (!(*iter)->isAsk);
+    iter++; 
+    double prevY = (*iter)->quantity;
+    iter++;
+    for (; iter != orderBook->orders.end(); iter++) {
+        quantity.append(prevY);
+        quantity.append(prevY + (*iter)->quantity);
+        prevY += (*iter)->quantity;
+    }
+    return quantity;
 }
