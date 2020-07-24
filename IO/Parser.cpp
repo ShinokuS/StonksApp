@@ -169,7 +169,6 @@ void Parser::parseDeals()
 
 			delete doc;
 			delete json;
-			break;
 		}
 	}
 	dealsPlace = (size_t)_ftelli64(dumpFile);

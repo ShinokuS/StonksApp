@@ -1,4 +1,6 @@
-﻿#include <QtWidgets/QApplication>
+﻿#include <thread>
+
+#include <QtWidgets/QApplication>
 
 #include "UI\StonksMainWindow.h"
 #include "IO/Parser.h"
@@ -18,6 +20,8 @@ int main(int argc, char *argv[])
     
     auto bot = new BotLogic();
     
+    std::thread parsingDeals ([parser]() { parser->parseDeals(); });
+
     QApplication a(argc, argv);
     StonksMainWindow mainWindow(orderBook, dealsModel, bot, parser);
     mainWindow.show();

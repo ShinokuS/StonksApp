@@ -76,11 +76,10 @@ void StonksMainWindow::insertNewDataAndUpdate()
 {
     //Parser::parseDaytimeOrders();
     
-    if (! dealsModel->canLoadNextDealFromSource()) {
-        parser->parseDeals();
+    if (dealsModel->canLoadNextDealFromSource()) {
+        dealsModel->loadNextDealFromSource();
+        botLogic->reactAtNewDeal(dealsModel->getLastDeal());
     }
-    dealsModel->loadNextDealFromSource();
-    botLogic->reactAtNewDeal(dealsModel->getLastDeal());
 
     updateWindow();
 }
