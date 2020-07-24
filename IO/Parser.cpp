@@ -11,9 +11,6 @@
 size_t ordersPlace = 0;
 size_t dealsPlace = 0;
 
-time_t times;
-const int TIME_SPACE = 600000;
-
 FILE* dumpFile;
 size_t filesize;
 
@@ -88,8 +85,6 @@ OrderBook* Parser::parsePreDayOrders()
 				orderBookTable->addOrder(newAsk);
 			}
 
-			times = timestamp;
-
 			delete doc;
 			delete json;
 			break;
@@ -145,13 +140,7 @@ void Parser::ParseDaytimeOrders()
 
 			delete doc;
 			delete json;
-
-			if (times + TIME_SPACE < timestamp)
-			{
-				times = timestamp;
-				break;
-			}
-
+			break;
 		}
 	}
 
