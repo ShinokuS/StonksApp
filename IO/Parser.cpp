@@ -28,7 +28,7 @@ void Parser::setDealsStorage(std::vector<Order*>* newDealsStorage)
 //Метод для парса в новую таблицу ордеров
 OrderBook* Parser::parsePreDayOrders()
 {
-	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
+	_fseeki64(dumpFile, START_POS, SEEK_SET);
 
 	std::string search;//Буффер для поиска ключевых слов
 	const std::string keyWord = "book." + instrumentName;
@@ -38,7 +38,7 @@ OrderBook* Parser::parsePreDayOrders()
 	ordersStorage->reserve(5000000);
 	OrderBook* orderBookTable = new OrderBook(ordersStorage); //Книжка для заполнения ордерами
 
-	for (size_t i = ordersPlace; i < filesize; ++i)//Начинаем поиск по файлу
+	for (size_t i = START_POS; i < filesize; ++i)//Начинаем поиск по файлу
 	{
 		for (int j = 0; j < search.size() - 1; ++j)
 		{
@@ -78,28 +78,28 @@ OrderBook* Parser::parsePreDayOrders()
 			break;
 		}
 	}
-	ordersPlace = (size_t)_ftelli64(dumpFile);
+	placeWherePreDayEnded = (size_t)_ftelli64(dumpFile);
 	return orderBookTable;
 }
 
 
 void Parser::parseDaytimeOrders()
 {
-	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
+	_fseeki64(dumpFile, placeWherePreDayEnded, SEEK_SET);
 
-	std::string search;//Буффер для поиска ключевых слов
-	const std::string keyWord = "book." + instrumentName;
-	search.resize(keyWord.size());
+	std::string ordersSearchBuffer;//Буффер для поиска ключевых слов
+	const std::string ordersJsonTitle = "book." + instrumentName;
+	ordersSearchBuffer.resize(ordersJsonTitle.size());
 
 
-	for (size_t i = ordersPlace; i < filesize; ++i)//Начинаем поиск по файлу
+	for (size_t i = placeWherePreDayEnded; i < filesize; ++i)//Начинаем поиск по файлу
 	{
-		for (int j = 0; j < search.size() - 1; ++j)
+		for (int j = 0; j < ordersSearchBuffer.size() - 1; ++j)
 		{
-			search[j] = search[j + 1];
+			ordersSearchBuffer[j] = ordersSearchBuffer[j + 1];
 		}
-		search.back() = fgetc(dumpFile);
-		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
+		ordersSearchBuffer.back() = fgetc(dumpFile);
+		if (ordersSearchBuffer == (ordersJsonTitle))	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
 			auto json = readOrdersJsonFromPoint(i);
 			rapidjson::Document* doc = new rapidjson::Document;
@@ -128,30 +128,27 @@ void Parser::parseDaytimeOrders()
 
 			delete doc;
 			delete json;
-			break;
 		}
 	}
-
-	ordersPlace = (size_t)_ftelli64(dumpFile);
 }
 
 void Parser::parseDeals()
 {
-	_fseeki64(dumpFile, dealsPlace, SEEK_SET);
+	_fseeki64(dumpFile, placeWherePreDayEnded, SEEK_SET);
 
-	std::string search;//Буффер для поиска ключевых слов
-	const std::string keyWord = "trades." + instrumentName;
-	search.resize(keyWord.size());
+	std::string dealsSearchBuffer;//Буффер для поиска ключевых слов
+	const std::string dealsJsonTitle = "trades." + instrumentName;
+	dealsSearchBuffer.resize(dealsJsonTitle.size());
 
 
-	for (size_t i = dealsPlace; i < filesize; ++i)//Начинаем поиск по файлу
+	for (size_t i = placeWherePreDayEnded; i < filesize; ++i)//Начинаем поиск по файлу
 	{
-		for (int j = 0; j < search.size() - 1; ++j)
+		for (int j = 0; j < dealsSearchBuffer.size() - 1; ++j)
 		{
-			search[j] = search[j + 1];
+			dealsSearchBuffer[j] = dealsSearchBuffer[j + 1];
 		}
-		search.back() = fgetc(dumpFile);
-		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
+		dealsSearchBuffer.back() = fgetc(dumpFile);
+		if (dealsSearchBuffer == (dealsJsonTitle))	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
 			auto json = readDealsJsonFromPoint(i);
 			rapidjson::Document* doc = new rapidjson::Document;
@@ -171,7 +168,6 @@ void Parser::parseDeals()
 			delete json;
 		}
 	}
-	dealsPlace = (size_t)_ftelli64(dumpFile);
 }
 
 std::string* Parser::readOrdersJsonFromPoint(size_t& i)

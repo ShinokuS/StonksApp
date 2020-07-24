@@ -17,9 +17,8 @@ public:
 	void parseDeals();
 
 private:
-	//Это для файлового указателя, чтобы знать, где уже прочитан файл, а где нет.
-	size_t ordersPlace = 0;
-	size_t dealsPlace = 0;
+	static const size_t START_POS = 0;
+	size_t placeWherePreDayEnded;
 
 	FILE* dumpFile;
 	size_t filesize;
