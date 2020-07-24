@@ -19,6 +19,8 @@ public:
 	QVector<double> getPriceForPriceGraph();
 
 private:
+	double minPrice=0;
+	double maxPrice=0;
 	Deals* dealsModel;
 	bool isFirstDeal;
 };

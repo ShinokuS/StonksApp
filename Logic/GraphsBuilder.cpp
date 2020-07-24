@@ -89,7 +89,8 @@ void GraphsBuilder::update(PriceGraph* priceGraph, BotLogic* bot)
             priceGraph->graph(1)->setData(bot->timeBuy, bot->priceBuy);
             priceGraph->graph(2)->setData(bot->timeSell, bot->priceSell);
             priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
-                dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
+                2*std::max(dealsModel->dealsForPriceGraph.last()->price-minPrice,
+                    maxPrice - dealsModel->dealsForPriceGraph.last()->price)+1, Qt::AlignBottom);
         }
     }
     priceGraph->replot();
@@ -110,6 +111,12 @@ QVector<double> GraphsBuilder::getPriceForPriceGraph()
     for (auto iter = dealsModel->dealsForPriceGraph.begin();
             iter != dealsModel->dealsForPriceGraph.end(); iter++) {
         price.push_back((*iter)->price);
+        if ((*iter)->price > maxPrice) {
+            maxPrice = (*iter)->price;
+        }
+        if ((*iter)->price < minPrice || minPrice == 0) {
+            minPrice = (*iter)->price;
+        }
     }
     return price;
 }

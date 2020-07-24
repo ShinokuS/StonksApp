@@ -28,7 +28,7 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic*
 
     // таймер, чтобы каждую секунду вбрасывать новые ордеры и обновлять окно
     tmr = new QTimer();
-    tmr->setInterval(1000);
+    tmr->setInterval(1);
     connect(tmr, SIGNAL(timeout()), this, SLOT(insertNewDataAndUpdate()));
     tmr->start();
 
@@ -107,7 +107,7 @@ void StonksMainWindow::updateWindow()
 {
     // Я бы хотел это распараллелить, но Qt не даёт.
     updatePriceGraph();
-    updateMarketDepthGraph();
+    //updateMarketDepthGraph();
     updateOrderBookTable();
 
     ui.label->setText("Bot Balance: " + QString::number(botLogic->botBalance) +
