@@ -1,20 +1,29 @@
-﻿#include <QtWidgets/QApplication>
+﻿#include <thread>
+
+#include <QtWidgets/QApplication>
 
 #include "UI\StonksMainWindow.h"
 #include "IO/Parser.h"
 
 int main(int argc, char *argv[])
 {
+    auto parser = new Parser;
+    parser->openFile("20200620.deribit.dump");
+    parser->setInstrumentName("ETH-PERPETUAL");
+
+    auto orderBook = parser->parsePreDayOrders();
+
     auto dealsSource = new std::vector<Order*>();
     dealsSource->reserve(1000000);
-    Parser::setDealsStorage(dealsSource);
-    Parser::ParseDaytimeDeal("20200620.deribit.dump", "ETH-PERPETUAL");
+    parser->setDealsStorage(dealsSource);
     auto dealsModel = new Deals(dealsSource);
-    auto bot = new BotLogic();
-    auto orderBook = Parser::parsePreDayOrders("20200620.deribit.dump","ETH-PERPETUAL");
     
+    auto bot = new BotLogic();
+    
+    std::thread threadForParsing ([parser]() { parser->parseDaytimeStuff(); });
+
     QApplication a(argc, argv);
-    StonksMainWindow mainWindow(orderBook, dealsModel, bot);
+    StonksMainWindow mainWindow(orderBook, dealsModel, bot, parser);
     mainWindow.show();
 
     return a.exec();

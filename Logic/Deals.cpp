@@ -3,6 +3,7 @@
 Deals::Deals(std::vector<Order*>* dealsSource)
 {
 	this->dealsSource = dealsSource;
+	dealsForPriceGraph.reserve(dealsSource->size());
 	activeDealIndexInSource = -1;
 }
 
@@ -16,6 +17,17 @@ void Deals::loadNextDealFromSource()
 	activeDealIndexInSource++;
 	//addNewDeal((*dealsSource)[activeDealIndexInSource]);
 	dealsForPriceGraph.append((*dealsSource)[activeDealIndexInSource]);
+}
+
+bool Deals::canLoadMoreFromTheSameFrame()
+{
+	if (!canLoadNextDealFromSource()) {
+		return false; // но вдруг здесь надо дождаться парсера на том потоке?
+	}
+	else {
+		auto timeframe = this->getLastDeal()->time;
+		return (*dealsSource)[activeDealIndexInSource + 1]->time == timeframe;
+	}
 }
 
 Order* Deals::getLastDeal()

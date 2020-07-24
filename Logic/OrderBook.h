@@ -1,6 +1,7 @@
 ﻿#pragma once
 
-#include "Deals.h"
+#include <vector>
+
 #include "Order.h"
 
 class OrderBook
@@ -8,15 +9,20 @@ class OrderBook
 public:
     int indexOfFirstVisibleElement;
     int countOfAsks;
-    Deals* deals;
+    int activeOrderIndexInSource;
     QList<Order*> orders;
 
-    OrderBook();
+    OrderBook(std::vector<Order*>* ordersSource);
 
     // Интерфейс для добавления новых ордеров.
     void addOrder(Order* newOrder);
 
+    bool canLoadNextOrderFromSource();
+    void loadNextOrderFromSource();
+
 private:
+
+    std::vector<Order*>* ordersSource;
 
     // Имплементация операций над ордерами в ордербуке.
     void insertOrder(Order* newOrder);

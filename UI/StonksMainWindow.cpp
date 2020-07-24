@@ -8,7 +8,7 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic* bot, QWidget* parent)
+StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic* bot, Parser* parser, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
@@ -17,6 +17,7 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic*
 
     dealsModel = deals;
     botLogic = bot;
+    this->parser = parser;
 
     graphsBuilder = new GraphsBuilder;
 
@@ -73,13 +74,31 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 
 void StonksMainWindow::insertNewDataAndUpdate() 
 {
-    //Parser::ParseDaytimeOrders("20200620.deribit.dump", "ETH-PERPETUAL", orderBook);
-    
-    if (! dealsModel->canLoadNextDealFromSource()) {
-        Parser::ParseDaytimeDeal("20200620.deribit.dump", "ETH-PERPETUAL");
+    if (dealsModel->canLoadNextDealFromSource()) {
+
+        // Считываем все ордеры между прошлой сделкой и новой
+        while (orderBook->canLoadNextOrderFromSource()) {
+            orderBook->loadNextOrderFromSource();
+        }
+        
+        // Считываем новую сделку
+        dealsModel->loadNextDealFromSource();
+        botLogic->reactAtNewDeal(dealsModel->getLastDeal());
+
+        // Считываем все остальные сделки из пачки за тот же момент:
+        while (dealsModel->canLoadMoreFromTheSameFrame()) {
+            dealsModel->loadNextDealFromSource();
+            botLogic->reactAtNewDeal(dealsModel->getLastDeal());
+        }
     }
-    dealsModel->loadNextDealFromSource();
-    botLogic->reactAtNewDeal(dealsModel->getLastDeal());
+    /*else {
+        if (parser->hasNotFinished) {
+            // Текущий тред спит, пока парсер не подгрузит дальше
+        }
+        else {
+            // Завершение программы
+        }
+    }*/
 
     updateWindow();
 }
