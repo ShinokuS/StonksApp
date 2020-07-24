@@ -7,18 +7,6 @@
 #include "../Logic/OrderBook.h"
 #include "Parser.h"
 
-//Это для файлового указателя, чтобы знать, где уже прочитан файл, а где нет.
-size_t ordersPlace = 0;
-size_t dealsPlace = 0;
-
-FILE* dumpFile;
-size_t filesize;
-
-std::string instrumentName;
-
-std::vector<Order*>* ordersStorage;
-std::vector<Order*>* dealsStorage;
-
 void Parser::openFile(std::string fileName)
 {
 	dumpFile = fopen(fileName.c_str(), "rb");
