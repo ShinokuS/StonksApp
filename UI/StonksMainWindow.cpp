@@ -83,6 +83,14 @@ void StonksMainWindow::insertNewDataAndUpdate()
         dealsModel->loadNextDealFromSource();
         botLogic->reactAtNewDeal(dealsModel->getLastDeal());
     }
+    /*else {
+        if (parser->hasNotFinished) {
+            // Текущий тред спит, пока парсер не подгрузит дальше
+        }
+        else {
+            // Завершение программы
+        }
+    }*/
 
     updateWindow();
 }
