@@ -3,6 +3,7 @@
 Deals::Deals(std::vector<Order*>* dealsSource)
 {
 	this->dealsSource = dealsSource;
+	dealsForPriceGraph.reserve(dealsSource->size());
 	activeDealIndexInSource = -1;
 }
 
