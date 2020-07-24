@@ -2,8 +2,6 @@
 
 #include <string>
 
-#include "rapidjson/document.h"
-
 #include "../Logic/OrderBook.h"
 #include "Parser.h"
 
@@ -38,7 +36,7 @@ OrderBook* Parser::parsePreDayOrders()
 	ordersStorage->reserve(5000000);
 	OrderBook* orderBookTable = new OrderBook(ordersStorage); //Книжка для заполнения ордерами
 
-	for (size_t i = START_POS; i < filesize; ++i)//Начинаем поиск по файлу
+	for (i = START_POS; i < filesize; ++i)//Начинаем поиск по файлу
 	{
 		for (int j = 0; j < search.size() - 1; ++j)
 		{
@@ -48,7 +46,7 @@ OrderBook* Parser::parsePreDayOrders()
 
 		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
-			auto json = readOrdersJsonFromPoint(i);
+			auto json = readOrdersJsonFromPoint();
 			rapidjson::Document* doc = new rapidjson::Document;
 			doc->Parse(json->c_str());
 
@@ -78,13 +76,13 @@ OrderBook* Parser::parsePreDayOrders()
 			break;
 		}
 	}
-	placeWherePreDayEnded = (size_t)_ftelli64(dumpFile);
+	i = (size_t)_ftelli64(dumpFile);
 	return orderBookTable;
 }
 
 void Parser::parseDaytimeStuff()
 {
-	_fseeki64(dumpFile, placeWherePreDayEnded, SEEK_SET);
+	_fseeki64(dumpFile, i, SEEK_SET);
 
 	std::string ordersSearchBuffer;
 	const std::string ordersJsonTitle = "book." + instrumentName;
@@ -95,7 +93,7 @@ void Parser::parseDaytimeStuff()
 	dealsSearchBuffer.resize(dealsJsonTitle.size());
 
 
-	for (size_t i = placeWherePreDayEnded; i < filesize; ++i)//Начинаем поиск по файлу
+	for (/*     */; i < filesize; ++i)//Начинаем поиск по файлу
 	{
 		for (int j = 0; j < ordersSearchBuffer.size() - 1; ++j)
 		{
@@ -112,7 +110,7 @@ void Parser::parseDaytimeStuff()
 		// Нашли начало джейсона с ордерами
 		if (ordersSearchBuffer == (ordersJsonTitle))
 		{
-			auto json = readOrdersJsonFromPoint(i);
+			auto json = readOrdersJsonFromPoint();
 			rapidjson::Document* doc = new rapidjson::Document;
 			doc->Parse(json->c_str());
 
@@ -143,7 +141,7 @@ void Parser::parseDaytimeStuff()
 		// Нашли начало джейсона со сделками
 		if (dealsSearchBuffer == (dealsJsonTitle))
 		{
-			auto json = readDealsJsonFromPoint(i);
+			auto json = readDealsJsonFromPoint();
 			rapidjson::Document* doc = new rapidjson::Document;
 			doc->Parse(json->c_str());
 
@@ -163,7 +161,7 @@ void Parser::parseDaytimeStuff()
 	}
 }
 
-std::string* Parser::readOrdersJsonFromPoint(size_t& i)
+std::string* Parser::readOrdersJsonFromPoint()
 {
 	auto json = new std::string("{");
 	while (fgetc(dumpFile) != '{'); // Мотаем поток до начала тела джейсона
@@ -188,7 +186,7 @@ std::string* Parser::readOrdersJsonFromPoint(size_t& i)
 	return json;
 }
 
-std::string* Parser::readDealsJsonFromPoint(size_t& i)
+std::string* Parser::readDealsJsonFromPoint()
 {
 	auto json = new std::string("{\"data\":[");
 	while (fgetc(dumpFile) != '[');  // Мотаем поток до начала тела джейсона
@@ -212,4 +210,14 @@ std::string* Parser::readDealsJsonFromPoint(size_t& i)
 	}
 	*json += "}";
 	return json;
+}
+
+void Parser::parseOrdersFromDocument(rapidjson::Document* doc)
+{
+
+}
+
+void Parser::parseDealsFromDocument(rapidjson::Document* doc)
+{
+
 }

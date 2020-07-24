@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "rapidjson/document.h"
+
 #include "../Logic/OrderBook.h"
 
 class Parser
@@ -17,7 +19,7 @@ public:
 
 private:
 	static const size_t START_POS = 0;
-	size_t placeWherePreDayEnded;
+	size_t i;
 
 	FILE* dumpFile;
 	size_t filesize;
@@ -27,6 +29,9 @@ private:
 	std::vector<Order*>* ordersStorage;
 	std::vector<Order*>* dealsStorage;
 
-	std::string* readOrdersJsonFromPoint(size_t& i);
-	std::string* readDealsJsonFromPoint(size_t& i);
+	std::string* readOrdersJsonFromPoint();
+	std::string* readDealsJsonFromPoint();
+
+	void parseOrdersFromDocument(rapidjson::Document* doc);
+	void parseDealsFromDocument(rapidjson::Document* doc);
 };
