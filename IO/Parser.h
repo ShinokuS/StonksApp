@@ -1,4 +1,6 @@
-﻿#include <string>
+﻿#pragma once
+
+#include <string>
 #include <vector>
 
 #include "../Logic/OrderBook.h"
@@ -6,16 +8,14 @@
 class Parser
 {
 public:
-	static void openFile(std::string fileName);
-	static void setInstrumentName(std::string nameToSet);
-	static void setDealsStorage(std::vector<Order*>* newDealsStorage);
+	void openFile(std::string fileName);
+	void setInstrumentName(std::string nameToSet);
+	void setDealsStorage(std::vector<Order*>* newDealsStorage);
 
-	static OrderBook* parsePreDayOrders();
-	static void ParseDaytimeOrders();
-	static void Parser::ParseDaytimeDeal();
+	OrderBook* parsePreDayOrders();
+	void ParseDaytimeOrders();
+	void ParseDaytimeDeal();
 private:
-	static std::string* readOrdersJsonFromPoint(size_t& i);
-	static std::string* readDealsJsonFromPoint(size_t& i);
+	std::string* readOrdersJsonFromPoint(size_t& i);
+	std::string* readDealsJsonFromPoint(size_t& i);
 };
-
-

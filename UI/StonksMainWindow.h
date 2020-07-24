@@ -12,7 +12,7 @@
 #include "../Logic/BotLogic.h"
 #include "Graphs/MarketDepthGraph.h"
 #include "Graphs/BotGraph.h"
-
+#include "../IO/Parser.h"
 
 class StonksMainWindow : public QMainWindow
 {
@@ -20,7 +20,7 @@ class StonksMainWindow : public QMainWindow
 
 public:
     StonksMainWindow(OrderBook* orderBookTableModel, Deals* deals, 
-                    BotLogic* bot, QWidget* parent = Q_NULLPTR);
+                    BotLogic* bot, Parser* parser, QWidget* parent = Q_NULLPTR);
 
 private slots:
     void insertNewDataAndUpdate();
@@ -34,6 +34,7 @@ private:
     SmallOrderBookTableModel* visibleOrders;
     OrderBook* orderBook;
     Deals* dealsModel;
+    Parser* parser;
     GraphsBuilder* graphsBuilder;
     QTimer* tmr;
 

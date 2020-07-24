@@ -8,7 +8,7 @@
 using namespace QtCharts;
 
 // parent по умолчанию описан в хэдере (Q_NULLPTR короч)
-StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic* bot, QWidget* parent)
+StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic* bot, Parser* parser, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
@@ -17,6 +17,7 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic*
 
     dealsModel = deals;
     botLogic = bot;
+    this->parser = parser;
 
     graphsBuilder = new GraphsBuilder;
 
@@ -76,7 +77,7 @@ void StonksMainWindow::insertNewDataAndUpdate()
     //Parser::ParseDaytimeOrders(orderBook);
     
     if (! dealsModel->canLoadNextDealFromSource()) {
-        Parser::ParseDaytimeDeal();
+        parser->ParseDaytimeDeal();
     }
     dealsModel->loadNextDealFromSource();
     botLogic->reactAtNewDeal(dealsModel->getLastDeal());

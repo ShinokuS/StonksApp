@@ -46,7 +46,7 @@ OrderBook* Parser::parsePreDayOrders()
 	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
 
 	std::string search;//Буффер для поиска ключевых слов
-	const std::string keyWord = "book."+instrumentName; 
+	const std::string keyWord = "book." + instrumentName;
 	search.resize(keyWord.size());
 
 	ordersStorage = new std::vector<Order*>;
@@ -55,9 +55,9 @@ OrderBook* Parser::parsePreDayOrders()
 
 	for (size_t i = ordersPlace; i < filesize; ++i)//Начинаем поиск по файлу
 	{
-		for (int j = 0; j < search.size()-1; ++j)
+		for (int j = 0; j < search.size() - 1; ++j)
 		{
-			search[j] = search[j+1];
+			search[j] = search[j + 1];
 		}
 		search.back() = fgetc(dumpFile);
 
@@ -77,7 +77,7 @@ OrderBook* Parser::parsePreDayOrders()
 				qreal quantity = (*itr)[2].GetDouble();
 				auto newBid = new Order{ price, quantity, false, timestamp, flag };
 				orderBookTable->addOrder(newBid);
-			} 
+			}
 
 			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
 			{
@@ -100,7 +100,7 @@ OrderBook* Parser::parsePreDayOrders()
 }
 
 
-void Parser::ParseDaytimeOrders() 
+void Parser::ParseDaytimeOrders()
 {
 	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
 
@@ -189,7 +189,7 @@ void Parser::ParseDaytimeDeal()
 				auto newDeal = new Order{ price, quantity, false, time };
 				dealsStorage->push_back(newDeal);
 			}
-			
+
 			delete doc;
 			delete json;
 			break;
