@@ -8,9 +8,9 @@ public:
 	//int BORDER_BUY_PRICE = 85;
 	//int BORDER_SELL_PRICE = 120;
 
-	int CHEKING_TIME_INTERVAL = 450;
-	double PURCHASE_PERCENTAGE = 1.5;
-	double SALE_PERCENTAGE = 1.5; 
+	int CHEKING_TIME_INTERVAL = 40;
+	double PURCHASE_PERCENTAGE = 0.01;
+	double SALE_PERCENTAGE = 0.1; 
 
 	int firtsIntervalTime;
 	double currentAverPrice;
