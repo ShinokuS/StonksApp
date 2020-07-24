@@ -19,6 +19,7 @@ size_t filesize;
 
 std::string instrumentName;
 
+std::vector<Order*>* ordersStorage;
 std::vector<Order*>* dealsStorage;
 
 void Parser::openFile(std::string fileName)
@@ -48,7 +49,9 @@ OrderBook* Parser::parsePreDayOrders()
 	const std::string keyWord = "book."+instrumentName; 
 	search.resize(keyWord.size());
 
-	OrderBook* orderBookTable = new OrderBook; //Книжка для заполнения ордерами
+	ordersStorage = new std::vector<Order*>;
+	ordersStorage->reserve(5000000);
+	OrderBook* orderBookTable = new OrderBook(ordersStorage); //Книжка для заполнения ордерами
 
 	for (size_t i = ordersPlace; i < filesize; ++i)//Начинаем поиск по файлу
 	{
