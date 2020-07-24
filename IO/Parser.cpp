@@ -159,6 +159,7 @@ void Parser::parseDaytimeStuff()
 			delete json;
 		}
 	}
+	fclose(dumpFile);
 }
 
 std::string* Parser::readOrdersJsonFromPoint()
