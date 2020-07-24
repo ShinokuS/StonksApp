@@ -98,8 +98,9 @@ OrderBook* Parser::parsePreDayOrders()
 	ordersPlace = (size_t)_ftelli64(dumpFile);
 	return orderBookTable;
 }
-//Второй метод для парса в уже существующуу таблицу
-OrderBook* Parser::ParseDaytimeOrders(OrderBook* orderBook) 
+
+
+void Parser::ParseDaytimeOrders() 
 {
 	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
 
@@ -130,7 +131,7 @@ OrderBook* Parser::ParseDaytimeOrders(OrderBook* orderBook)
 				qreal price = (*itr)[1].GetDouble();
 				qreal quantity = (*itr)[2].GetDouble();
 				auto newBid = new Order{ price, quantity, false, timestamp, flag };
-				orderBook->addOrder(newBid);
+				ordersStorage->push_back(newBid);
 			}
 
 			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
@@ -139,7 +140,7 @@ OrderBook* Parser::ParseDaytimeOrders(OrderBook* orderBook)
 				qreal price = (*itr)[1].GetDouble();
 				qreal quantity = (*itr)[2].GetDouble();
 				auto newAsk = new Order{ price, quantity, true, timestamp, flag };
-				orderBook->addOrder(newAsk);
+				ordersStorage->push_back(newAsk);
 			}
 
 			delete doc;
@@ -155,7 +156,6 @@ OrderBook* Parser::ParseDaytimeOrders(OrderBook* orderBook)
 	}
 
 	ordersPlace = (size_t)_ftelli64(dumpFile);
-	return orderBook;
 }
 
 void Parser::ParseDaytimeDeal()
