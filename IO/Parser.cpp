@@ -83,7 +83,7 @@ OrderBook* Parser::parsePreDayOrders()
 }
 
 
-void Parser::ParseDaytimeOrders()
+void Parser::parseDaytimeOrders()
 {
 	_fseeki64(dumpFile, ordersPlace, SEEK_SET);
 
@@ -135,7 +135,7 @@ void Parser::ParseDaytimeOrders()
 	ordersPlace = (size_t)_ftelli64(dumpFile);
 }
 
-void Parser::ParseDaytimeDeal()
+void Parser::parseDeals()
 {
 	_fseeki64(dumpFile, dealsPlace, SEEK_SET);
 

@@ -74,10 +74,10 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 
 void StonksMainWindow::insertNewDataAndUpdate() 
 {
-    //Parser::ParseDaytimeOrders(orderBook);
+    //Parser::parseDaytimeOrders();
     
     if (! dealsModel->canLoadNextDealFromSource()) {
-        parser->ParseDaytimeDeal();
+        parser->parseDeals();
     }
     dealsModel->loadNextDealFromSource();
     botLogic->reactAtNewDeal(dealsModel->getLastDeal());

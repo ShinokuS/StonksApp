@@ -13,8 +13,8 @@ public:
 	void setDealsStorage(std::vector<Order*>* newDealsStorage);
 
 	OrderBook* parsePreDayOrders();
-	void ParseDaytimeOrders();
-	void ParseDaytimeDeal();
+	void parseDaytimeOrders();
+	void parseDeals();
 
 private:
 	//Это для файлового указателя, чтобы знать, где уже прочитан файл, а где нет.
