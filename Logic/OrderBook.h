@@ -9,12 +9,16 @@ class OrderBook
 public:
     int indexOfFirstVisibleElement;
     int countOfAsks;
+    int activeOrderIndexInSource;
     QList<Order*> orders;
 
     OrderBook(std::vector<Order*>* ordersSource);
 
     // Интерфейс для добавления новых ордеров.
     void addOrder(Order* newOrder);
+
+    bool canLoadNextOrderFromSource();
+    void loadNextOrderFromSource();
 
 private:
 
