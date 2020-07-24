@@ -77,6 +77,9 @@ void StonksMainWindow::insertNewDataAndUpdate()
     //Parser::parseDaytimeOrders();
     
     if (dealsModel->canLoadNextDealFromSource()) {
+        /*while (orderBook->canLoadNextOrderFromSource()) {
+            orderBook->loadNextOrderFromSource();
+        }*/
         dealsModel->loadNextDealFromSource();
         botLogic->reactAtNewDeal(dealsModel->getLastDeal());
     }
