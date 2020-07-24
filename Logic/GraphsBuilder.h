@@ -13,7 +13,8 @@ public:
 	MarketDepthGraph* buildMarketDepthGraph(OrderBook* orderBook);
 
 	PriceGraph* buildPriceGraph(Deals* deals);
-	void update(PriceGraph* priceGraph, BotLogic* bot);
+	void updatePriceGraph(PriceGraph* priceGraph, BotLogic* bot);
+	void updateMarketDepthGraph(MarketDepthGraph* marketDepthGraph);
 
 	QVector<double> getTimeForPriceGraph();
 	QVector<double> getPriceForPriceGraph();
@@ -29,4 +30,5 @@ private:
 	Deals* dealsModel;
 	OrderBook* orderBook;
 	bool isFirstDeal;
+	bool isFirstOrder;
 };

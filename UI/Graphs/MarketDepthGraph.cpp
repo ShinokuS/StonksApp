@@ -1,43 +1,36 @@
 ﻿#include "MarketDepthGraph.h"
 
-#include <QtCharts/QAreaSeries>
-
-// Конструктор получает на вход готовые линии графика
-// и отстраивает визуальный стиль их отображения
-
-MarketDepthGraph::MarketDepthGraph(QAreaSeries* bidsSeries, QAreaSeries* asksSeries)
+MarketDepthGraph::MarketDepthGraph(QVector <double> priceAsk, QVector <double> quantityAsk,
+                                QVector <double> priceBid, QVector <double> quantityBid)
 {
-    this->setTitle("Market Depth");
+    this->xAxis->setTickLabelFont(QFont(QFont().family(), 8));
+    this->yAxis->setTickLabelFont(QFont(QFont().family(), 8));
 
-    // Нанесение самих линий графика:
-    this->addSeries(bidsSeries);
-    QPen pen(0x059605);
-    pen.setWidth(1);
-    bidsSeries->setPen(pen);
+    this->xAxis->setAutoTickStep(true);
 
-    this->addSeries(asksSeries);
-    pen.setColor(0x940000);
-    pen.setWidth(1);
-    asksSeries->setPen(pen);
+    this->xAxis2->setVisible(true);
+    this->yAxis2->setVisible(true);
+    this->xAxis2->setTicks(false);
+    this->yAxis2->setTicks(false);
+    this->xAxis2->setTickLabels(false);
+    this->yAxis2->setTickLabels(false);
+    this->yAxis->setTickLabels(false);
 
-    // И подписей к ним.
-    bidsSeries->setName("Bids");
-    asksSeries->setName("Asks");
+    this->addGraph();
+    this->graph(0)->setPen(QPen(QColor(0x940000), 1.5));
+    this->graph(0)->setBrush(QBrush(0xff6161));
+    this->addGraph();
+    this->graph(1)->setPen(QPen(QColor(0x059605), 1.5));
+    this->graph(1)->setBrush(QBrush(0x7ce670));
 
-    // Красивое заполнение прощади под линиями:
-    QLinearGradient gradient(QPointF(0, 0), QPointF(0, 1));
-    gradient.setColorAt(0.0, 0x7ce670);
-    gradient.setColorAt(1.0, 0x7ce670);
-    gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-    bidsSeries->setBrush(gradient);
-    gradient.setColorAt(0.0, 0xff6161);
-    gradient.setColorAt(1.0, 0xff6161);
-    asksSeries->setBrush(gradient);
+    this->graph(0)->setLineStyle(QCPGraph::lsLine);
+    this->graph(1)->setLineStyle(QCPGraph::lsLine);
 
-    // Оси:
-    this->createDefaultAxes();
+    this->graph(0)->setAntialiased(true);
+    this->graph(1)->setAntialiased(true);
 
-    // будущая фича для расширения полей у оси Y
-    //this->axes(Qt::Horizontal).first()->setRange(0, 20);
-    //this->axes(Qt::Vertical).first()->setRange(0, 10);
+    this->legend->setVisible(true);
+
+    this->graph(0)->setData(priceAsk, quantityAsk);
+    this->graph(1)->setData(priceBid, quantityBid);
 }

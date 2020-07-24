@@ -107,11 +107,11 @@ void StonksMainWindow::updateWindow()
 {
     // Я бы хотел это распараллелить, но Qt не даёт.
     updatePriceGraph();
-    //updateMarketDepthGraph();
+    updateMarketDepthGraph();
     updateOrderBookTable();
 
     ui.label->setText("Bot Balance: " + QString::number(botLogic->botBalance) +
-        " Things Quantity: " + QString::number(botLogic->botThingsQuantity));
+        "\nThings Quantity: " + QString::number(botLogic->botThingsQuantity));
 }
 
 void StonksMainWindow::updateOrderBookTable()
@@ -123,27 +123,20 @@ void StonksMainWindow::updateOrderBookTable()
 
 void StonksMainWindow::updateMarketDepthGraph()
 {
-    auto newMarketDepthGraph = graphsBuilder->buildMarketDepthGraph(orderBook);
-    marketDepthView->setChart(newMarketDepthGraph);
-    delete marketDepthGraph;
-    marketDepthGraph = newMarketDepthGraph;
-    ui.graphWidget->repaint();
+    graphsBuilder->updateMarketDepthGraph(marketDepthGraph);
 }
 
 void StonksMainWindow::updatePriceGraph()
 {
-    graphsBuilder->update(priceGraph, botLogic);
+    graphsBuilder->updatePriceGraph(priceGraph, botLogic);
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
 {
     marketDepthGraph = graphsBuilder->buildMarketDepthGraph(orderBook);
 
-    marketDepthView = new QChartView(marketDepthGraph);
-    marketDepthView->setRenderHint(QPainter::Antialiasing);
-
     graphLayout = new QGridLayout(this);
-    graphLayout->addWidget(marketDepthView);
+    graphLayout->addWidget(marketDepthGraph);
     ui.graphWidget->setLayout(graphLayout);
 }
 

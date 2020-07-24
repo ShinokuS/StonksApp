@@ -7,47 +7,25 @@
 
 using namespace QtCharts;
 
-MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
+MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orders) 
+{
 
-    // Объявляем серии для хранения точек для линий графика.
-    QLineSeries* bidsUpLineSeries = new QLineSeries();
-    QLineSeries* bidsDownLineSeries = new QLineSeries();
-    QLineSeries* asksUpLineSeries = new QLineSeries();
-    QLineSeries* asksDownLineSeries = new QLineSeries();
+    this->orderBook = orders;
 
-    // Обрабатываем данные с модели
-    auto iter = orderBook->orders.end();
-    do iter--; while (! (*iter)->isAsk);
-    auto centralIter = iter;
-    qreal prevY = (*iter)->quantity;
-    asksUpLineSeries->append(prevY, (*iter)->price);
-    do {
-        iter--;
-        asksUpLineSeries->append(prevY, (*iter)->price);
-        asksUpLineSeries->append(prevY + (*iter)->quantity, (*iter)->price);
-        prevY += (*iter)->quantity;
-    } while (iter!=orderBook->orders.begin());
-    *asksDownLineSeries << QPointF(0, (*centralIter)->price) << QPointF(0, (*iter)->price);
+    auto marketDepthGraph = new MarketDepthGraph(getPriceAskForMarketDepthGraph(),
+        getQuantityAskForMarketDepthGraph(), getPriceBidForMarketDepthGraph(),
+        getQuantityBidForMarketDepthGraph());
 
-    iter = centralIter++;
-    prevY = (*iter)->quantity;
-    iter++;
-    for (; iter != orderBook->orders.end(); iter++) {
-        bidsUpLineSeries->append(prevY, (*iter)->price);
-        bidsUpLineSeries->append(prevY + (*iter)->quantity, (*iter)->price);
-        prevY += (*iter)->quantity;
+    if (getPriceAskForMarketDepthGraph().empty() || 
+        getPriceBidForMarketDepthGraph().empty()) {
+        isFirstOrder = true;
     }
-    iter--;
-    *bidsDownLineSeries << QPointF(0, (*centralIter)->price) << QPointF(0, (*iter)->price);
+    else {
+        marketDepthGraph->rescaleAxes();
+        isFirstOrder = false;
+    }
 
-    // Получаем полную форму каждой половины графика по кривой сверху и дну снизу.
-    QAreaSeries* bidsSeries = new QAreaSeries(bidsUpLineSeries, bidsDownLineSeries);
-    QAreaSeries* asksSeries = new QAreaSeries(asksUpLineSeries, asksDownLineSeries);
-
-    // В график запихиваем все эти полученные линии,
-    // а он в конструкторе разбирается со стилем их отображения.
-    // На выходе из метода будет полностью готовый график.
-    return new MarketDepthGraph(bidsSeries, asksSeries);
+    return marketDepthGraph;
 }
 
 PriceGraph* GraphsBuilder::buildPriceGraph(Deals* deals)
@@ -71,8 +49,23 @@ PriceGraph* GraphsBuilder::buildPriceGraph(Deals* deals)
 
     return priceGraph;
 }
+void GraphsBuilder::updateMarketDepthGraph(MarketDepthGraph* marketDepthGraph)
+{
+    marketDepthGraph->graph(0)->clearData();
+    marketDepthGraph->graph(1)->clearData();
+    if (!getPriceAskForMarketDepthGraph().empty() &&
+        !getPriceBidForMarketDepthGraph().empty()) {
+            
+        marketDepthGraph->graph(0)->setData(getPriceAskForMarketDepthGraph(),
+            getQuantityAskForMarketDepthGraph());
+        marketDepthGraph->graph(1)->setData(getPriceBidForMarketDepthGraph(),
+                getQuantityBidForMarketDepthGraph());
+    }
+    marketDepthGraph->rescaleAxes();
+    marketDepthGraph->replot();
+}
 
-void GraphsBuilder::update(PriceGraph* priceGraph, BotLogic* bot)
+void GraphsBuilder::updatePriceGraph(PriceGraph* priceGraph, BotLogic* bot)
 {
     priceGraph->graph()->clearData();
     if (! getTimeForPriceGraph().empty()) {
