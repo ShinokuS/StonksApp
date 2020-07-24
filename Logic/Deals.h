@@ -20,6 +20,7 @@ public:
 
 	bool canLoadNextDealFromSource();
 	void loadNextDealFromSource();
+	bool canLoadMoreFromTheSameFrame();
 	Order* getLastDeal();
 
 private:

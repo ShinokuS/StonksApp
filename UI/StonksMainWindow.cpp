@@ -75,11 +75,21 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 void StonksMainWindow::insertNewDataAndUpdate() 
 {
     if (dealsModel->canLoadNextDealFromSource()) {
+
+        // Считываем все ордеры между прошлой сделкой и новой
         while (orderBook->canLoadNextOrderFromSource()) {
             orderBook->loadNextOrderFromSource();
         }
+        
+        // Считываем новую сделку
         dealsModel->loadNextDealFromSource();
         botLogic->reactAtNewDeal(dealsModel->getLastDeal());
+
+        // Считываем все остальные сделки из пачки за тот же момент:
+        while (dealsModel->canLoadMoreFromTheSameFrame()) {
+            dealsModel->loadNextDealFromSource();
+            botLogic->reactAtNewDeal(dealsModel->getLastDeal());
+        }
     }
     /*else {
         if (parser->hasNotFinished) {
