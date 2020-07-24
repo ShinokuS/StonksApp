@@ -3,6 +3,8 @@
 MarketDepthGraph::MarketDepthGraph(QVector <double> priceAsk, QVector <double> quantityAsk,
                                 QVector <double> priceBid, QVector <double> quantityBid)
 {
+    this->setInteraction(QCP::iRangeZoom, true);
+    this->setInteraction(QCP::iRangeDrag, true);
     this->xAxis->setTickLabelFont(QFont(QFont().family(), 8));
     this->yAxis->setTickLabelFont(QFont(QFont().family(), 8));
 
@@ -30,6 +32,8 @@ MarketDepthGraph::MarketDepthGraph(QVector <double> priceAsk, QVector <double> q
     this->graph(1)->setAntialiased(true);
 
     this->legend->setVisible(true);
+    this->graph(0)->setName("Asks");
+    this->graph(1)->setName("Bids");
 
     this->graph(0)->setData(priceAsk, quantityAsk);
     this->graph(1)->setData(priceBid, quantityBid);

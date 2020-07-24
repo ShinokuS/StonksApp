@@ -41,7 +41,7 @@ PriceGraph* GraphsBuilder::buildPriceGraph(Deals* deals)
     }
     else {
         priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.last()->time,
-            dealsModel->dealsForPriceGraph.last()->time + Time::THREE_HOURS);
+            dealsModel->dealsForPriceGraph.last()->time + Time::THREE_MINUTES);
         priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
                                     dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
         isFirstDeal = false;
@@ -61,7 +61,7 @@ void GraphsBuilder::updateMarketDepthGraph(MarketDepthGraph* marketDepthGraph)
         marketDepthGraph->graph(1)->setData(getPriceBidForMarketDepthGraph(),
                 getQuantityBidForMarketDepthGraph());
     }
-    marketDepthGraph->rescaleAxes();
+    //marketDepthGraph->rescaleAxes();
     marketDepthGraph->replot();
 }
 
@@ -71,7 +71,7 @@ void GraphsBuilder::updatePriceGraph(PriceGraph* priceGraph, BotLogic* bot)
     if (! getTimeForPriceGraph().empty()) {
         if (isFirstDeal) {
             priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.first()->time,
-                dealsModel->dealsForPriceGraph.last()->time + Time::THREE_HOURS);
+                dealsModel->dealsForPriceGraph.last()->time + Time::THREE_MINUTES);
             priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
                 dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
             isFirstDeal = false;
@@ -122,8 +122,8 @@ QVector<double> GraphsBuilder::getPriceAskForMarketDepthGraph()
     do iter--; while (!(*iter)->isAsk);
     price.append((*iter)->price);
     do {
-        iter--;
         price.append((*iter)->price);
+        iter--;
         price.append((*iter)->price);
     } while (iter != orderBook->orders.begin());
     return price;
@@ -150,8 +150,8 @@ QVector<double> GraphsBuilder::getQuantityAskForMarketDepthGraph()
     double prevY = (*iter)->quantity;
     quantity.append(prevY);
     do {
-        iter--;
         quantity.append(prevY);
+        iter--;
         quantity.append(prevY+(*iter)->quantity);
         prevY += (*iter)->quantity;
     } while (iter != orderBook->orders.begin());
