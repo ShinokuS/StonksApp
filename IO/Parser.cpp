@@ -144,16 +144,7 @@ void Parser::parseDaytimeStuff()
 			auto json = readDealsJsonFromHere();
 			rapidjson::Document* doc = new rapidjson::Document;
 			doc->Parse(json->c_str());
-
-			for (auto it = (*doc)["data"].Begin(); it != (*doc)["data"].End(); ++it)
-			{
-				// деление это отбрасывание долей секунд для конвертации в юникстайм
-				time_t time = (*it)["timestamp"].GetInt64() / 10000;
-				qreal price = (*it)["price"].GetDouble();
-				qreal quantity = (*it)["amount"].GetDouble();
-				auto newDeal = new Order{ price, quantity, false, time };
-				dealsStorage->push_back(newDeal);
-			}
+			parseDealsFromDocument(doc);
 
 			delete doc;
 			delete json;
@@ -220,5 +211,13 @@ void Parser::parseOrdersFromDocument(rapidjson::Document* doc)
 
 void Parser::parseDealsFromDocument(rapidjson::Document* doc)
 {
-
+	for (auto it = (*doc)["data"].Begin(); it != (*doc)["data"].End(); ++it)
+	{
+		// деление это отбрасывание долей секунд для конвертации в юникстайм
+		time_t time = (*it)["timestamp"].GetInt64() / 10000;
+		qreal price = (*it)["price"].GetDouble();
+		qreal quantity = (*it)["amount"].GetDouble();
+		auto newDeal = new Order{ price, quantity, false, time };
+		dealsStorage->push_back(newDeal);
+	}
 }
