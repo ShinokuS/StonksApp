@@ -9,13 +9,14 @@ int main(int argc, char *argv[])
     parser->openFile("20200620.deribit.dump");
     parser->setInstrumentName("ETH-PERPETUAL");
 
+    auto orderBook = parser->parsePreDayOrders();
+
     auto dealsSource = new std::vector<Order*>();
     dealsSource->reserve(1000000);
     parser->setDealsStorage(dealsSource);
-    
     auto dealsModel = new Deals(dealsSource);
+    
     auto bot = new BotLogic();
-    auto orderBook = parser->parsePreDayOrders();
     
     QApplication a(argc, argv);
     StonksMainWindow mainWindow(orderBook, dealsModel, bot, parser);
