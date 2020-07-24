@@ -82,14 +82,17 @@ OrderBook* Parser::parsePreDayOrders()
 	return orderBookTable;
 }
 
-
-void Parser::parseDaytimeOrders()
+void Parser::parseDaytimeStuff()
 {
 	_fseeki64(dumpFile, placeWherePreDayEnded, SEEK_SET);
 
-	std::string ordersSearchBuffer;//Буффер для поиска ключевых слов
+	std::string ordersSearchBuffer;
 	const std::string ordersJsonTitle = "book." + instrumentName;
 	ordersSearchBuffer.resize(ordersJsonTitle.size());
+
+	std::string dealsSearchBuffer;
+	const std::string dealsJsonTitle = "trades." + instrumentName;
+	dealsSearchBuffer.resize(dealsJsonTitle.size());
 
 
 	for (size_t i = placeWherePreDayEnded; i < filesize; ++i)//Начинаем поиск по файлу
@@ -99,7 +102,15 @@ void Parser::parseDaytimeOrders()
 			ordersSearchBuffer[j] = ordersSearchBuffer[j + 1];
 		}
 		ordersSearchBuffer.back() = fgetc(dumpFile);
-		if (ordersSearchBuffer == (ordersJsonTitle))	//Если находим ключевое слово, начинаем считывать чистую json-строку
+
+		for (int j = 0; j < dealsSearchBuffer.size() - 1; ++j)
+		{
+			dealsSearchBuffer[j] = dealsSearchBuffer[j + 1];
+		}
+		dealsSearchBuffer.back() = ordersSearchBuffer.back();
+
+		// Нашли начало джейсона с ордерами
+		if (ordersSearchBuffer == (ordersJsonTitle))
 		{
 			auto json = readOrdersJsonFromPoint(i);
 			rapidjson::Document* doc = new rapidjson::Document;
@@ -129,26 +140,8 @@ void Parser::parseDaytimeOrders()
 			delete doc;
 			delete json;
 		}
-	}
-}
-
-void Parser::parseDeals()
-{
-	_fseeki64(dumpFile, placeWherePreDayEnded, SEEK_SET);
-
-	std::string dealsSearchBuffer;//Буффер для поиска ключевых слов
-	const std::string dealsJsonTitle = "trades." + instrumentName;
-	dealsSearchBuffer.resize(dealsJsonTitle.size());
-
-
-	for (size_t i = placeWherePreDayEnded; i < filesize; ++i)//Начинаем поиск по файлу
-	{
-		for (int j = 0; j < dealsSearchBuffer.size() - 1; ++j)
-		{
-			dealsSearchBuffer[j] = dealsSearchBuffer[j + 1];
-		}
-		dealsSearchBuffer.back() = fgetc(dumpFile);
-		if (dealsSearchBuffer == (dealsJsonTitle))	//Если находим ключевое слово, начинаем считывать чистую json-строку
+		// Нашли начало джейсона со сделками
+		if (dealsSearchBuffer == (dealsJsonTitle))
 		{
 			auto json = readDealsJsonFromPoint(i);
 			rapidjson::Document* doc = new rapidjson::Document;

@@ -13,8 +13,7 @@ public:
 	void setDealsStorage(std::vector<Order*>* newDealsStorage);
 
 	OrderBook* parsePreDayOrders();
-	void parseDaytimeOrders();
-	void parseDeals();
+	void parseDaytimeStuff();
 
 private:
 	static const size_t START_POS = 0;
