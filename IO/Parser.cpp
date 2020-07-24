@@ -46,7 +46,7 @@ OrderBook* Parser::parsePreDayOrders()
 
 		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
 		{
-			auto json = readOrdersJsonFromPoint();
+			auto json = readOrdersJsonFromHere();
 			rapidjson::Document* doc = new rapidjson::Document;
 			doc->Parse(json->c_str());
 
@@ -110,7 +110,7 @@ void Parser::parseDaytimeStuff()
 		// Нашли начало джейсона с ордерами
 		if (ordersSearchBuffer == (ordersJsonTitle))
 		{
-			auto json = readOrdersJsonFromPoint();
+			auto json = readOrdersJsonFromHere();
 			rapidjson::Document* doc = new rapidjson::Document;
 			doc->Parse(json->c_str());
 
@@ -141,7 +141,7 @@ void Parser::parseDaytimeStuff()
 		// Нашли начало джейсона со сделками
 		if (dealsSearchBuffer == (dealsJsonTitle))
 		{
-			auto json = readDealsJsonFromPoint();
+			auto json = readDealsJsonFromHere();
 			rapidjson::Document* doc = new rapidjson::Document;
 			doc->Parse(json->c_str());
 
@@ -162,7 +162,7 @@ void Parser::parseDaytimeStuff()
 	fclose(dumpFile);
 }
 
-std::string* Parser::readOrdersJsonFromPoint()
+std::string* Parser::readOrdersJsonFromHere()
 {
 	auto json = new std::string("{");
 	while (fgetc(dumpFile) != '{'); // Мотаем поток до начала тела джейсона
@@ -187,7 +187,7 @@ std::string* Parser::readOrdersJsonFromPoint()
 	return json;
 }
 
-std::string* Parser::readDealsJsonFromPoint()
+std::string* Parser::readDealsJsonFromHere()
 {
 	auto json = new std::string("{\"data\":[");
 	while (fgetc(dumpFile) != '[');  // Мотаем поток до начала тела джейсона

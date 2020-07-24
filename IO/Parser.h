@@ -29,8 +29,8 @@ private:
 	std::vector<Order*>* ordersStorage;
 	std::vector<Order*>* dealsStorage;
 
-	std::string* readOrdersJsonFromPoint();
-	std::string* readDealsJsonFromPoint();
+	std::string* readOrdersJsonFromHere();
+	std::string* readDealsJsonFromHere();
 
 	void parseOrdersFromDocument(rapidjson::Document* doc);
 	void parseDealsFromDocument(rapidjson::Document* doc);
