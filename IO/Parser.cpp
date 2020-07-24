@@ -113,27 +113,7 @@ void Parser::parseDaytimeStuff()
 			auto json = readOrdersJsonFromHere();
 			rapidjson::Document* doc = new rapidjson::Document;
 			doc->Parse(json->c_str());
-
-			// деление это отбрасывание долей секунд для конвертации в юникстайм
-			time_t timestamp = (*doc)["timestamp"].GetInt64() / 10000;
-
-			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
-			{
-				std::string flag = (*itr)[0].GetString();
-				qreal price = (*itr)[1].GetDouble();
-				qreal quantity = (*itr)[2].GetDouble();
-				auto newBid = new Order{ price, quantity, false, timestamp, flag };
-				ordersStorage->push_back(newBid);
-			}
-
-			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
-			{
-				std::string flag = (*itr)[0].GetString();
-				qreal price = (*itr)[1].GetDouble();
-				qreal quantity = (*itr)[2].GetDouble();
-				auto newAsk = new Order{ price, quantity, true, timestamp, flag };
-				ordersStorage->push_back(newAsk);
-			}
+			parseOrdersFromDocument(doc);
 
 			delete doc;
 			delete json;
@@ -206,7 +186,26 @@ std::string* Parser::readDealsJsonFromHere()
 
 void Parser::parseOrdersFromDocument(rapidjson::Document* doc)
 {
+	// деление это отбрасывание долей секунд для конвертации в юникстайм
+	time_t timestamp = (*doc)["timestamp"].GetInt64() / 10000;
 
+	for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
+	{
+		std::string flag = (*itr)[0].GetString();
+		qreal price = (*itr)[1].GetDouble();
+		qreal quantity = (*itr)[2].GetDouble();
+		auto newBid = new Order{ price, quantity, false, timestamp, flag };
+		ordersStorage->push_back(newBid);
+	}
+
+	for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
+	{
+		std::string flag = (*itr)[0].GetString();
+		qreal price = (*itr)[1].GetDouble();
+		qreal quantity = (*itr)[2].GetDouble();
+		auto newAsk = new Order{ price, quantity, true, timestamp, flag };
+		ordersStorage->push_back(newAsk);
+	}
 }
 
 void Parser::parseDealsFromDocument(rapidjson::Document* doc)
