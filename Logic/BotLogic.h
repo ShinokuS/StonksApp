@@ -5,7 +5,7 @@
 class BotLogic
 {
 public:
-	int CHEKING_TIME_INTERVAL = 40;
+	int CHEKING_TIME_INTERVAL = 30;
 	double PURCHASE_PERCENTAGE = 0.01;
 	double SALE_PERCENTAGE = 0.1; 
 
