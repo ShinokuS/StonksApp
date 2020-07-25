@@ -1,12 +1,10 @@
 ﻿#pragma once
 
-#include "QtCharts/qchart.h"
+#include "../../Logic/QCustomPlot/qcustomplot.h"
 
-using QtCharts::QChart;
-using QtCharts::QAreaSeries;
-
-class MarketDepthGraph : public QtCharts::QChart
+class MarketDepthGraph : public QCustomPlot
 {
 public:
-	MarketDepthGraph(QAreaSeries* bidsSeries, QAreaSeries* asksSeries);
+	MarketDepthGraph(QVector <double> priceAsk, QVector <double> quantityAsk,
+		QVector <double> priceBid, QVector <double> quantityBid);
 };

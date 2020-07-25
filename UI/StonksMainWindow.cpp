@@ -28,7 +28,7 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic*
 
     // таймер, чтобы каждую секунду вбрасывать новые ордеры и обновлять окно
     tmr = new QTimer();
-    tmr->setInterval(1000);
+    tmr->setInterval(1);
     connect(tmr, SIGNAL(timeout()), this, SLOT(insertNewDataAndUpdate()));
     tmr->start();
 
@@ -110,8 +110,8 @@ void StonksMainWindow::updateWindow()
     updateMarketDepthGraph();
     updateOrderBookTable();
 
-    ui.label->setText("Bot Balance: " + QString::number(botLogic->botBalance) +
-        " Things Quantity: " + QString::number(botLogic->botThingsQuantity));
+    ui.label->setText("Balance: " + QString::number(botLogic->botBalance) +
+        "\nThings: " + QString::number(botLogic->botThingsQuantity));
 }
 
 void StonksMainWindow::updateOrderBookTable()
@@ -123,27 +123,20 @@ void StonksMainWindow::updateOrderBookTable()
 
 void StonksMainWindow::updateMarketDepthGraph()
 {
-    auto newMarketDepthGraph = graphsBuilder->buildMarketDepthGraph(orderBook);
-    marketDepthView->setChart(newMarketDepthGraph);
-    delete marketDepthGraph;
-    marketDepthGraph = newMarketDepthGraph;
-    ui.graphWidget->repaint();
+    graphsBuilder->updateMarketDepthGraph(marketDepthGraph);
 }
 
 void StonksMainWindow::updatePriceGraph()
 {
-    graphsBuilder->update(priceGraph, botLogic);
+    graphsBuilder->updatePriceGraph(priceGraph, botLogic);
 }
 
 void StonksMainWindow::placeMarketDepthGraph()
 {
     marketDepthGraph = graphsBuilder->buildMarketDepthGraph(orderBook);
 
-    marketDepthView = new QChartView(marketDepthGraph);
-    marketDepthView->setRenderHint(QPainter::Antialiasing);
-
     graphLayout = new QGridLayout(this);
-    graphLayout->addWidget(marketDepthView);
+    graphLayout->addWidget(marketDepthGraph);
     ui.graphWidget->setLayout(graphLayout);
 }
 

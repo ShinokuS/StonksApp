@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1242</width>
-    <height>551</height>
+    <width>928</width>
+    <height>531</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QWidget" name="graphWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>910</x>
-      <y>10</y>
-      <width>331</width>
-      <height>521</height>
+      <x>20</x>
+      <y>300</y>
+      <width>461</width>
+      <height>231</height>
      </rect>
     </property>
    </widget>
@@ -40,22 +40,35 @@
       <x>0</x>
       <y>-10</y>
       <width>661</width>
-      <height>541</height>
+      <height>331</height>
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>510</y>
-      <width>251</width>
-      <height>31</height>
+      <x>490</x>
+      <y>320</y>
+      <width>151</width>
+      <height>181</height>
      </rect>
     </property>
-    <property name="text">
-     <string/>
+    <property name="title">
+     <string>Bot stats:</string>
     </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>121</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>

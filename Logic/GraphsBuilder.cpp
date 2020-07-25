@@ -1,53 +1,27 @@
 ﻿#include "GraphsBuilder.h"
 
 #include <QtGlobal>
-#include <QtCharts/QLineSeries>
-#include <QtCharts/QAreaSeries>
 #include <QDateTime>
 
-using namespace QtCharts;
+MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orders) 
+{
 
-MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orderBook) {
+    this->orderBook = orders;
 
-    // Объявляем серии для хранения точек для линий графика.
-    QLineSeries* bidsUpLineSeries = new QLineSeries();
-    QLineSeries* bidsDownLineSeries = new QLineSeries();
-    QLineSeries* asksUpLineSeries = new QLineSeries();
-    QLineSeries* asksDownLineSeries = new QLineSeries();
+    auto marketDepthGraph = new MarketDepthGraph(getPriceAskForMarketDepthGraph(),
+        getQuantityAskForMarketDepthGraph(), getPriceBidForMarketDepthGraph(),
+        getQuantityBidForMarketDepthGraph());
 
-    // Обрабатываем данные с модели
-    auto iter = orderBook->orders.end();
-    do iter--; while (! (*iter)->isAsk);
-    auto centralIter = iter;
-    qreal prevY = (*iter)->quantity;
-    asksUpLineSeries->append(prevY, (*iter)->price);
-    do {
-        iter--;
-        asksUpLineSeries->append(prevY, (*iter)->price);
-        asksUpLineSeries->append(prevY + (*iter)->quantity, (*iter)->price);
-        prevY += (*iter)->quantity;
-    } while (iter!=orderBook->orders.begin());
-    *asksDownLineSeries << QPointF(0, (*centralIter)->price) << QPointF(0, (*iter)->price);
-
-    iter = centralIter++;
-    prevY = (*iter)->quantity;
-    iter++;
-    for (; iter != orderBook->orders.end(); iter++) {
-        bidsUpLineSeries->append(prevY, (*iter)->price);
-        bidsUpLineSeries->append(prevY + (*iter)->quantity, (*iter)->price);
-        prevY += (*iter)->quantity;
+    if (getPriceAskForMarketDepthGraph().empty() || 
+        getPriceBidForMarketDepthGraph().empty()) {
+        isFirstOrder = true;
     }
-    iter--;
-    *bidsDownLineSeries << QPointF(0, (*centralIter)->price) << QPointF(0, (*iter)->price);
+    else {
+        marketDepthGraph->rescaleAxes();
+        isFirstOrder = false;
+    }
 
-    // Получаем полную форму каждой половины графика по кривой сверху и дну снизу.
-    QAreaSeries* bidsSeries = new QAreaSeries(bidsUpLineSeries, bidsDownLineSeries);
-    QAreaSeries* asksSeries = new QAreaSeries(asksUpLineSeries, asksDownLineSeries);
-
-    // В график запихиваем все эти полученные линии,
-    // а он в конструкторе разбирается со стилем их отображения.
-    // На выходе из метода будет полностью готовый график.
-    return new MarketDepthGraph(bidsSeries, asksSeries);
+    return marketDepthGraph;
 }
 
 PriceGraph* GraphsBuilder::buildPriceGraph(Deals* deals)
@@ -58,27 +32,42 @@ PriceGraph* GraphsBuilder::buildPriceGraph(Deals* deals)
     auto priceGraph = new PriceGraph(getTimeForPriceGraph(),
                                     getPriceForPriceGraph());
     
-    if (getTimeForPriceGraph().empty()) {
-        isFirstDeal = true;
-    }
-    else {
+    if (!getTimeForPriceGraph().empty()) {
         priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.last()->time,
-            dealsModel->dealsForPriceGraph.last()->time + Time::THREE_HOURS);
+            dealsModel->dealsForPriceGraph.last()->time + Time::HALF_OF_HOUR - Time::FIVE_MINUTES);
         priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
-                                    dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
-        isFirstDeal = false;
+            dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
     }
-
     return priceGraph;
 }
+void GraphsBuilder::updateMarketDepthGraph(MarketDepthGraph* marketDepthGraph)
+{
+    marketDepthGraph->graph(0)->clearData();
+    marketDepthGraph->graph(1)->clearData();
+    if (!getPriceAskForMarketDepthGraph().empty() &&
+        !getPriceBidForMarketDepthGraph().empty()) {
+            
+        marketDepthGraph->graph(0)->setData(getPriceAskForMarketDepthGraph(),
+            getQuantityAskForMarketDepthGraph());
+        marketDepthGraph->graph(1)->setData(getPriceBidForMarketDepthGraph(),
+                getQuantityBidForMarketDepthGraph());
+        marketDepthGraph->xAxis->setRange((getPriceBidForMarketDepthGraph().first()+getPriceAskForMarketDepthGraph().first())/2,
+            2 * (std::min(getPriceBidForMarketDepthGraph().first()- getPriceBidForMarketDepthGraph().last(),
+            getPriceAskForMarketDepthGraph().last()-getPriceAskForMarketDepthGraph().first())), Qt::AlignCenter);
+        marketDepthGraph->yAxis->setRange(std::min(getQuantityAskForMarketDepthGraph().first(),
+            getQuantityBidForMarketDepthGraph().first()), std::max(
+            getQuantityAskForMarketDepthGraph().last(), getQuantityBidForMarketDepthGraph().last()));
+    }
+    marketDepthGraph->replot();
+}
 
-void GraphsBuilder::update(PriceGraph* priceGraph, BotLogic* bot)
+void GraphsBuilder::updatePriceGraph(PriceGraph* priceGraph, BotLogic* bot)
 {
     priceGraph->graph()->clearData();
     if (! getTimeForPriceGraph().empty()) {
         if (isFirstDeal) {
             priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.first()->time,
-                dealsModel->dealsForPriceGraph.last()->time + Time::THREE_HOURS);
+                dealsModel->dealsForPriceGraph.last()->time + Time::HALF_OF_HOUR - Time::FIVE_MINUTES);
             priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
                 dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
             isFirstDeal = false;
@@ -89,7 +78,8 @@ void GraphsBuilder::update(PriceGraph* priceGraph, BotLogic* bot)
             priceGraph->graph(1)->setData(bot->timeBuy, bot->priceBuy);
             priceGraph->graph(2)->setData(bot->timeSell, bot->priceSell);
             priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
-                dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
+                2*std::max(dealsModel->dealsForPriceGraph.last()->price-minPrice,
+                    maxPrice - dealsModel->dealsForPriceGraph.last()->price)+1, Qt::AlignBottom);
         }
     }
     priceGraph->replot();
@@ -104,12 +94,77 @@ QVector<double> GraphsBuilder::getTimeForPriceGraph()
     }
     return time;
 }
+
 QVector<double> GraphsBuilder::getPriceForPriceGraph()
 {
     QVector <double> price;
     for (auto iter = dealsModel->dealsForPriceGraph.begin();
             iter != dealsModel->dealsForPriceGraph.end(); iter++) {
         price.push_back((*iter)->price);
+        if ((*iter)->price > maxPrice) {
+            maxPrice = (*iter)->price;
+        }
+        if ((*iter)->price < minPrice || minPrice == 0) {
+            minPrice = (*iter)->price;
+        }
     }
     return price;
+}
+
+QVector<double> GraphsBuilder::getPriceAskForMarketDepthGraph()
+{
+    QVector <double> price;
+    auto iter = orderBook->orders.end();
+    do iter--; while (!(*iter)->isAsk);
+    price.append((*iter)->price);
+    do {
+        price.append((*iter)->price);
+        iter--;
+        price.append((*iter)->price);
+    } while (iter != orderBook->orders.begin());
+    return price;
+}
+
+QVector<double> GraphsBuilder::getPriceBidForMarketDepthGraph()
+{
+    QVector <double> price;
+    auto iter = orderBook->orders.end();
+    do iter--; while (!(*iter)->isAsk);
+    iter++; iter++;
+    for (; iter != orderBook->orders.end(); iter++) {
+        price.append((*iter)->price);
+        price.append((*iter)->price);
+    }
+    return price;
+}
+
+QVector<double> GraphsBuilder::getQuantityAskForMarketDepthGraph()
+{
+    QVector <double> quantity;
+    auto iter = orderBook->orders.end();
+    do iter--; while (!(*iter)->isAsk);
+    double prevY = (*iter)->quantity;
+    quantity.append(prevY);
+    do {
+        quantity.append(prevY);
+        iter--;
+        quantity.append(prevY+(*iter)->quantity);
+        prevY += (*iter)->quantity;
+    } while (iter != orderBook->orders.begin());
+    return quantity;
+}
+
+QVector<double> GraphsBuilder::getQuantityBidForMarketDepthGraph() {
+    QVector <double> quantity;
+    auto iter = orderBook->orders.end();
+    do iter--; while (!(*iter)->isAsk);
+    iter++; 
+    double prevY = (*iter)->quantity;
+    iter++;
+    for (; iter != orderBook->orders.end(); iter++) {
+        quantity.append(prevY);
+        quantity.append(prevY + (*iter)->quantity);
+        prevY += (*iter)->quantity;
+    }
+    return quantity;
 }

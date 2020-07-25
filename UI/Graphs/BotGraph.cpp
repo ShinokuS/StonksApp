@@ -9,10 +9,10 @@ BotGraph::BotGraph(QVector <double> timeBuy, QVector <double> priceBuy,
 
 	priceGraph->addGraph();
 	priceGraph->graph(1)->setLineStyle(QCPGraph::lsNone);
-	priceGraph->graph(1)->setScatterStyle(QCPScatterStyle(shapes.at(0), 10));
+	priceGraph->graph(1)->setScatterStyle(QCPScatterStyle(shapes.at(0), 15));
 	priceGraph->addGraph();
 	priceGraph->graph(2)->setLineStyle(QCPGraph::lsNone);
-	priceGraph->graph(2)->setScatterStyle(QCPScatterStyle(shapes.at(1), 10));
+	priceGraph->graph(2)->setScatterStyle(QCPScatterStyle(shapes.at(1), 15));
 
 	QPen pen;
 	pen.setColor(0x059605);

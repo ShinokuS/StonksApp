@@ -1,4 +1,4 @@
-﻿/***************************************************************************
+/***************************************************************************
 **                                                                        **
 **  QCustomPlot, an easy to use, modern plotting widget for Qt            **
 **  Copyright (C) 2011-2015 Emanuel Eichhammer                            **
@@ -19,8 +19,8 @@
 ****************************************************************************
 **           Author: Emanuel Eichhammer                                   **
 **  Website/Contact: http://www.qcustomplot.com/                          **
-**             Date: 25.04.15                                             **
-**          Version: 1.3.1                                                **
+**             Date: 22.12.15                                             **
+**          Version: 1.3.2                                                **
 ****************************************************************************/
 
 #ifndef QCUSTOMPLOT_H
@@ -47,11 +47,11 @@
 #include <limits>
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #  include <qnumeric.h>
-#  include <QtPrintSupport/QPrinter>
+#  include <QPrinter>
 #  include <QPrintEngine>
 #else
 #  include <QtNumeric>
-#  include <QtPrintSupport>
+#  include <QtPrintSupport/QtPrintSupport>
 #endif
 
 class QCPPainter;
@@ -3615,6 +3615,7 @@ protected:
   QPixmap mPixmap;
   QPixmap mScaledPixmap;
   bool mScaled;
+  bool mScaledPixmapInvalidated;
   Qt::AspectRatioMode mAspectRatioMode;
   Qt::TransformationMode mTransformationMode;
   QPen mPen, mSelectedPen;
