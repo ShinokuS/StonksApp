@@ -1,11 +1,7 @@
 ﻿#include "GraphsBuilder.h"
 
 #include <QtGlobal>
-#include <QtCharts/QLineSeries>
-#include <QtCharts/QAreaSeries>
 #include <QDateTime>
-
-using namespace QtCharts;
 
 MarketDepthGraph* GraphsBuilder::buildMarketDepthGraph(OrderBook* orders) 
 {
@@ -36,17 +32,12 @@ PriceGraph* GraphsBuilder::buildPriceGraph(Deals* deals)
     auto priceGraph = new PriceGraph(getTimeForPriceGraph(),
                                     getPriceForPriceGraph());
     
-    if (getTimeForPriceGraph().empty()) {
-        isFirstDeal = true;
-    }
-    else {
+    if (!getTimeForPriceGraph().empty()) {
         priceGraph->xAxis->setRange(dealsModel->dealsForPriceGraph.last()->time,
-            dealsModel->dealsForPriceGraph.last()->time + Time::HALF_OF_HOUR-Time::FIVE_MINUTES);
+            dealsModel->dealsForPriceGraph.last()->time + Time::HALF_OF_HOUR - Time::FIVE_MINUTES);
         priceGraph->yAxis->setRange(dealsModel->dealsForPriceGraph.last()->price,
-                                    dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
-        isFirstDeal = false;
+            dealsModel->dealsForPriceGraph.last()->price, Qt::AlignBottom);
     }
-
     return priceGraph;
 }
 void GraphsBuilder::updateMarketDepthGraph(MarketDepthGraph* marketDepthGraph)
@@ -60,14 +51,13 @@ void GraphsBuilder::updateMarketDepthGraph(MarketDepthGraph* marketDepthGraph)
             getQuantityAskForMarketDepthGraph());
         marketDepthGraph->graph(1)->setData(getPriceBidForMarketDepthGraph(),
                 getQuantityBidForMarketDepthGraph());
-        marketDepthGraph->xAxis->setRange(getPriceBidForMarketDepthGraph().first(),
+        marketDepthGraph->xAxis->setRange((getPriceBidForMarketDepthGraph().first()+getPriceAskForMarketDepthGraph().first())/2,
             2 * (std::min(getPriceBidForMarketDepthGraph().first()- getPriceBidForMarketDepthGraph().last(),
             getPriceAskForMarketDepthGraph().last()-getPriceAskForMarketDepthGraph().first())), Qt::AlignCenter);
         marketDepthGraph->yAxis->setRange(std::min(getQuantityAskForMarketDepthGraph().first(),
             getQuantityBidForMarketDepthGraph().first()), std::max(
             getQuantityAskForMarketDepthGraph().last(), getQuantityBidForMarketDepthGraph().last()));
     }
-    //marketDepthGraph->rescaleAxes();
     marketDepthGraph->replot();
 }
 
