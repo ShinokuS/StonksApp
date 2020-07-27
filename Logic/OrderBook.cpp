@@ -7,7 +7,7 @@ OrderBook::OrderBook(std::vector<Order>* ordersSource)
     countOfAsks = 0;
     activeOrderIndexInSource = -1;
     this->ordersSource = ordersSource;
-    orders.reserve(ordersSource->size());
+    orders.reserve(10000); // Ну сколько там позиций по цене может быть?
 }
 
 bool OrderBook::canLoadNextOrderFromSource()
