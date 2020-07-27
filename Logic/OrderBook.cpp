@@ -1,13 +1,13 @@
 ﻿#include "OrderBook.h"
 #include "SmallOrderBookTableModel.h"
 
-OrderBook::OrderBook(std::vector<Order*>* ordersSource)
+OrderBook::OrderBook(std::vector<Order>* ordersSource)
 {
     indexOfFirstVisibleElement = 0;
     countOfAsks = 0;
     activeOrderIndexInSource = -1;
     this->ordersSource = ordersSource;
-    orders.reserve(ordersSource->size());
+    orders.reserve(10000); // Ну сколько там позиций по цене может быть?
 }
 
 bool OrderBook::canLoadNextOrderFromSource()
@@ -18,7 +18,7 @@ bool OrderBook::canLoadNextOrderFromSource()
 void OrderBook::loadNextOrderFromSource()
 {
     activeOrderIndexInSource++;
-    addOrder((*ordersSource)[activeOrderIndexInSource]);
+    addOrder(&(*ordersSource)[activeOrderIndexInSource]);
 }
 
 void OrderBook::addOrder(Order* newOrder)
@@ -68,7 +68,6 @@ void OrderBook::deleteOrder(Order* newOrder)
     // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
     // Как и на то, совпадает ли маркер бида/аска.
 
-    delete* iter;
     orders.erase(iter);
 
     if (newOrder->isAsk) {
@@ -92,5 +91,4 @@ void OrderBook::changeOrder(Order* newOrder)
     // Как и на то, совпадает ли маркер бида/аска.
 
     (*iter)->quantity = newOrder->quantity;
-    delete newOrder;
 }

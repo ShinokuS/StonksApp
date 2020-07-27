@@ -13,8 +13,8 @@ int main(int argc, char *argv[])
 
     auto orderBook = parser->parsePreDayOrders();
 
-    auto dealsSource = new std::vector<Order*>();
-    dealsSource->reserve(1000000);
+    auto dealsSource = new std::vector<Order>();
+    dealsSource->reserve(50000); // 20.06.2020 по ETH-PERPETUAL было 18 тысяч сделок
     parser->setDealsStorage(dealsSource);
     auto dealsModel = new Deals(dealsSource);
     

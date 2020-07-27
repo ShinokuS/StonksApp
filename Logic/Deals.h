@@ -14,7 +14,7 @@ public:
 	double maxPrice;
 	double minPrice;
 
-	Deals(std::vector<Order*>* dealsSource);
+	Deals(std::vector<Order>* dealsSource);
 
 	static std::vector<Order*>* makeRandomListOfDeals(unsigned int seed = time(0));
 
@@ -24,7 +24,7 @@ public:
 	Order* getLastDeal();
 
 private:
-	std::vector<Order*>* dealsSource;
+	std::vector<Order>* dealsSource;
 	int activeDealIndexInSource;
 	int firstIntervalTime;
 	int timeOfInterval = 5;

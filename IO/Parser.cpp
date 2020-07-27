@@ -10,7 +10,7 @@ void Parser::openFile(std::string fileName)
 	dumpFile = fopen(fileName.c_str(), "rb");
 
 	_fseeki64(dumpFile, 0, SEEK_END);
-	filesize = (size_t)_ftelli64(dumpFile);//определяем размер файла.
+	filesize = (size_t)_ftelli64(dumpFile);
 }
 
 void Parser::setInstrumentName(std::string nameToSet)
@@ -18,42 +18,46 @@ void Parser::setInstrumentName(std::string nameToSet)
 	instrumentName = nameToSet;
 }
 
-void Parser::setDealsStorage(std::vector<Order*>* newDealsStorage)
+void Parser::setDealsStorage(std::vector<Order>* newDealsStorage)
 {
 	dealsStorage = newDealsStorage;
 }
 
-//Метод для парса в новую таблицу ордеров
+// Создаёт новый ордербук и распарсивает туда ордеры, которые были в первый момент дня.
 OrderBook* Parser::parsePreDayOrders()
 {
 	_fseeki64(dumpFile, START_POS, SEEK_SET);
 
-	std::string search;//Буффер для поиска ключевых слов
-	const std::string keyWord = "book." + instrumentName;
-	search.resize(keyWord.size());
+	// Буфер для поиска заголовка нужного джейсона
+	std::string ordersSearchBuffer;
+	const std::string ordersJsonBuffer = "book." + instrumentName;
+	ordersSearchBuffer.resize(ordersJsonBuffer.size());
 
-	ordersStorage = new std::vector<Order*>;
+	// Создание ордербука, который заполним и вернём
+	ordersStorage = new std::vector<Order>;
 	ordersStorage->reserve(5000000);
-	OrderBook* orderBookTable = new OrderBook(ordersStorage); //Книжка для заполнения ордерами
+	OrderBook* orderBookTable = new OrderBook(ordersStorage);
 
-	for (i = START_POS; i < filesize; ++i)//Начинаем поиск по файлу
+	// Листание файла
+	for (i = START_POS; i < filesize; ++i)
 	{
-		for (int j = 0; j < search.size() - 1; ++j)
+		for (int j = 0; j < ordersSearchBuffer.size() - 1; ++j)
 		{
-			search[j] = search[j + 1];
+			ordersSearchBuffer[j] = ordersSearchBuffer[j + 1];
 		}
-		search.back() = fgetc(dumpFile);
+		ordersSearchBuffer.back() = fgetc(dumpFile);
 
-		if (search == (keyWord))	//Если находим ключевое слово, начинаем считывать чистую json-строку
+		// Нашли начало джейсона с ордерами
+		if (ordersSearchBuffer == (ordersJsonBuffer))
 		{
 			auto json = readOrdersJsonFromHere();
 			rapidjson::Document* doc = new rapidjson::Document;
 			doc->Parse(json->c_str());
 
-			// деление это отбрасывание долей секунд для конвертации в юникстайм
-			time_t timestamp = (*doc)["timestamp"].GetInt64() / 10000;
+			// Деление это отбрасывание долей секунд для конвертации в юникстайм
+			time_t timestamp = (*doc)["timestamp"].GetInt64() / 1000;
 
-			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
+			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr)
 			{
 				std::string flag = (*itr)[0].GetString();
 				qreal price = (*itr)[1].GetDouble();
@@ -62,7 +66,7 @@ OrderBook* Parser::parsePreDayOrders()
 				orderBookTable->addOrder(newBid);
 			}
 
-			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
+			for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)
 			{
 				std::string flag = (*itr)[0].GetString();
 				qreal price = (*itr)[1].GetDouble();
@@ -84,31 +88,30 @@ void Parser::parseDaytimeStuff()
 {
 	_fseeki64(dumpFile, i, SEEK_SET);
 
-	std::string ordersSearchBuffer;
-	const std::string ordersJsonTitle = "book." + instrumentName;
-	ordersSearchBuffer.resize(ordersJsonTitle.size());
-
+	// Основной буфер для поиска нужной инфы в файле.
 	std::string dealsSearchBuffer;
 	const std::string dealsJsonTitle = "trades." + instrumentName;
 	dealsSearchBuffer.resize(dealsJsonTitle.size());
 
+	// Этот указатель для заглядывания в буфер начиная с третьего символа,
+	// потому что ключевое слово для ордеров короче, чем для сделок.
+	const char* ordersSearchBuffer = &dealsSearchBuffer.c_str()[2];
 
-	for (/*     */; i < filesize; ++i)//Начинаем поиск по файлу
+	// Написать одной строкой не работает, надо чтоб std::string отдельно тут лежала.
+	const std::string ordersJsonTitle_StdString = ("book." + instrumentName);
+	const char* ordersJsonTitle = ordersJsonTitle_StdString.c_str();
+
+	// Листание файла
+	for (/*     */; i < filesize; ++i)
 	{
-		for (int j = 0; j < ordersSearchBuffer.size() - 1; ++j)
-		{
-			ordersSearchBuffer[j] = ordersSearchBuffer[j + 1];
-		}
-		ordersSearchBuffer.back() = fgetc(dumpFile);
-
 		for (int j = 0; j < dealsSearchBuffer.size() - 1; ++j)
 		{
 			dealsSearchBuffer[j] = dealsSearchBuffer[j + 1];
 		}
-		dealsSearchBuffer.back() = ordersSearchBuffer.back();
+		dealsSearchBuffer.back() = fgetc(dumpFile);
 
 		// Нашли начало джейсона с ордерами
-		if (ordersSearchBuffer == (ordersJsonTitle))
+		if (!strcmp(ordersSearchBuffer, ordersJsonTitle))
 		{
 			auto json = readOrdersJsonFromHere();
 			rapidjson::Document* doc = new rapidjson::Document;
@@ -186,25 +189,23 @@ std::string* Parser::readDealsJsonFromHere()
 
 void Parser::parseOrdersFromDocument(rapidjson::Document* doc)
 {
-	// деление это отбрасывание долей секунд для конвертации в юникстайм
-	time_t timestamp = (*doc)["timestamp"].GetInt64() / 10000;
+	// Деление это отбрасывание долей секунд для конвертации в юникстайм
+	time_t timestamp = (*doc)["timestamp"].GetInt64() / 1000;
 
-	for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr) //Прогоняемся по массиву bids для заполнения книжки
+	for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr)
 	{
 		std::string flag = (*itr)[0].GetString();
 		qreal price = (*itr)[1].GetDouble();
 		qreal quantity = (*itr)[2].GetDouble();
-		auto newBid = new Order{ price, quantity, false, timestamp, flag };
-		ordersStorage->push_back(newBid);
+		ordersStorage->emplace_back(Order{ price, quantity, false, timestamp, flag });
 	}
 
-	for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
+	for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)
 	{
 		std::string flag = (*itr)[0].GetString();
 		qreal price = (*itr)[1].GetDouble();
 		qreal quantity = (*itr)[2].GetDouble();
-		auto newAsk = new Order{ price, quantity, true, timestamp, flag };
-		ordersStorage->push_back(newAsk);
+		ordersStorage->emplace_back( Order{ price, quantity, true, timestamp, flag });
 	}
 }
 
@@ -212,11 +213,10 @@ void Parser::parseDealsFromDocument(rapidjson::Document* doc)
 {
 	for (auto it = (*doc)["data"].Begin(); it != (*doc)["data"].End(); ++it)
 	{
-		// деление это отбрасывание долей секунд для конвертации в юникстайм
-		time_t time = (*it)["timestamp"].GetInt64() / 10000;
+		// Деление это отбрасывание долей секунд для конвертации в юникстайм
+		time_t time = (*it)["timestamp"].GetInt64() / 1000;
 		qreal price = (*it)["price"].GetDouble();
 		qreal quantity = (*it)["amount"].GetDouble();
-		auto newDeal = new Order{ price, quantity, false, time };
-		dealsStorage->push_back(newDeal);
+		dealsStorage->emplace_back( Order { price, quantity, false, time });
 	}
 }
