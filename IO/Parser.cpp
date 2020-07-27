@@ -84,31 +84,29 @@ void Parser::parseDaytimeStuff()
 {
 	_fseeki64(dumpFile, i, SEEK_SET);
 
-	std::string ordersSearchBuffer;
-	const std::string ordersJsonTitle = "book." + instrumentName;
-	ordersSearchBuffer.resize(ordersJsonTitle.size());
-
+	// Основной буфер для поиска нужной инфы в файле.
 	std::string dealsSearchBuffer;
 	const std::string dealsJsonTitle = "trades." + instrumentName;
 	dealsSearchBuffer.resize(dealsJsonTitle.size());
 
+	// Этот указатель для заглядывания в буфер начиная с третьего символа,
+	// потому что ключевое слово для ордеров короче, чем для сделок.
+	const char* ordersSearchBuffer = &dealsSearchBuffer.c_str()[2];
+
+	// Написать одной строкой не работает, надо чтоб std::string отдельно тут лежала.
+	const std::string ordersJsonTitle_StdString = ("book." + instrumentName);
+	const char* ordersJsonTitle = ordersJsonTitle_StdString.c_str();
 
 	for (/*     */; i < filesize; ++i)//Начинаем поиск по файлу
 	{
-		for (int j = 0; j < ordersSearchBuffer.size() - 1; ++j)
-		{
-			ordersSearchBuffer[j] = ordersSearchBuffer[j + 1];
-		}
-		ordersSearchBuffer.back() = fgetc(dumpFile);
-
 		for (int j = 0; j < dealsSearchBuffer.size() - 1; ++j)
 		{
 			dealsSearchBuffer[j] = dealsSearchBuffer[j + 1];
 		}
-		dealsSearchBuffer.back() = ordersSearchBuffer.back();
+		dealsSearchBuffer.back() = fgetc(dumpFile);
 
 		// Нашли начало джейсона с ордерами
-		if (ordersSearchBuffer == (ordersJsonTitle))
+		if (!strcmp(ordersSearchBuffer, ordersJsonTitle))
 		{
 			auto json = readOrdersJsonFromHere();
 			rapidjson::Document* doc = new rapidjson::Document;
