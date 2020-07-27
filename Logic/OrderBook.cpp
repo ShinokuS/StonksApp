@@ -68,7 +68,6 @@ void OrderBook::deleteOrder(Order* newOrder)
     // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
     // Как и на то, совпадает ли маркер бида/аска.
 
-    delete* iter;
     orders.erase(iter);
 
     if (newOrder->isAsk) {
@@ -92,5 +91,4 @@ void OrderBook::changeOrder(Order* newOrder)
     // Как и на то, совпадает ли маркер бида/аска.
 
     (*iter)->quantity = newOrder->quantity;
-    delete newOrder;
 }
