@@ -32,7 +32,7 @@ OrderBook* Parser::parsePreDayOrders()
 	const std::string keyWord = "book." + instrumentName;
 	search.resize(keyWord.size());
 
-	ordersStorage = new std::vector<Order*>;
+	ordersStorage = new std::vector<Order>;
 	ordersStorage->reserve(5000000);
 	OrderBook* orderBookTable = new OrderBook(ordersStorage); //Книжка для заполнения ордерами
 
@@ -194,8 +194,7 @@ void Parser::parseOrdersFromDocument(rapidjson::Document* doc)
 		std::string flag = (*itr)[0].GetString();
 		qreal price = (*itr)[1].GetDouble();
 		qreal quantity = (*itr)[2].GetDouble();
-		auto newBid = new Order{ price, quantity, false, timestamp, flag };
-		ordersStorage->push_back(newBid);
+		ordersStorage->emplace_back(Order{ price, quantity, false, timestamp, flag });
 	}
 
 	for (auto itr = (*doc)["asks"].Begin(); itr != (*doc)["asks"].End(); ++itr)	//Прогоняемся по массиву asks для заполнения книжки
@@ -203,8 +202,7 @@ void Parser::parseOrdersFromDocument(rapidjson::Document* doc)
 		std::string flag = (*itr)[0].GetString();
 		qreal price = (*itr)[1].GetDouble();
 		qreal quantity = (*itr)[2].GetDouble();
-		auto newAsk = new Order{ price, quantity, true, timestamp, flag };
-		ordersStorage->push_back(newAsk);
+		ordersStorage->emplace_back( Order{ price, quantity, true, timestamp, flag });
 	}
 }
 

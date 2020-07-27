@@ -26,7 +26,7 @@ private:
 
 	std::string instrumentName;
 
-	std::vector<Order*>* ordersStorage;
+	std::vector<Order>* ordersStorage;
 	std::vector<Order>* dealsStorage;
 
 	std::string* readOrdersJsonFromHere();

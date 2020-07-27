@@ -1,7 +1,7 @@
 ﻿#include "OrderBook.h"
 #include "SmallOrderBookTableModel.h"
 
-OrderBook::OrderBook(std::vector<Order*>* ordersSource)
+OrderBook::OrderBook(std::vector<Order>* ordersSource)
 {
     indexOfFirstVisibleElement = 0;
     countOfAsks = 0;
@@ -18,7 +18,7 @@ bool OrderBook::canLoadNextOrderFromSource()
 void OrderBook::loadNextOrderFromSource()
 {
     activeOrderIndexInSource++;
-    addOrder((*ordersSource)[activeOrderIndexInSource]);
+    addOrder(&(*ordersSource)[activeOrderIndexInSource]);
 }
 
 void OrderBook::addOrder(Order* newOrder)
