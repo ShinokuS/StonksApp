@@ -1,6 +1,6 @@
 ﻿#include "Deals.h"
 
-Deals::Deals(std::vector<Order*>* dealsSource)
+Deals::Deals(std::vector<Order>* dealsSource)
 {
 	this->dealsSource = dealsSource;
 	dealsForPriceGraph.reserve(dealsSource->size());
@@ -16,7 +16,7 @@ void Deals::loadNextDealFromSource()
 {
 	activeDealIndexInSource++;
 	//addNewDeal((*dealsSource)[activeDealIndexInSource]);
-	dealsForPriceGraph.append((*dealsSource)[activeDealIndexInSource]);
+	dealsForPriceGraph.append(&(*dealsSource)[activeDealIndexInSource]);
 }
 
 bool Deals::canLoadMoreFromTheSameFrame()
@@ -26,7 +26,7 @@ bool Deals::canLoadMoreFromTheSameFrame()
 	}
 	else {
 		auto timeframe = this->getLastDeal()->time;
-		return (*dealsSource)[activeDealIndexInSource + 1]->time == timeframe;
+		return (*dealsSource)[activeDealIndexInSource + 1].time == timeframe;
 	}
 }
 

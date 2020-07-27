@@ -18,7 +18,7 @@ void Parser::setInstrumentName(std::string nameToSet)
 	instrumentName = nameToSet;
 }
 
-void Parser::setDealsStorage(std::vector<Order*>* newDealsStorage)
+void Parser::setDealsStorage(std::vector<Order>* newDealsStorage)
 {
 	dealsStorage = newDealsStorage;
 }
@@ -216,7 +216,6 @@ void Parser::parseDealsFromDocument(rapidjson::Document* doc)
 		time_t time = (*it)["timestamp"].GetInt64() / 10000;
 		qreal price = (*it)["price"].GetDouble();
 		qreal quantity = (*it)["amount"].GetDouble();
-		auto newDeal = new Order{ price, quantity, false, time };
-		dealsStorage->push_back(newDeal);
+		dealsStorage->emplace_back( Order { price, quantity, false, time });
 	}
 }

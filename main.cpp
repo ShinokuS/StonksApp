@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
     auto orderBook = parser->parsePreDayOrders();
 
-    auto dealsSource = new std::vector<Order*>();
+    auto dealsSource = new std::vector<Order>();
     dealsSource->reserve(1000000);
     parser->setDealsStorage(dealsSource);
     auto dealsModel = new Deals(dealsSource);
@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     auto bot = new BotLogic();
     
     std::thread threadForParsing ([parser]() { parser->parseDaytimeStuff(); });
+    threadForParsing.join();
 
     QApplication a(argc, argv);
     StonksMainWindow mainWindow(orderBook, dealsModel, bot, parser);
