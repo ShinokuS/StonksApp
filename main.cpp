@@ -21,7 +21,6 @@ int main(int argc, char *argv[])
     auto bot = new BotLogic();
     
     std::thread threadForParsing ([parser]() { parser->parseDaytimeStuff(); });
-    threadForParsing.join();
 
     QApplication a(argc, argv);
     StonksMainWindow mainWindow(orderBook, dealsModel, bot, parser);
