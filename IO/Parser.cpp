@@ -55,7 +55,7 @@ OrderBook* Parser::parsePreDayOrders()
 			doc->Parse(json->c_str());
 
 			// Деление это отбрасывание долей секунд для конвертации в юникстайм
-			time_t timestamp = (*doc)["timestamp"].GetInt64() / 10000;
+			time_t timestamp = (*doc)["timestamp"].GetInt64() / 1000;
 
 			for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr)
 			{
@@ -190,7 +190,7 @@ std::string* Parser::readDealsJsonFromHere()
 void Parser::parseOrdersFromDocument(rapidjson::Document* doc)
 {
 	// Деление это отбрасывание долей секунд для конвертации в юникстайм
-	time_t timestamp = (*doc)["timestamp"].GetInt64() / 10000;
+	time_t timestamp = (*doc)["timestamp"].GetInt64() / 1000;
 
 	for (auto itr = (*doc)["bids"].Begin(); itr != (*doc)["bids"].End(); ++itr)
 	{
@@ -214,7 +214,7 @@ void Parser::parseDealsFromDocument(rapidjson::Document* doc)
 	for (auto it = (*doc)["data"].Begin(); it != (*doc)["data"].End(); ++it)
 	{
 		// Деление это отбрасывание долей секунд для конвертации в юникстайм
-		time_t time = (*it)["timestamp"].GetInt64() / 10000;
+		time_t time = (*it)["timestamp"].GetInt64() / 1000;
 		qreal price = (*it)["price"].GetDouble();
 		qreal quantity = (*it)["amount"].GetDouble();
 		dealsStorage->emplace_back( Order { price, quantity, false, time });
