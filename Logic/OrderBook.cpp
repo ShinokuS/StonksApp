@@ -58,18 +58,17 @@ void OrderBook::insertOrder(Order* newOrder)
 
 void OrderBook::deleteOrder(Order* newOrder)
 {
-    // Костыль из-за интерфейса STL
-    Order reference = { newOrder->price, 0, false };
-
-    // Бинарный поиск позиции с ценой не меньше указанной
-    auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
-        [reference](Order* element, const Order reference) { return element->price > reference.price; });
-
-    // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
-    // Как и на то, совпадает ли маркер бида/аска.
-
-    orders.erase(iter);
-
+    for (auto iter = orders.begin(); iter != orders.end(); ++iter)
+    {
+        // Проверяем и маркер аска, потому что в моменты между сделками бывает так,
+        // что на одну цену весит и бид, и аск. И нужно выбрать из них нужное.
+        if ((newOrder->price == (*iter)->price) && (newOrder->isAsk == (*iter)->isAsk))
+        {
+            orders.erase(iter);
+            break;
+        }
+    }
+    
     if (newOrder->isAsk) {
         countOfAsks--;
         if (countOfAsks > SmallOrderBookTableModel::MAX_VISIBLE_ASKS_AMOUNT) {
@@ -80,15 +79,14 @@ void OrderBook::deleteOrder(Order* newOrder)
 
 void OrderBook::changeOrder(Order* newOrder)
 {
-    // Костыль из-за интерфейса STL
-    Order reference = { newOrder->price, 0, false };
-
-    // Бинарный поиск позиции с ценой не меньше указанной
-    auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
-        [reference](Order* element, const Order reference) { return element->price > reference.price; });
-
-    // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
-    // Как и на то, совпадает ли маркер бида/аска.
-
-    (*iter)->quantity = newOrder->quantity;
+    for (auto iter = orders.begin(); iter != orders.end(); ++iter)
+    {
+        // Проверяем и маркер аска, потому что в моменты между сделками бывает так,
+        // что на одну цену весит и бид, и аск. И нужно выбрать из них нужное.
+        if ((newOrder->price == (*iter)->price) && (newOrder->isAsk == (*iter)->isAsk))
+        {
+            (*iter)->quantity = newOrder->quantity;
+            break;
+        }
+    }
 }
