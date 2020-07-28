@@ -62,14 +62,21 @@ void OrderBook::deleteOrder(Order* newOrder)
     Order reference = { newOrder->price, 0, false };
 
     // Бинарный поиск позиции с ценой не меньше указанной
-    auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
-        [reference](Order* element, const Order reference) { return element->price > reference.price; });
+    //auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
+    //    [reference](Order* element, const Order reference) { return element->price > reference.price; });
 
     // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
     // Как и на то, совпадает ли маркер бида/аска.
+    for (auto iter = orders.begin(); iter != orders.end(); ++iter)
+    {
+        if ((newOrder->price == (*iter)->price) && (newOrder->isAsk == (*iter)->isAsk))
+        {
+            orders.erase(iter);
+            break;
+        }
+    }
 
-    delete* iter;
-    orders.erase(iter);
+
 
     if (newOrder->isAsk) {
         countOfAsks--;
@@ -84,13 +91,22 @@ void OrderBook::changeOrder(Order* newOrder)
     // Костыль из-за интерфейса STL
     Order reference = { newOrder->price, 0, false };
 
-    // Бинарный поиск позиции с ценой не меньше указанной
-    auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
-        [reference](Order* element, const Order reference) { return element->price > reference.price; });
+     //Бинарный поиск позиции с ценой не меньше указанной
+    //auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
+    //    [reference](Order* element, const Order reference) { return element->price > reference.price; });
+
+    for (auto iter = orders.begin(); iter != orders.end(); ++iter)
+    {
+        if ((newOrder->price == (*iter)->price) && (newOrder->isAsk == (*iter)->isAsk))
+        {
+            (*iter)->quantity = newOrder->quantity;
+            break;
+        }
+    }
 
     // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
     // Как и на то, совпадает ли маркер бида/аска.
 
-    (*iter)->quantity = newOrder->quantity;
+
     delete newOrder;
 }
