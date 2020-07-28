@@ -62,22 +62,24 @@ void OrderBook::deleteOrder(Order* newOrder)
     Order reference = { newOrder->price, 0, false };
 
     // Бинарный поиск позиции с ценой не меньше указанной
-    //auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
-    //    [reference](Order* element, const Order reference) { return element->price > reference.price; });
+    auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
+        [reference](Order* element, const Order reference) { return element->price > reference.price; });
 
-    // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
-    // Как и на то, совпадает ли маркер бида/аска.
-    for (auto iter = orders.begin(); iter != orders.end(); ++iter)
+    //Проверка на совпадение isAsk
+    if (newOrder->isAsk == (*iter)->isAsk)
     {
-        if ((newOrder->price == (*iter)->price) && (newOrder->isAsk == (*iter)->isAsk))
-        {
-            orders.erase(iter);
-            break;
-        }
+        orders.erase(iter);
     }
-
-
-
+    else if (newOrder->price == (*(--iter))->price)
+    {
+        orders.erase(iter);
+    }
+    else
+    {
+        iter += 2;
+        orders.erase(iter);
+    }
+    
     if (newOrder->isAsk) {
         countOfAsks--;
         if (countOfAsks > SmallOrderBookTableModel::MAX_VISIBLE_ASKS_AMOUNT) {
@@ -92,21 +94,23 @@ void OrderBook::changeOrder(Order* newOrder)
     Order reference = { newOrder->price, 0, false };
 
      //Бинарный поиск позиции с ценой не меньше указанной
-    //auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
-    //    [reference](Order* element, const Order reference) { return element->price > reference.price; });
+    auto iter = std::lower_bound(orders.begin(), orders.end(), reference,
+        [reference](Order* element, const Order reference) { return element->price > reference.price; });
 
-    for (auto iter = orders.begin(); iter != orders.end(); ++iter)
+    //Проверка на совпадение isAsk
+    if (newOrder->isAsk == (*iter)->isAsk)
     {
-        if ((newOrder->price == (*iter)->price) && (newOrder->isAsk == (*iter)->isAsk))
-        {
-            (*iter)->quantity = newOrder->quantity;
-            break;
-        }
+        (*iter)->quantity = newOrder->quantity;
     }
-
-    // Проверку на то, что цена пришла валидная и точно имеющаяся в списке, не делаю!
-    // Как и на то, совпадает ли маркер бида/аска.
-
+    else if (newOrder->price == (*(--iter))->price)
+    {
+        (*iter)->quantity = newOrder->quantity;
+    }
+    else
+    {
+        iter += 2;
+        (*iter)->quantity = newOrder->quantity;
+    }
 
     delete newOrder;
 }
