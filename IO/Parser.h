@@ -12,7 +12,7 @@ class Parser
 public:
 	void openFile(std::string fileName);
 	void setInstrumentName(std::string nameToSet);
-	void setDealsStorage(std::vector<Order*>* newDealsStorage);
+	void setDealsStorage(std::vector<Order>* newDealsStorage);
 
 	OrderBook* parsePreDayOrders();
 	void parseDaytimeStuff();
@@ -26,8 +26,8 @@ private:
 
 	std::string instrumentName;
 
-	std::vector<Order*>* ordersStorage;
-	std::vector<Order*>* dealsStorage;
+	std::vector<Order>* ordersStorage;
+	std::vector<Order>* dealsStorage;
 
 	std::string* readOrdersJsonFromHere();
 	std::string* readDealsJsonFromHere();

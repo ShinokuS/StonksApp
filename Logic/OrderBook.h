@@ -12,7 +12,7 @@ public:
     int activeOrderIndexInSource;
     QList<Order*> orders;
 
-    OrderBook(std::vector<Order*>* ordersSource);
+    OrderBook(std::vector<Order>* ordersSource);
 
     // Интерфейс для добавления новых ордеров.
     void addOrder(Order* newOrder);
@@ -22,7 +22,7 @@ public:
 
 private:
 
-    std::vector<Order*>* ordersSource;
+    std::vector<Order>* ordersSource;
 
     // Имплементация операций над ордерами в ордербуке.
     void insertOrder(Order* newOrder);

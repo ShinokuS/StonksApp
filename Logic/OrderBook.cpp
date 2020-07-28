@@ -1,13 +1,13 @@
 ﻿#include "OrderBook.h"
 #include "SmallOrderBookTableModel.h"
 
-OrderBook::OrderBook(std::vector<Order*>* ordersSource)
+OrderBook::OrderBook(std::vector<Order>* ordersSource)
 {
     indexOfFirstVisibleElement = 0;
     countOfAsks = 0;
     activeOrderIndexInSource = -1;
     this->ordersSource = ordersSource;
-    orders.reserve(ordersSource->size());
+    orders.reserve(10000); // Ну сколько там позиций по цене может быть?
 }
 
 bool OrderBook::canLoadNextOrderFromSource()
@@ -18,7 +18,7 @@ bool OrderBook::canLoadNextOrderFromSource()
 void OrderBook::loadNextOrderFromSource()
 {
     activeOrderIndexInSource++;
-    addOrder((*ordersSource)[activeOrderIndexInSource]);
+    addOrder(&(*ordersSource)[activeOrderIndexInSource]);
 }
 
 void OrderBook::addOrder(Order* newOrder)
