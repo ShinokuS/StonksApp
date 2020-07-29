@@ -23,7 +23,7 @@ public:
                     BotLogic* bot, Parser* parser, QWidget* parent = Q_NULLPTR);
 
 private slots:
-    void insertNewDataAndUpdate();
+    void startMainLoop();
     void slotRangeChanged(const QCPRange& newRange);
 
 private:

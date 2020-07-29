@@ -29,7 +29,7 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic*
     // таймер, чтобы каждую секунду вбрасывать новые ордеры и обновлять окно
     tmr = new QTimer();
     tmr->setInterval(1);
-    connect(tmr, SIGNAL(timeout()), this, SLOT(insertNewDataAndUpdate()));
+    connect(tmr, SIGNAL(timeout()), this, SLOT(startMainLoop()));
     tmr->start();
 
     connect(priceGraph->xAxis, SIGNAL(rangeChanged(QCPRange)),
@@ -72,7 +72,7 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 
 }
 
-void StonksMainWindow::insertNewDataAndUpdate() 
+void StonksMainWindow::startMainLoop() 
 {
     if (dealsModel->canLoadNextDealFromSource()) {
 
