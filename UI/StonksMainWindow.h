@@ -50,6 +50,7 @@ private:
     void placePriceGraph();
     void placeOrderBookTable();
 
+    void loadNewDataAndUpdate();
     void updateWindow();
     void updateOrderBookTable();
     void updateMarketDepthGraph();
