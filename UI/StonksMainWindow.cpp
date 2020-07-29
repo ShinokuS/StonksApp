@@ -26,11 +26,8 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic*
     this->placeOrderBookTable();
     this->placePriceGraph();
 
-    // таймер, чтобы каждую секунду вбрасывать новые ордеры и обновлять окно
-    tmr = new QTimer();
-    tmr->setInterval(1);
-    connect(tmr, SIGNAL(timeout()), this, SLOT(startMainLoop()));
-    tmr->start();
+    // Задержка, чтобы цикл обновления окна начался позже, чем exec() приложения в мэйне
+    QTimer::singleShot(1000, this, SLOT(startMainLoop()));
 
     connect(priceGraph->xAxis, SIGNAL(rangeChanged(QCPRange)),
         this, SLOT(slotRangeChanged(QCPRange)));
@@ -74,17 +71,23 @@ void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 
 void StonksMainWindow::startMainLoop() 
 {
-    if (dealsModel->canLoadNextDealFromSource()) {
-        loadNewDataAndUpdate();
-    }
-    /*else {
-        if (parser->hasNotFinished) {
-            // Текущий тред спит, пока парсер не подгрузит дальше
+    // Работа параллельно с парсером
+    while (! parser->hasFinished) {
+        if (dealsModel->canLoadNextDealFromSource()) {
+            this->loadNewDataAndUpdate();
         }
         else {
-            // Завершение программы
+            // Надо немного подождать, пока парсер на распарсит дальше.
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
         }
-    }*/
+    }
+
+    // Работа после того как парсер уже добежал до конца
+    while (dealsModel->canLoadNextDealFromSource()) {
+        this->loadNewDataAndUpdate();
+    }
+
+    // Дальше должна быть выдача отчёта и завершение работы
 }
 
 void StonksMainWindow::loadNewDataAndUpdate()
