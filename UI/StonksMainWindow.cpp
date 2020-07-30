@@ -93,16 +93,13 @@ void StonksMainWindow::insertNewDataAndUpdate()
 
         updateWindow();
     }
-    /*else {
-        if (parser->hasNotFinished) {
-            // Текущий тред спит, пока парсер не подгрузит дальше
-        }
-        else {
-            // Завершение программы
-        }
-    }*/
+    else if (parser->hasFinished) {
+        // День закончен
+        tmr->stop();
+    }
 
-    
+    // В противном случае просто ничего не делаем, пропуская этот тик
+    // в ожидании, пока парсер подпарсит дальше.
 }
 
 void StonksMainWindow::updateWindow()
