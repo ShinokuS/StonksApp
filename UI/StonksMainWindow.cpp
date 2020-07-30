@@ -26,7 +26,9 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic*
     this->placeOrderBookTable();
     this->placePriceGraph();
 
-    // таймер, чтобы каждую секунду вбрасывать новые ордеры и обновлять окно
+    // Этот таймер оставлен как костыль вместо цикла по сделкам.
+    // Так приложение работает приятнее, без подвисаний.
+    // Можете сравнить с веткой "замена-таймера-на-цикл".
     tmr = new QTimer();
     tmr->setInterval(1);
     connect(tmr, SIGNAL(timeout()), this, SLOT(insertNewDataAndUpdate()));
@@ -90,17 +92,22 @@ void StonksMainWindow::insertNewDataAndUpdate()
             dealsModel->loadNextDealFromSource();
             botLogic->reactAtNewDeal(dealsModel->getLastDeal());
         }
-    }
-    /*else {
-        if (parser->hasNotFinished) {
-            // Текущий тред спит, пока парсер не подгрузит дальше
-        }
-        else {
-            // Завершение программы
-        }
-    }*/
 
-    updateWindow();
+        updateWindow();
+    }
+    else if (parser->hasFinished) {
+        // День закончен
+        tmr->stop();
+
+        if (botLogic->botThingsQuantity > 0) {
+            botLogic->sellAfter(dealsModel->getLastDeal());
+        }
+        updateWindow();
+        showDayResultsOnLabel();
+    }
+
+    // В противном случае просто ничего не делаем, пропуская этот тик
+    // в ожидании, пока парсер подпарсит дальше.
 }
 
 void StonksMainWindow::updateWindow()
@@ -160,4 +167,15 @@ void StonksMainWindow::placePriceGraph()
     priceGraphLayout = new QGridLayout(this);
     priceGraphLayout->addWidget(priceGraph);
     ui.priceGraphWidget->setLayout(priceGraphLayout);
+}
+
+void StonksMainWindow::showDayResultsOnLabel()
+{
+    ui.label->setFixedHeight(121);
+    ui.label->setText(QString("DAY ENDED") +
+        "\n\nBalance: " + QString::number(botLogic->botBalance) +
+        "\nThings: " + QString::number(botLogic->botThingsQuantity) +
+        "\n\nStart balance: " + QString::number(botLogic->START_BALANCE) +
+        "\nDaily profit: " + QString::number(
+            ((botLogic->botBalance / botLogic->START_BALANCE) - 1) * 100) + " %");
 }

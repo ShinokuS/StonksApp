@@ -54,4 +54,6 @@ private:
     void updateOrderBookTable();
     void updateMarketDepthGraph();
     void updatePriceGraph();
+
+    void showDayResultsOnLabel();
 };

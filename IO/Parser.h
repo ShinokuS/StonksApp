@@ -17,6 +17,8 @@ public:
 	OrderBook* parsePreDayOrders();
 	void parseDaytimeStuff();
 
+	bool hasFinished = false;
+
 private:
 	static const size_t START_POS = 0;
 	size_t i;
