@@ -8,6 +8,9 @@ public:
 
 	void reactAtNewDeal(Order* newDeal);
 
+	void buyAfter(Order* deal);
+	void sellAfter(Order* deal);
+
 	double botBalance = 1000;
 	int botThingsQuantity = 0;
 

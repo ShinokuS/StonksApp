@@ -19,21 +19,34 @@ void BotLogic::reactAtNewDeal(Order* deal)
 	}
 	if (countOfIntervals % 2 == 0 && botBalance >= deal->price && 
 		100 - currentAverPrice * 100 / prevAverPrice > PURCHASE_PERCENTAGE && currentAverPrice<AverPrice) {
-		botThingsQuantity += int(botBalance / deal->price);
-		botBalance -= int(botBalance / deal->price) * deal->price;
-		if(!lastPurchasePrice) lastPurchasePrice = deal->price;
-
-		priceBuy.append(deal->price);
-		timeBuy.append(deal->time);
+		
+		buyAfter(deal);
 	}
 	if (botThingsQuantity && 
 		100 - lastPurchasePrice * 100 / deal->price > SALE_PERCENTAGE) {
-		botBalance += botThingsQuantity * deal->price;
-		botThingsQuantity = 0;
-		lastPurchasePrice = 0;
-
-		priceSell.append(deal->price);
-		timeSell.append(deal->time);
+		
+		sellAfter(deal);
 	}
 
+}
+
+void BotLogic::buyAfter(Order* deal)
+{
+	int amountToBuy = int(botBalance / deal->price);
+	botThingsQuantity += amountToBuy;
+	botBalance -= amountToBuy * deal->price;
+	if (!lastPurchasePrice) lastPurchasePrice = deal->price;
+
+	priceBuy.append(deal->price);
+	timeBuy.append(deal->time);
+}
+
+void BotLogic::sellAfter(Order* deal)
+{
+	botBalance += botThingsQuantity * deal->price;
+	botThingsQuantity = 0;
+	lastPurchasePrice = 0;
+
+	priceSell.append(deal->price);
+	timeSell.append(deal->time);
 }
