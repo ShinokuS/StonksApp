@@ -26,7 +26,9 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic*
     this->placeOrderBookTable();
     this->placePriceGraph();
 
-    // таймер, чтобы каждую секунду вбрасывать новые ордеры и обновлять окно
+    // Этот таймер оставлен как костыль вместо цикла по сделкам.
+    // Так приложение работает приятнее, без подвисаний.
+    // Можете сравнить с веткой "замена-таймера-на-цикл".
     tmr = new QTimer();
     tmr->setInterval(1);
     connect(tmr, SIGNAL(timeout()), this, SLOT(insertNewDataAndUpdate()));
