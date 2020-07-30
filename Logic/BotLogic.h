@@ -11,7 +11,8 @@ public:
 	void buyAfter(Order* deal);
 	void sellAfter(Order* deal);
 
-	double botBalance = 1000;
+	const double START_BALANCE = 1000;
+	double botBalance = START_BALANCE;
 	int botThingsQuantity = 0;
 
 	QVector <double> timeBuy;

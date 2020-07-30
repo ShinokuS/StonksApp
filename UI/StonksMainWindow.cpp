@@ -101,6 +101,8 @@ void StonksMainWindow::insertNewDataAndUpdate()
             botLogic->sellAfter(dealsModel->getLastDeal());
         }
         updateWindow();
+        ui.label->setText("Balance: " + QString::number(botLogic->botBalance) +
+            "\nThings: " + QString::number(botLogic->botThingsQuantity));
     }
 
     // В противном случае просто ничего не делаем, пропуская этот тик
@@ -114,8 +116,13 @@ void StonksMainWindow::updateWindow()
     updateMarketDepthGraph();
     updateOrderBookTable();
 
-    ui.label->setText("Balance: " + QString::number(botLogic->botBalance) +
-        "\nThings: " + QString::number(botLogic->botThingsQuantity));
+    ui.label->setFixedHeight(121);
+    ui.label->setText(QString("DAY ENDED") +
+        "\n\nBalance: " + QString::number(botLogic->botBalance) +
+        "\nThings: " + QString::number(botLogic->botThingsQuantity) +
+        "\n\nStart balance: " + QString::number(botLogic->START_BALANCE) +
+        "\nDaily profit: " + QString::number(
+            ((botLogic->botBalance / botLogic->START_BALANCE) - 1) * 100) + " %");
 }
 
 void StonksMainWindow::updateOrderBookTable()
