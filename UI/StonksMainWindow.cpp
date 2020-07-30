@@ -90,6 +90,8 @@ void StonksMainWindow::insertNewDataAndUpdate()
             dealsModel->loadNextDealFromSource();
             botLogic->reactAtNewDeal(dealsModel->getLastDeal());
         }
+
+        updateWindow();
     }
     /*else {
         if (parser->hasNotFinished) {
@@ -100,7 +102,7 @@ void StonksMainWindow::insertNewDataAndUpdate()
         }
     }*/
 
-    updateWindow();
+    
 }
 
 void StonksMainWindow::updateWindow()
