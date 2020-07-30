@@ -96,6 +96,11 @@ void StonksMainWindow::insertNewDataAndUpdate()
     else if (parser->hasFinished) {
         // День закончен
         tmr->stop();
+
+        if (botLogic->botThingsQuantity > 0) {
+            botLogic->sellAfter(dealsModel->getLastDeal());
+        }
+        updateWindow();
     }
 
     // В противном случае просто ничего не делаем, пропуская этот тик
