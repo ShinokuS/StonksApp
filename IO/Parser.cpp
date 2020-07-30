@@ -133,7 +133,9 @@ void Parser::parseDaytimeStuff()
 			delete json;
 		}
 	}
+
 	fclose(dumpFile);
+	this->hasFinished = true;
 }
 
 std::string* Parser::readOrdersJsonFromHere()
