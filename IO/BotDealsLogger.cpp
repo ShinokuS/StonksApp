@@ -2,6 +2,8 @@
 
 #include <fstream>
 
+#include <QDate>
+
 bool fileIsEmptyOrDoesntExist(const std::string& fileName)
 {
 	std::ifstream file(fileName);
@@ -20,6 +22,13 @@ BotDealsLogger::BotDealsLogger()
 
 void BotDealsLogger::log(Order deal, std::string accountName)
 {
+	QDateTime dateTime;
+	dateTime.setTime_t(deal.time);
+	std::string date = dateTime.date().toString("dd.MM.yyyy").toStdString();
+	std::string time = dateTime.time().toString("HH:mm:ss.zzz").toStdString();// + ".000";
+
+	// Имя инструмента пока что захардкодил. Надо будет его протащить из мэйна сюда.
 	std::ofstream logFile(logFileName, std::ios_base::app);
-	logFile << accountName << " bought or sold.\n";
+	logFile << ";;;" << accountName << ";;" << "ETH" << ";;;" <<
+		date << ";" << time << ";;;" << deal.quantity << ";" << deal.price << ";;\n";
 }
