@@ -28,6 +28,7 @@ void BotLogic::reactAtNewDeal(Order* deal)
 		sellAfter(deal);
 	}
 
+	dealsLogger.log(deal, accountName);
 }
 
 void BotLogic::buyAfter(Order* deal)

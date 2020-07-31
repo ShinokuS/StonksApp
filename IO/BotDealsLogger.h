@@ -1,10 +1,13 @@
 ﻿#pragma once
 
-#include <QString>
-
 #include "../Logic/Order.h"
 
 class BotDealsLogger
 {
-	void log(Order* deal, QString accountName);
+public:
+
+	std::string logFileName = "bot_deals.csv";
+
+	void log(Order* deal, std::string accountName);
+
 };
