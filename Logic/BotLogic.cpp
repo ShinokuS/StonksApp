@@ -21,13 +21,11 @@ void BotLogic::reactAtNewDeal(Order* deal)
 		100 - currentAverPrice * 100 / prevAverPrice > PURCHASE_PERCENTAGE && currentAverPrice<AverPrice) {
 		
 		buyAfter(deal);
-		dealsLogger.log(*deal, accountName);
 	}
 	if (botThingsQuantity && 
 		100 - lastPurchasePrice * 100 / deal->price > SALE_PERCENTAGE) {
 		
 		sellAfter(deal);
-		dealsLogger.log(*deal, accountName);
 	}
 }
 
@@ -40,14 +38,18 @@ void BotLogic::buyAfter(Order* deal)
 
 	priceBuy.append(deal->price);
 	timeBuy.append(deal->time);
+
+	dealsLogger.log({ deal->price, double(amountToBuy), false, deal->time }, accountName);
 }
 
 void BotLogic::sellAfter(Order* deal)
 {
 	botBalance += botThingsQuantity * deal->price;
-	botThingsQuantity = 0;
 	lastPurchasePrice = 0;
 
 	priceSell.append(deal->price);
 	timeSell.append(deal->time);
+
+	dealsLogger.log({ deal->price, double(-botThingsQuantity), false, deal->time }, accountName);
+	botThingsQuantity = 0;
 }
