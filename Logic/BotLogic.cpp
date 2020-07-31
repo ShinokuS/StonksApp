@@ -21,14 +21,14 @@ void BotLogic::reactAtNewDeal(Order* deal)
 		100 - currentAverPrice * 100 / prevAverPrice > PURCHASE_PERCENTAGE && currentAverPrice<AverPrice) {
 		
 		buyAfter(deal);
+		dealsLogger.log(*deal, accountName);
 	}
 	if (botThingsQuantity && 
 		100 - lastPurchasePrice * 100 / deal->price > SALE_PERCENTAGE) {
 		
 		sellAfter(deal);
+		dealsLogger.log(*deal, accountName);
 	}
-
-	dealsLogger.log(deal, accountName);
 }
 
 void BotLogic::buyAfter(Order* deal)
