@@ -91,6 +91,7 @@
     <QtRcc Include="UI\StonksMainWindow.qrc" />
     <QtUic Include="UI\StonksMainWindow.ui" />
     <QtMoc Include="UI\StonksMainWindow.h" />
+    <ClCompile Include="IO\BotDealsLogger.cpp" />
     <ClCompile Include="IO\Parser.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\WeWil\Documents\stonks;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\WeWil\Documents\stonks;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -112,6 +113,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IO\BotDealsLogger.h" />
     <ClInclude Include="IO\Parser.h" />
     <ClInclude Include="Logic\BotLogic.h" />
     <ClInclude Include="Logic\Deals.h" />
