@@ -25,7 +25,7 @@ public:
 private:
 
 	std::string accountName = "basic_bot";
-	BotDealsLogger dealsLogger;
+	BotDealsLogger dealsLogger = BotDealsLogger();
 
 	int CHEKING_TIME_INTERVAL = 30;
 	double PURCHASE_PERCENTAGE = 0.01;

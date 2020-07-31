@@ -8,6 +8,6 @@ public:
 
 	std::string logFileName = "bot_deals.csv";
 
+	BotDealsLogger();
 	void log(Order deal, std::string accountName);
-
 };
