@@ -6,12 +6,12 @@ class BotDealsLogger
 {
 public:
 
-	std::string logFileName = "bot_deals.csv";
+	std::string logFileName = "TradeLog.csv";
 
 	BotDealsLogger();
 	void log(Order deal, std::string accountName);
 
 private:
 
-	long long tradeId = 0;
+	long long tradeId = 1;
 };
