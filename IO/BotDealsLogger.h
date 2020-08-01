@@ -10,4 +10,8 @@ public:
 
 	BotDealsLogger();
 	void log(Order deal, std::string accountName);
+
+private:
+
+	long long tradeId = 0;
 };

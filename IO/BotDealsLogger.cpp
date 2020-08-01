@@ -29,6 +29,7 @@ void BotDealsLogger::log(Order deal, std::string accountName)
 
 	// Имя инструмента пока что захардкодил. Надо будет его протащить из мэйна сюда.
 	std::ofstream logFile(logFileName, std::ios_base::app);
-	logFile << ";;;" << accountName << ";;" << "ETH" << ";;;" <<
+	logFile << tradeId << ";;;" << accountName << ";;" << "ETH" << ";;;" <<
 		date << ";" << time << ";;;" << deal.quantity << ";" << deal.price << ";;\n";
+	tradeId++;
 }
