@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Deals.h"
+#include "../IO/BotDealsLogger.h"
 
 class BotLogic
 {
@@ -22,6 +23,9 @@ public:
 	QVector <double> priceSell;
 
 private:
+
+	std::string accountName = "basic_bot";
+	BotDealsLogger dealsLogger = BotDealsLogger();
 
 	int CHEKING_TIME_INTERVAL = 30;
 	double PURCHASE_PERCENTAGE = 0.01;

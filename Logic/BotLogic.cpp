@@ -27,7 +27,6 @@ void BotLogic::reactAtNewDeal(Order* deal)
 		
 		sellAfter(deal);
 	}
-
 }
 
 void BotLogic::buyAfter(Order* deal)
@@ -39,14 +38,18 @@ void BotLogic::buyAfter(Order* deal)
 
 	priceBuy.append(deal->price);
 	timeBuy.append(deal->time);
+
+	dealsLogger.log({ deal->price, double(amountToBuy), false, deal->time }, accountName);
 }
 
 void BotLogic::sellAfter(Order* deal)
 {
 	botBalance += botThingsQuantity * deal->price;
-	botThingsQuantity = 0;
 	lastPurchasePrice = 0;
 
 	priceSell.append(deal->price);
 	timeSell.append(deal->time);
+
+	dealsLogger.log({ deal->price, double(-botThingsQuantity), false, deal->time }, accountName);
+	botThingsQuantity = 0;
 }

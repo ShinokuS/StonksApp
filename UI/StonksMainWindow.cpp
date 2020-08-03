@@ -40,8 +40,7 @@ StonksMainWindow::StonksMainWindow(OrderBook* orderBook, Deals* deals, BotLogic*
 
 void StonksMainWindow::slotRangeChanged(const QCPRange& newRange)
 {
-    int firstDayTime = (int(graphsBuilder->getTimeForPriceGraph().first()) / Time::DAY)
-                        * Time::DAY;
+    int firstDayTime = graphsBuilder->getTimeForPriceGraph().first();
     int lastDayTime = firstDayTime + Time::DAY;
 
     if (newRange.size() < Time::ONE_MINUTE) {

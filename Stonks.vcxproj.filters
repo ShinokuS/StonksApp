@@ -66,6 +66,9 @@
     <ClCompile Include="Logic\BotLogic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IO\BotDealsLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UI\Graphs\MarketDepthGraph.h">
@@ -96,6 +99,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logic\BotLogic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IO\BotDealsLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
